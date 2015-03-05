@@ -11,5 +11,9 @@ package testgityannis;
  * @author Yannis
  */
 public class tetsgity {
-    
+	public int lel;
+	
+	public tetsgity(){
+		lel = 0;
+	}
 }
