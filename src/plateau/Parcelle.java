@@ -11,14 +11,14 @@ public class Parcelle {
     int nbouvrier=0;
     boolean irrigué=false;
     boolean secheresse=false;
-    typeChamps champs=null;
+    typeChamps champs=typeChamps.vide;
 
 
     
             
             
   public enum typeChamps {
-  patate, piment, banane, bambou, haricot;	
+  patate, piment, banane, bambou, haricot, vide;
 }
 
 
