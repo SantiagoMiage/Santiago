@@ -13,7 +13,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URL;
 
-
+/**
+ * Created by Yannis Cipriani on 16/03/2015.
+ */
 public class Plateau {
     private JLabel[][] tabParcelleGUI = new JLabel[6][8];   //tableau image
     private Parcelle[][] tabParcelleModele = new Parcelle[6][8]; //tableau objet
@@ -65,10 +67,6 @@ public class Plateau {
 //creation label
                 final JLabel thumb = new JLabel();
                 thumb.setPreferredSize(new Dimension(100, 100));
-//creation image
-                //     String cheminimage= "/ressource/images/parcelle.png";
-                //     URL url_icone = this.getClass().getResource(cheminimage);
-                // ImageIcon imgThisImg = new ImageIcon(parcelle);
 //affectation image au label par défaut sur parcelle
                 thumb.setIcon(iconparcelle);
 //gestion listener pour le label

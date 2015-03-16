@@ -6,7 +6,9 @@
 
 package plateau;
 
-
+/**
+ * Created by Yannis Cipriani on 16/03/2015.
+ */
 public class Parcelle {
     int nbouvrier=0;
     boolean irrigué=false;
@@ -24,7 +26,7 @@ public Parcelle(int nbouvrier, boolean irrigué, boolean secheresse, typeChamps 
 }            
             
   public enum typeChamps {
-  patate, piment, banane, bambou, haricot;	
+  patate, piment, banane, bambou, haricot, vide;
 }
 
 
