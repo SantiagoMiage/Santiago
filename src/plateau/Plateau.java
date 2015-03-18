@@ -19,7 +19,7 @@ import java.net.URL;
 public class Plateau {
     private JLabel[][] tabParcelleGUI = new JLabel[6][8];   //tableau image
     private Parcelle[][] tabParcelleModele = new Parcelle[6][8]; //tableau objet
-    private JPanel panel = new JPanel(new GridLayout(6,8));
+    private JPanel panel = new JPanel(new GridLayout(10, 13));
 
     public Plateau() {
 
@@ -54,10 +54,11 @@ public class Plateau {
         String chemincanalverti = "/ressource/images/canalverti.png";
         URL url_canalverti = this.getClass().getResource(chemincanalverti);
 
+        //intersection
+        String cheminintersection = "/ressource/images/intersection.png";
+        URL url_intersection = this.getClass().getResource(cheminintersection);
 
-
-
-//rajouter les plantations 2 ouvriers
+//[A FAIRE]rajouter les plantations 2 ouvriers
         final ImageIcon iconparcelle = new ImageIcon(url_parcelle),
                 iconpatate1 = new ImageIcon(url_patate1),
                 iconpiment1 = new ImageIcon(url_piment1),
@@ -66,51 +67,71 @@ public class Plateau {
                 iconharicot1 = new ImageIcon(url_haricot1),
                 icontest = new ImageIcon(url_test),
                 iconcanalhori = new ImageIcon(url_canalhori),
-                iconcanalverti = new ImageIcon(url_canalverti);
+                iconcanalverti = new ImageIcon(url_canalverti),
+                iconintersection = new ImageIcon(url_intersection);
 
 
+        for (int i = 0; i < 10; i++) {
 
-        //  panel.setLayout(new GridLayout(6, 8));
-        for (int i = 0; i < tabParcelleModele.length; i++) {
-
-            for (int j = 0; j < tabParcelleModele[0].length; j++) {
-             /*  if (j % 2 == 0) {
-
-                    final JLabel thumbc = new JLabel();
-                    thumbc.setPreferredSize(new Dimension(10, 100));
-                    thumbc.setIcon(iconcanalverti);
-                    panel.add(thumbc);
-                }
-*/
-
-//creation label
+            for (int j = 0; j < 13; j++) {
                 final JLabel thumb = new JLabel();
-                thumb.setPreferredSize(new Dimension(100, 100));
-//affectation image au label par défaut sur parcelle
-                thumb.setIcon(iconparcelle);
-//gestion listener pour le label
-                thumb.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                        System.out.println("yolo");
-                        //tester le changement d'icone
+                if ((i == 0 || i == 3 || i == 6 || i == 9) && (j == 0 || j == 3 || j == 6 || j == 9 || j == 12)) {
+                    System.out.println("c est une intersection i : " + i + " j : " + j);
 
-                        if (thumb.getIcon()==icontest){
-                            thumb.setIcon(iconpatate1);
-                        }else{
-                            thumb.setIcon(icontest);
-                        }
+                    thumb.setPreferredSize(new Dimension(10, 10));
+                    thumb.setIcon(iconintersection);
+                  //  panel.add(thumb, i, j);
+                } else {
+                   // final JLabel thumbc = new JLabel();
+                    System.out.println("ce n est pas une intersection i : " + i + " j : " + j);
+                    if ((i == 0 || i == 3 || i == 6 || i == 9)) {
+                        System.out.println("canal hori i : " + i + " j : " + j);
+
+                        thumb.setPreferredSize(new Dimension(50, 10));
+                        thumb.setIcon(iconcanalhori);
+                      //  panel.add(thumb, i, j);
+                    } else if ((j == 0 || j == 3 || j == 6 || j == 9 || j == 12)) {
+                        System.out.println("canal verti i : " + i + " j : " + j);
+                       // final JLabel thumbcc = new JLabel();
+                        thumb.setPreferredSize(new Dimension(10, 50));
+                        thumb.setIcon(iconcanalverti);
+                       // panel.add(thumb, i, j);
+
+                    } else {
+                        System.out.println("parcelle i : " + i + " j : " + j);
+//creation label
+                     //   final JLabel thumb = new JLabel();
+                        thumb.setPreferredSize(new Dimension(100, 100));
+//affectation image au label par défaut sur parcelle
+                        thumb.setIcon(iconparcelle);
+//gestion listener pour le label
+                        thumb.addMouseListener(new MouseAdapter() {
+                            @Override
+                            public void mouseClicked(MouseEvent e) {
+                                //tester le changement d'icone
+
+                                if (thumb.getIcon() == icontest) {
+                                    thumb.setIcon(iconpatate1);
+                                } else {
+                                    thumb.setIcon(icontest);
+                                }
+                            }
+
+                        });
+//ajout au panel
+                      //  panel.add(thumb, i, j);//utiliser un gridpanel a faire
+                        //creation de l'objet  Parcelle
+                        Parcelle parcelle = new Parcelle(0, false, false, Parcelle.typeChamps.vide);
+//ajout aux tableaux
+//                tabParcelleGUI[m][n] = thumb;
+                        //      tabParcelleModele[m][n] = parcelle;
+
                     }
 
-                });
-//ajout au panel
-                panel.add(thumb,i,j);//utiliser un gridpanel a faire
-//creation de l'objet  Parcelle
-                Parcelle parcelle = new Parcelle(0, false, false, Parcelle.typeChamps.vide);
-//ajout aux tableaux
-                tabParcelleGUI[i][j] = thumb;
-                tabParcelleModele[i][j] = parcelle;
 
+                }
+
+                panel.add(thumb, i, j);
             }
         }
 
@@ -118,7 +139,8 @@ public class Plateau {
 
 
     public void creationFenetre() {
-        panel.setPreferredSize(new Dimension(800, 600));
+        panel.setPreferredSize(new Dimension(850, 640));
+
         JFrame fenetre = new JFrame();
         fenetre.setContentPane(panel);
         fenetre.pack();
