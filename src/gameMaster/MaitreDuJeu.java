@@ -6,6 +6,8 @@ import plateau.PileParcelle;
 import plateau.Plateau;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
 
 /**
  * Created by Crema on 18/03/2015.
@@ -34,16 +36,25 @@ public class MaitreDuJeu {
     //Créer les différentes pile de parcelles pour la partie
     private void initialisationPileParcelles() {
         int nbPile = pileParcelles.size();
+        long seed = System.nanoTime(); //Pour notre randoum
         ArrayList<Parcelle> parcelles = new ArrayList<Parcelle>(45);
 
         //On créer les 45 tuiles
         CreationParcelles(parcelles);
 
+        Collections.shuffle(parcelles, new Random(seed));
 
+        //Si on est à 4 joueurs on retire une parcelle du jeu
+        if(nbPile == 4){
+            parcelles.remove(0);
+        }
 
-
-
-
+        while(!parcelles.isEmpty()){
+            for(int i = 0; i<nbPile;  i++){
+                pileParcelles.get(i).AjoutParcelle(parcelles.get(0));
+                parcelles.remove(0);
+            }
+        }
     }
 
     private void CreationParcelles(ArrayList<Parcelle> parcelles) {
