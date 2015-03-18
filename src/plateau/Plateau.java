@@ -19,7 +19,7 @@ import java.net.URL;
 public class Plateau {
     private JLabel[][] tabParcelleGUI = new JLabel[6][8];   //tableau image
     private Parcelle[][] tabParcelleModele = new Parcelle[6][8]; //tableau objet
-    private JPanel panel = new JPanel();
+    private JPanel panel = new JPanel(new GridLayout(6,8));
 
     public Plateau() {
 
@@ -32,7 +32,7 @@ public class Plateau {
 
     public void initialisation() {
 
-        //pour la performance , on instance seulement 5 fois au début , pour ne pas devoir le faire plus tard dans le listener, gain
+        //pour la performance , on instancie seulement  au début , pour ne pas devoir le faire plus tard dans le listener, gain
         String cheminparcelle = "/ressource/images/parcelle.png";
         URL url_parcelle = this.getClass().getResource(cheminparcelle);
         String cheminpatate1 = "/ressource/images/patate1.png";
@@ -48,6 +48,15 @@ public class Plateau {
         String chemintest = "/ressource/images/test.png";
         URL url_test = this.getClass().getResource(chemintest);
 
+        //Les canals
+        String chemincanalhori = "/ressource/images/canalhori.png";
+        URL url_canalhori = this.getClass().getResource(chemincanalhori);
+        String chemincanalverti = "/ressource/images/canalverti.png";
+        URL url_canalverti = this.getClass().getResource(chemincanalverti);
+
+
+
+
 //rajouter les plantations 2 ouvriers
         final ImageIcon iconparcelle = new ImageIcon(url_parcelle),
                 iconpatate1 = new ImageIcon(url_patate1),
@@ -55,14 +64,24 @@ public class Plateau {
                 iconbanane1 = new ImageIcon(url_banane1),
                 iconbambou1 = new ImageIcon(url_bambou1),
                 iconharicot1 = new ImageIcon(url_haricot1),
-                icontest = new ImageIcon(url_test);
+                icontest = new ImageIcon(url_test),
+                iconcanalhori = new ImageIcon(url_canalhori),
+                iconcanalverti = new ImageIcon(url_canalverti);
 
 
 
         //  panel.setLayout(new GridLayout(6, 8));
         for (int i = 0; i < tabParcelleModele.length; i++) {
-            for (int j = 0; j < tabParcelleModele[0].length; j++) {
 
+            for (int j = 0; j < tabParcelleModele[0].length; j++) {
+             /*  if (j % 2 == 0) {
+
+                    final JLabel thumbc = new JLabel();
+                    thumbc.setPreferredSize(new Dimension(10, 100));
+                    thumbc.setIcon(iconcanalverti);
+                    panel.add(thumbc);
+                }
+*/
 
 //creation label
                 final JLabel thumb = new JLabel();
@@ -85,7 +104,7 @@ public class Plateau {
 
                 });
 //ajout au panel
-                panel.add(thumb);//utiliser un gridpanel a faire
+                panel.add(thumb,i,j);//utiliser un gridpanel a faire
 //creation de l'objet  Parcelle
                 Parcelle parcelle = new Parcelle(0, false, false, Parcelle.typeChamps.vide);
 //ajout aux tableaux
