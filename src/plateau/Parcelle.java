@@ -7,7 +7,7 @@
 package plateau;
 
 /**
- * Created by Yannis Cipriani on 16/03/2015.
+ * Created by Yannis Cipriani on 06/03/2015.
  */
 public class Parcelle {
     int nbouvrier=0;
