@@ -17,9 +17,14 @@ import java.net.URL;
  * Created by Yannis Cipriani on 16/03/2015.
  */
 public class Plateau {
-    private JLabel[][] tabParcelleGUI = new JLabel[6][8];   //tableau image
-    private Parcelle[][] tabParcelleModele = new Parcelle[6][8]; //tableau objet
-    private JPanel panel = new JPanel(new GridLayout(10, 13));
+
+    // private JLabel[][] tabParcelleGUI = new JLabel[6][8];   //tableau image
+    // private Parcelle[][] tabParcelleModele = new Parcelle[6][8]; //tableau objet
+    private JLabel[][] tabParcelleGUI = new JLabel[10][13];   //tableau image
+    private Parcelle[][] tabParcelleModele = new Parcelle[10][13]; //tableau objet
+            /* On ajoute un gridbagLauout au panel */
+    //private JPanel panel = new JPanel(new GridLayout(10, 13));
+    private JPanel panel = new JPanel(new GridBagLayout());
 
     public Plateau() {
 
@@ -31,6 +36,13 @@ public class Plateau {
     }
 
     public void initialisation() {
+       //   panel.setSize(new Dimension(850, 640));
+        panel.setSize(new Dimension(600, 500));
+            /* Le gridBagConstraints va définir la position et la taille des éléments */
+      //  GridBagConstraints gc = new GridBagConstraints();
+       // gc.fill=GridBagConstraints.BOTH;
+
+
 
         //pour la performance , on instancie seulement  au début , pour ne pas devoir le faire plus tard dans le listener, gain
         String cheminparcelle = "/ressource/images/parcelle.png";
@@ -74,27 +86,39 @@ public class Plateau {
         for (int i = 0; i < 10; i++) {
 
             for (int j = 0; j < 13; j++) {
+                GridBagConstraints gc = new GridBagConstraints();
+
                 final JLabel thumb = new JLabel();
                 if ((i == 0 || i == 3 || i == 6 || i == 9) && (j == 0 || j == 3 || j == 6 || j == 9 || j == 12)) {
-                    System.out.println("c est une intersection i : " + i + " j : " + j);
-                    thumb.setPreferredSize(new Dimension(9, 9));
                     thumb.setIcon(iconintersection);
+                    gc.gridx=j;
+                    gc.gridy=i;
+               //     panel.add(thumb, gc);
                 } else {
-                    System.out.println("ce n est pas une intersection i : " + i + " j : " + j);
                     if ((i == 0 || i == 3 || i == 6 || i == 9)) {
-                        System.out.println("canal hori i : " + i + " j : " + j);
-                        thumb.setPreferredSize(new Dimension(49, 10));
-                        thumb.setIcon(iconcanalhori);
+                        if (j == 1 || j ==4 || j ==7|| j ==10 || j ==13) {
+                            thumb.setPreferredSize(new Dimension(50, 10));
+                            thumb.setIcon(iconcanalhori);
+                            gc.gridwidth = 2;
+                            gc.fill = GridBagConstraints.HORIZONTAL;
+                            gc.gridx = j;
+                            gc.gridy = i;
+                     //       panel.add(thumb, gc);
+                        }
                     } else if ((j == 0 || j == 3 || j == 6 || j == 9 || j == 12)) {
-                        System.out.println("canal verti i : " + i + " j : " + j);
-                        thumb.setPreferredSize(new Dimension(10, 49));
-                        thumb.setIcon(iconcanalverti);
+                        if (i == 1 || i ==4 || i ==7|| i ==10) {
+                            thumb.setIcon(iconcanalverti);
 
+                            gc.gridheight = 2;
+                         //   gc.fill = GridBagConstraints.VERTICAL;
+                            gc.gridx = j;
+                            gc.gridy = i;
+                       //     panel.add(thumb, gc);
+                        }
                     } else {
-                        System.out.println("parcelle i : " + i + " j : " + j);
-//creation label
-                        thumb.setPreferredSize(new Dimension(100, 100));
-//affectation image au label par défaut sur parcelle
+                        //    System.out.println("parcelle i : " + i + " j : " + j);
+
+                        thumb.setPreferredSize(new Dimension(50, 50));
                         thumb.setIcon(iconparcelle);
 //gestion listener pour le label
                         thumb.addMouseListener(new MouseAdapter() {
@@ -111,19 +135,21 @@ public class Plateau {
 
                         });
 //ajout au panel
-                      //  panel.add(thumb, i, j);//utiliser un gridpanel a faire
+                        gc.gridx=j;
+                        gc.gridy=i;
+                     //   panel.add(thumb, gc);
                         //creation de l'objet  Parcelle
-                        Parcelle parcelle = new Parcelle(0, false, false, Parcelle.typeChamps.vide);
+                   //     Parcelle parcelle = new Parcelle(0, false, false, Parcelle.typeChamps.vide);
 //ajout aux tableaux
-//                tabParcelleGUI[m][n] = thumb;
-                        //      tabParcelleModele[m][n] = parcelle;
+                   //     tabParcelleGUI[i][j] = thumb;
+                   //     tabParcelleModele[i][j] = parcelle;
 
                     }
 
 
                 }
 
-                panel.add(thumb, i, j);
+                panel.add(thumb, gc);
             }
         }
 
@@ -131,11 +157,13 @@ public class Plateau {
 
 
     public void creationFenetre() {
-        panel.setPreferredSize(new Dimension(850, 640));
+
 
         JFrame fenetre = new JFrame();
         fenetre.setTitle("Santiago");
-    //    fenetre.setSize(new Dimension(900,800));
+        fenetre.setPreferredSize(new Dimension(1000, 900));
+       // fenetre.add(panel);
+
         fenetre.setContentPane(panel);
         fenetre.pack();
         fenetre.setLocationRelativeTo(null);
