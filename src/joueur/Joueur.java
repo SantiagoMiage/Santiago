@@ -9,6 +9,11 @@ public class Joueur {
     private int argent;
     private int score;
 
+    public Joueur(String pseudo, int argent){
+        this.pseudo=pseudo;
+        this.argent=argent;
+        this.score = 0;
+    }
 
     public String getPseudo() {
         return pseudo;
