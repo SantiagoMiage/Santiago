@@ -77,30 +77,22 @@ public class Plateau {
                 final JLabel thumb = new JLabel();
                 if ((i == 0 || i == 3 || i == 6 || i == 9) && (j == 0 || j == 3 || j == 6 || j == 9 || j == 12)) {
                     System.out.println("c est une intersection i : " + i + " j : " + j);
-
-                    thumb.setPreferredSize(new Dimension(10, 10));
+                    thumb.setPreferredSize(new Dimension(9, 9));
                     thumb.setIcon(iconintersection);
-                  //  panel.add(thumb, i, j);
                 } else {
-                   // final JLabel thumbc = new JLabel();
                     System.out.println("ce n est pas une intersection i : " + i + " j : " + j);
                     if ((i == 0 || i == 3 || i == 6 || i == 9)) {
                         System.out.println("canal hori i : " + i + " j : " + j);
-
-                        thumb.setPreferredSize(new Dimension(50, 10));
+                        thumb.setPreferredSize(new Dimension(49, 10));
                         thumb.setIcon(iconcanalhori);
-                      //  panel.add(thumb, i, j);
                     } else if ((j == 0 || j == 3 || j == 6 || j == 9 || j == 12)) {
                         System.out.println("canal verti i : " + i + " j : " + j);
-                       // final JLabel thumbcc = new JLabel();
-                        thumb.setPreferredSize(new Dimension(10, 50));
+                        thumb.setPreferredSize(new Dimension(10, 49));
                         thumb.setIcon(iconcanalverti);
-                       // panel.add(thumb, i, j);
 
                     } else {
                         System.out.println("parcelle i : " + i + " j : " + j);
 //creation label
-                     //   final JLabel thumb = new JLabel();
                         thumb.setPreferredSize(new Dimension(100, 100));
 //affectation image au label par défaut sur parcelle
                         thumb.setIcon(iconparcelle);
@@ -142,6 +134,8 @@ public class Plateau {
         panel.setPreferredSize(new Dimension(850, 640));
 
         JFrame fenetre = new JFrame();
+        fenetre.setTitle("Santiago");
+    //    fenetre.setSize(new Dimension(900,800));
         fenetre.setContentPane(panel);
         fenetre.pack();
         fenetre.setLocationRelativeTo(null);
