@@ -8,7 +8,7 @@ public class Intersection {
     int i;
     int j;
 
-    public Intersection(int j, int i) {
+    public Intersection(int i, int j) {
         this.j = j;
         this.i = i;
     }

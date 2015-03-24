@@ -12,16 +12,21 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URL;
+import java.util.ArrayList;
 
 /**
  * Created by Yannis Cipriani on 16/03/2015.
  */
 public class Plateau {
 
-
-    private JLabel[][] tabParcelleGUI = new JLabel[10][13];   //tableau image
-    private Parcelle[][] tabParcelleModele = new Parcelle[10][13]; //tableau objet
-
+    //Tableaux relatifs aux Parcelles
+    //remplacer les tableaux par des listes
+    ArrayList<JLabel> ListParcelleGUI = new  ArrayList<JLabel>();
+    ArrayList<Parcelle> ListParcelleModele = new  ArrayList<Parcelle>();
+  //  private JLabel[][] tabParcelleGUI = new JLabel[10][13];   //tableau image
+ //   private Parcelle[][] tabParcelleObjet = new Parcelle[10][13]; //tableau objet
+    //Tableau relatis aux Intersections
+    ArrayList<Intersection> ListIntersect = new  ArrayList<Intersection>();
 
     private JPanel panel = new JPanel(new GridBagLayout());
 
@@ -91,11 +96,10 @@ public class Plateau {
                     thumb.setIcon(iconintersection);
                     gc.gridx=j;
                     gc.gridy=i;
-                    //creation de l'objet  Parcelle
-                    //Parcelle parcelle = new Parcelle(0, false, false, Parcelle.typeChamps.vide);
-                    //ajout aux tableaux
-                    //tabParcelleGUI[i][j] = thumb;
-                    //tabParcelleModele[i][j] = parcelle;
+                    //creation de l'objet  Intersection
+                    Intersection inter = new Intersection(i,j);
+                    //ajout au tableau d'intersection
+                    ListIntersect.add(inter);
                 } else {
                     if ((i == 0 || i == 3 || i == 6 || i == 9)) {
                         //si canal horizontal
@@ -163,8 +167,8 @@ public class Plateau {
                         //creation de l'objet  Parcelle
                         Parcelle parcelle = new Parcelle(0, false, false, Parcelle.typeChamps.vide);
                         //ajout aux tableaux
-                        tabParcelleGUI[i][j] = thumb;
-                        tabParcelleModele[i][j] = parcelle;
+                        ListParcelleGUI.add(thumb);
+                        ListParcelleModele.add(parcelle);
                     }
                 }
                 panel.add(thumb, gc);
