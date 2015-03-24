@@ -26,7 +26,7 @@ public Parcelle(int nbouvrier, boolean irrigué, boolean secheresse, typeChamps 
 }            
             
   public enum typeChamps {
-  patate, piment, banane, bambou, haricot, vide;
+  patate, piment, banane, bambou, haricot, vide, test;
 }
 
 
