@@ -33,4 +33,8 @@ public class PileParcelle {
     public Parcelle getParcelle(){
         return this.pileParcelle.get(0);
     }
+
+    public int getNbParcelle(){
+        return this.pileParcelle.size();
+    }
 }
