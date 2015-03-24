@@ -42,6 +42,12 @@ public class MaitreDuJeu {
 
     //Créer les différentes pile de parcelles pour la partie
     private void initialisationPileParcelles() {
+
+        //on init les piles parcelles
+        for(int i = 0; i<joueurs.size(); i++){
+            pileParcelles.add(new PileParcelle());
+        }
+
         int nbPile = pileParcelles.size();
         long seed = System.nanoTime(); //Pour notre randoum
         ArrayList<Parcelle> parcelles = new ArrayList<Parcelle>(45);
@@ -55,7 +61,6 @@ public class MaitreDuJeu {
         if(nbPile == 4){
             parcelles.remove(0);
         }
-
         while(!parcelles.isEmpty()){
             for(int i = 0; i<nbPile;  i++){
                 pileParcelles.get(i).AjoutParcelle(parcelles.get(0));
