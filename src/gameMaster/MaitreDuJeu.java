@@ -19,12 +19,19 @@ public class MaitreDuJeu {
     private ArrayList<Joueur> joueurs; //la liste des joueurs dans la partie
     private ArrayList<PileParcelle> pileParcelles;
 
+    public int getNbTours() {
+        return nbTours;
+    }
+
+    public ArrayList<PileParcelle> getPileParcelles() {
+        return pileParcelles;
+    }
 
     public MaitreDuJeu(ArrayList<Joueur> joueurs){
         this.nbTours = 0;
         this.plateau = new Plateau();
         this.plateau.initialisation();
-        this.plateau.creationFenetre();
+        //this.plateau.creationFenetre();
         this.joueurs = joueurs;
         //créer autant de pile de parcelle qu'il y a de joueurs
         this.pileParcelles = new ArrayList<PileParcelle>(joueurs.size());
