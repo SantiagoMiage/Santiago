@@ -17,9 +17,13 @@ import java.net.URL;
  * Created by Yannis Cipriani on 16/03/2015.
  */
 public class Plateau {
-    private JLabel[][] tabParcelleGUI = new JLabel[6][8];   //tableau image
-    private Parcelle[][] tabParcelleModele = new Parcelle[6][8]; //tableau objet
-    private JPanel panel = new JPanel(new GridLayout(10, 13));
+
+
+    private JLabel[][] tabParcelleGUI = new JLabel[10][13];   //tableau image
+    private Parcelle[][] tabParcelleModele = new Parcelle[10][13]; //tableau objet
+
+
+    private JPanel panel = new JPanel(new GridBagLayout());
 
     public Plateau() {
 
@@ -31,6 +35,8 @@ public class Plateau {
     }
 
     public void initialisation() {
+
+        panel.setSize(new Dimension(600, 500));
 
         //pour la performance , on instancie seulement  au début , pour ne pas devoir le faire plus tard dans le listener, gain
         String cheminparcelle = "/ressource/images/parcelle.png";
@@ -47,13 +53,15 @@ public class Plateau {
         URL url_haricot1 = this.getClass().getResource(cheminharicot1);
         String chemintest = "/ressource/images/test.png";
         URL url_test = this.getClass().getResource(chemintest);
-
         //Les canals
         String chemincanalhori = "/ressource/images/canalhori.png";
         URL url_canalhori = this.getClass().getResource(chemincanalhori);
+        String chemincanalhorirrigue = "/ressource/images/canalhorirrigue.png";
+        URL url_canalhorirrigue = this.getClass().getResource(chemincanalhorirrigue);
         String chemincanalverti = "/ressource/images/canalverti.png";
         URL url_canalverti = this.getClass().getResource(chemincanalverti);
-
+        String chemincanalvertirrigue = "/ressource/images/canalvertirrigue.png";
+        URL url_canalvertirrigue = this.getClass().getResource(chemincanalvertirrigue);
         //intersection
         String cheminintersection = "/ressource/images/intersection.png";
         URL url_intersection = this.getClass().getResource(cheminintersection);
@@ -67,44 +75,75 @@ public class Plateau {
                 iconharicot1 = new ImageIcon(url_haricot1),
                 icontest = new ImageIcon(url_test),
                 iconcanalhori = new ImageIcon(url_canalhori),
+                iconcanalhorirrigue = new ImageIcon(url_canalhorirrigue),
                 iconcanalverti = new ImageIcon(url_canalverti),
+                iconcanalvertirrigue = new ImageIcon(url_canalvertirrigue),
                 iconintersection = new ImageIcon(url_intersection);
-
 
         for (int i = 0; i < 10; i++) {
 
             for (int j = 0; j < 13; j++) {
+                GridBagConstraints gc = new GridBagConstraints();
+
                 final JLabel thumb = new JLabel();
+                //si intersection
                 if ((i == 0 || i == 3 || i == 6 || i == 9) && (j == 0 || j == 3 || j == 6 || j == 9 || j == 12)) {
-                    System.out.println("c est une intersection i : " + i + " j : " + j);
-
-                    thumb.setPreferredSize(new Dimension(10, 10));
                     thumb.setIcon(iconintersection);
-                  //  panel.add(thumb, i, j);
+                    gc.gridx=j;
+                    gc.gridy=i;
+                    //creation de l'objet  Parcelle
+                    //Parcelle parcelle = new Parcelle(0, false, false, Parcelle.typeChamps.vide);
+                    //ajout aux tableaux
+                    //tabParcelleGUI[i][j] = thumb;
+                    //tabParcelleModele[i][j] = parcelle;
                 } else {
-                   // final JLabel thumbc = new JLabel();
-                    System.out.println("ce n est pas une intersection i : " + i + " j : " + j);
                     if ((i == 0 || i == 3 || i == 6 || i == 9)) {
-                        System.out.println("canal hori i : " + i + " j : " + j);
+                        //si canal horizontal
+                        if (j == 1 || j ==4 || j ==7|| j ==10 || j ==13) {
+                            thumb.addMouseListener(new MouseAdapter() {
+                                @Override
+                                public void mouseClicked(MouseEvent e) {
+                                    //tester le changement d'icone pour canal irrigué
+                                    if (thumb.getIcon() == iconcanalhori) {
+                                        thumb.setIcon(iconcanalhorirrigue);
+                                    } else {
+                                        thumb.setIcon(iconcanalhori);
+                                    }
+                                }
 
-                        thumb.setPreferredSize(new Dimension(50, 10));
-                        thumb.setIcon(iconcanalhori);
-                      //  panel.add(thumb, i, j);
+                            });
+                            thumb.setIcon(iconcanalhori);
+                            gc.gridwidth = 2;
+                            gc.fill = GridBagConstraints.HORIZONTAL;
+                            gc.gridx = j;
+                            gc.gridy = i;
+                        }
                     } else if ((j == 0 || j == 3 || j == 6 || j == 9 || j == 12)) {
-                        System.out.println("canal verti i : " + i + " j : " + j);
-                       // final JLabel thumbcc = new JLabel();
-                        thumb.setPreferredSize(new Dimension(10, 50));
-                        thumb.setIcon(iconcanalverti);
-                       // panel.add(thumb, i, j);
+                        //si canal vertical
+                        if (i == 1 || i ==4 || i ==7|| i ==10) {
+                            thumb.setIcon(iconcanalverti);
+                            thumb.addMouseListener(new MouseAdapter() {
+                                @Override
+                                public void mouseClicked(MouseEvent e) {
+                                    //tester le changement d'icone pour canal irrigué
+                                    if (thumb.getIcon() == iconcanalverti) {
+                                        thumb.setIcon(iconcanalvertirrigue);
+                                    } else {
+                                        thumb.setIcon(iconcanalverti);
+                                    }
+                                }
 
+                            });
+                            gc.gridheight = 2;
+                            gc.fill = GridBagConstraints.VERTICAL;
+                            gc.gridx = j;
+                            gc.gridy = i;
+                        }
                     } else {
-                        System.out.println("parcelle i : " + i + " j : " + j);
-//creation label
-                     //   final JLabel thumb = new JLabel();
-                        thumb.setPreferredSize(new Dimension(100, 100));
-//affectation image au label par défaut sur parcelle
+                        //si Parcelle
+                        thumb.setPreferredSize(new Dimension(50, 50));
                         thumb.setIcon(iconparcelle);
-//gestion listener pour le label
+                        //gestion listener pour le label
                         thumb.addMouseListener(new MouseAdapter() {
                             @Override
                             public void mouseClicked(MouseEvent e) {
@@ -118,30 +157,28 @@ public class Plateau {
                             }
 
                         });
-//ajout au panel
-                      //  panel.add(thumb, i, j);//utiliser un gridpanel a faire
+                        //ajout au panel
+                        gc.gridx=j;
+                        gc.gridy=i;
                         //creation de l'objet  Parcelle
                         Parcelle parcelle = new Parcelle(0, false, false, Parcelle.typeChamps.vide);
-//ajout aux tableaux
-//                tabParcelleGUI[m][n] = thumb;
-                        //      tabParcelleModele[m][n] = parcelle;
-
+                        //ajout aux tableaux
+                        tabParcelleGUI[i][j] = thumb;
+                        tabParcelleModele[i][j] = parcelle;
                     }
-
-
                 }
-
-                panel.add(thumb, i, j);
+                panel.add(thumb, gc);
             }
         }
-
     }
 
 
     public void creationFenetre() {
-        panel.setPreferredSize(new Dimension(850, 640));
+
 
         JFrame fenetre = new JFrame();
+        fenetre.setTitle("Santiago");
+        fenetre.setPreferredSize(new Dimension(1000, 900));
         fenetre.setContentPane(panel);
         fenetre.pack();
         fenetre.setLocationRelativeTo(null);
