@@ -18,12 +18,11 @@ import java.net.URL;
  */
 public class Plateau {
 
-    // private JLabel[][] tabParcelleGUI = new JLabel[6][8];   //tableau image
-    // private Parcelle[][] tabParcelleModele = new Parcelle[6][8]; //tableau objet
+
     private JLabel[][] tabParcelleGUI = new JLabel[10][13];   //tableau image
     private Parcelle[][] tabParcelleModele = new Parcelle[10][13]; //tableau objet
-            /* On ajoute un gridbagLauout au panel */
-    //private JPanel panel = new JPanel(new GridLayout(10, 13));
+
+
     private JPanel panel = new JPanel(new GridBagLayout());
 
     public Plateau() {
@@ -36,13 +35,8 @@ public class Plateau {
     }
 
     public void initialisation() {
-       //   panel.setSize(new Dimension(850, 640));
+
         panel.setSize(new Dimension(600, 500));
-            /* Le gridBagConstraints va définir la position et la taille des éléments */
-      //  GridBagConstraints gc = new GridBagConstraints();
-       // gc.fill=GridBagConstraints.BOTH;
-
-
 
         //pour la performance , on instancie seulement  au début , pour ne pas devoir le faire plus tard dans le listener, gain
         String cheminparcelle = "/ressource/images/parcelle.png";
@@ -59,7 +53,6 @@ public class Plateau {
         URL url_haricot1 = this.getClass().getResource(cheminharicot1);
         String chemintest = "/ressource/images/test.png";
         URL url_test = this.getClass().getResource(chemintest);
-
         //Les canals
         String chemincanalhori = "/ressource/images/canalhori.png";
         URL url_canalhori = this.getClass().getResource(chemincanalhori);
@@ -93,12 +86,19 @@ public class Plateau {
                 GridBagConstraints gc = new GridBagConstraints();
 
                 final JLabel thumb = new JLabel();
+                //si intersection
                 if ((i == 0 || i == 3 || i == 6 || i == 9) && (j == 0 || j == 3 || j == 6 || j == 9 || j == 12)) {
                     thumb.setIcon(iconintersection);
                     gc.gridx=j;
                     gc.gridy=i;
+                    //creation de l'objet  Parcelle
+                    //Parcelle parcelle = new Parcelle(0, false, false, Parcelle.typeChamps.vide);
+                    //ajout aux tableaux
+                    //tabParcelleGUI[i][j] = thumb;
+                    //tabParcelleModele[i][j] = parcelle;
                 } else {
                     if ((i == 0 || i == 3 || i == 6 || i == 9)) {
+                        //si canal horizontal
                         if (j == 1 || j ==4 || j ==7|| j ==10 || j ==13) {
                             thumb.addMouseListener(new MouseAdapter() {
                                 @Override
@@ -119,6 +119,7 @@ public class Plateau {
                             gc.gridy = i;
                         }
                     } else if ((j == 0 || j == 3 || j == 6 || j == 9 || j == 12)) {
+                        //si canal vertical
                         if (i == 1 || i ==4 || i ==7|| i ==10) {
                             thumb.setIcon(iconcanalverti);
                             thumb.addMouseListener(new MouseAdapter() {
@@ -139,9 +140,10 @@ public class Plateau {
                             gc.gridy = i;
                         }
                     } else {
+                        //si Parcelle
                         thumb.setPreferredSize(new Dimension(50, 50));
                         thumb.setIcon(iconparcelle);
-//gestion listener pour le label
+                        //gestion listener pour le label
                         thumb.addMouseListener(new MouseAdapter() {
                             @Override
                             public void mouseClicked(MouseEvent e) {
@@ -155,12 +157,12 @@ public class Plateau {
                             }
 
                         });
-//ajout au panel
+                        //ajout au panel
                         gc.gridx=j;
                         gc.gridy=i;
-//creation de l'objet  Parcelle
+                        //creation de l'objet  Parcelle
                         Parcelle parcelle = new Parcelle(0, false, false, Parcelle.typeChamps.vide);
-//ajout aux tableaux
+                        //ajout aux tableaux
                         tabParcelleGUI[i][j] = thumb;
                         tabParcelleModele[i][j] = parcelle;
                     }
