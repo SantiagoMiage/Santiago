@@ -9,8 +9,8 @@ public class PileParcelle {
 
     private ArrayList<Parcelle> pileParcelle = new ArrayList<Parcelle>(11);
 
-    public PileParcelle(ArrayList<Parcelle> pileParcelle) {
-        pileParcelle = pileParcelle;
+    public PileParcelle() {
+        pileParcelle = new ArrayList<Parcelle>(11);
     }
 
     //Ajout d'une parcelle a la pile de parcelle
