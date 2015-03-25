@@ -146,10 +146,7 @@ public class Plateau {
                             gc.gridy = i;
                         }
                     } else {//si Parcelle
-                        //Calcul pour remplir correctement le tableau 8*6 de Parcelle
-                        if(compteurJparcelle<8){
 
-                        }
 
                         //
                         thumb.setPreferredSize(new Dimension(50, 50));
@@ -158,11 +155,17 @@ public class Plateau {
                         gc.gridx = j;
                         gc.gridy = i;
                         //creation de l'objet  Parcelle
-                        Parcelle parcelle = new Parcelle(0, false, false, Parcelle.typeChamps.vide);
+                        Parcelle parcelle = new Parcelle(0,0, false, false, Parcelle.typeChamps.vide,compteurIparcelle,compteurJparcelle);
                         //ajout aux tableaux
                         ListParcelleGUI.add(thumb);
                         ListParcelleModele.add(parcelle);
-
+                        //Calcul pour remplir correctement le tableau 8*6 de Parcelle
+                        if(compteurJparcelle<7){
+                            compteurJparcelle++;
+                        }else{
+                            compteurJparcelle=0;
+                            compteurIparcelle++;
+                        }
                         //gestion listener pour le label
                         thumb.addMouseListener(new MouseAdapter() {
                             @Override

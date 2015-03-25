@@ -11,42 +11,53 @@ package plateau;
  */
 public class Parcelle {
     int nbouvrier;
-    int nbouvrieractif=0;
-    boolean irrigué=false;
-    boolean secheresse=false;
-    typeChamps champs=typeChamps.vide;
+    int nbouvrieractif = 0;
+    boolean irrigué = false;
+    boolean secheresse = false;
+    typeChamps champs = typeChamps.vide;
+    int numligne;
+    int numcolonne;
 
 
+    public Parcelle(int nbouvrier, boolean irrigué, boolean secheresse, typeChamps champs) {
+        this.nbouvrier = nbouvrier;
+        this.irrigué = irrigué;
+        this.secheresse = secheresse;
+        this.champs = champs;
 
-public Parcelle(int nbouvrier, boolean irrigué, boolean secheresse, typeChamps champs) {
-    this.nbouvrier = nbouvrier;
-    this.irrigué = irrigué;
-    this.secheresse = secheresse;
-    this.champs = champs;
+    }
 
-}            
-            
-  public enum typeChamps {
-  patate, piment, banane, bambou, haricot, vide, test;
-}
-
+    public Parcelle(int nbouvrier, int nbouvrieractif, boolean irrigué, boolean secheresse, typeChamps champs, int numligne, int numcolonne) {
+        this.nbouvrier = nbouvrier;
+        this.nbouvrieractif = nbouvrieractif;
+        this.irrigué = irrigué;
+        this.secheresse = secheresse;
+        this.champs = champs;
+        this.numligne = numligne;
+        this.numcolonne = numcolonne;
+    }
 
     @Override
     public String toString() {
         return "Parcelle{" +
                 "nbouvrier=" + nbouvrier +
+                ", nbouvrieractif=" + nbouvrieractif +
                 ", irrigué=" + irrigué +
                 ", secheresse=" + secheresse +
                 ", champs=" + champs +
+                ", numligne=" + numligne +
+                ", numcolonne=" + numcolonne +
                 '}';
+    }
+
+    public enum typeChamps {
+        patate, piment, banane, bambou, haricot, vide, test;
     }
 
 //Fonction d ajout ouvrier
 
 
-
 //
-
 
 
 }
