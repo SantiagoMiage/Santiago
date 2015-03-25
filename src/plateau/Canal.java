@@ -6,18 +6,15 @@ package plateau;
 public class Canal {
 
     boolean irrigue=false;
-    Intersection debut;
-    Intersection fin;
+   // Intersection debut;
+   // Intersection fin;
 
-    public Canal(Intersection debut, Intersection fin) {
-        this.debut = debut;
-        this.fin = fin;
-    }
+
 
     public Canal(boolean irrigue, Intersection debut, Intersection fin) {
         this.irrigue = irrigue;
-        this.debut = debut;
-        this.fin = fin;
+    //    this.debut = debut;
+    //    this.fin = fin;
     }
 
     public boolean isIrrigue() {
@@ -28,7 +25,7 @@ public class Canal {
         this.irrigue = irrigue;
     }
 
-    public Intersection getDebut() {
+ /*   public Intersection getDebut() {
         return debut;
     }
 
@@ -43,13 +40,10 @@ public class Canal {
     public void setFin(Intersection fin) {
         this.fin = fin;
     }
-
+*/
     @Override
     public String toString() {
         return "Canal{" +
-                "irrigue=" + irrigue +
-                ", debut=" + debut.toString() +
-                ", fin=" + fin.toString() +
-                '}';
+                "irrigue=" + irrigue;
     }
 }

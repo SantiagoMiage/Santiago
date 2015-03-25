@@ -20,14 +20,12 @@ import java.util.ArrayList;
 public class Plateau {
 
     //Tableaux relatifs aux Parcelles
-    //remplacer les tableaux par des listes
-    ArrayList<JLabel> ListParcelleGUI = new  ArrayList<JLabel>();
-    ArrayList<Parcelle> ListParcelleModele = new  ArrayList<Parcelle>();
-  //  private JLabel[][] tabParcelleGUI = new JLabel[10][13];   //tableau image
- //   private Parcelle[][] tabParcelleObjet = new Parcelle[10][13]; //tableau objet
-    //Tableau relatis aux Intersections
-    ArrayList<Intersection> ListIntersect = new  ArrayList<Intersection>();
-
+    ArrayList<JLabel> ListParcelleGUI = new ArrayList<JLabel>();
+    ArrayList<Parcelle> ListParcelleModele = new ArrayList<Parcelle>();
+    //Tableaux relatifs aux Intersections
+    ArrayList<Intersection> ListIntersect = new ArrayList<Intersection>();
+    private JLabel[][] tabParcelleGUI = new JLabel[8][6];   //tableau image
+    private Parcelle[][] tabParcelleObjet = new Parcelle[8][6]; //tableau objet
     private JPanel panel = new JPanel(new GridBagLayout());
 
     public Plateau() {
@@ -85,6 +83,8 @@ public class Plateau {
                 iconcanalvertirrigue = new ImageIcon(url_canalvertirrigue),
                 iconintersection = new ImageIcon(url_intersection);
 
+        int compteurIparcelle = 0;
+        int compteurJparcelle = 0;
         for (int i = 0; i < 10; i++) {
 
             for (int j = 0; j < 13; j++) {
@@ -92,18 +92,19 @@ public class Plateau {
 
                 final JLabel thumb = new JLabel();
                 //si intersection
-                if ((i == 0 || i == 3 || i == 6 || i == 9) && (j == 0 || j == 3 || j == 6 || j == 9 || j == 12)) {
+                if (testIntersection(i, j)) {
                     thumb.setIcon(iconintersection);
-                    gc.gridx=j;
-                    gc.gridy=i;
+                    gc.gridx = j;
+                    gc.gridy = i;
                     //creation de l'objet  Intersection
-                    Intersection inter = new Intersection(i,j);
+                    Intersection inter = new Intersection(i, j);
                     //ajout au tableau d'intersection
                     ListIntersect.add(inter);
                 } else {
+                    //si canal horizontal
+                    //  if (testCanalHori(i, j)) {
                     if ((i == 0 || i == 3 || i == 6 || i == 9)) {
-                        //si canal horizontal
-                        if (j == 1 || j ==4 || j ==7|| j ==10 || j ==13) {
+                        if (j == 1 || j == 4 || j == 7 || j == 10 || j == 13) {
                             thumb.addMouseListener(new MouseAdapter() {
                                 @Override
                                 public void mouseClicked(MouseEvent e) {
@@ -124,11 +125,12 @@ public class Plateau {
                         }
                     } else if ((j == 0 || j == 3 || j == 6 || j == 9 || j == 12)) {
                         //si canal vertical
-                        if (i == 1 || i ==4 || i ==7|| i ==10) {
+                        if (i == 1 || i == 4 || i == 7 || i == 10) {
                             thumb.setIcon(iconcanalverti);
                             thumb.addMouseListener(new MouseAdapter() {
                                 @Override
                                 public void mouseClicked(MouseEvent e) {
+
                                     //tester le changement d'icone pour canal irrigué
                                     if (thumb.getIcon() == iconcanalverti) {
                                         thumb.setIcon(iconcanalvertirrigue);
@@ -143,32 +145,45 @@ public class Plateau {
                             gc.gridx = j;
                             gc.gridy = i;
                         }
-                    } else {
-                        //si Parcelle
+                    } else {//si Parcelle
+                        //Calcul pour remplir correctement le tableau 8*6 de Parcelle
+                        if(compteurJparcelle<8){
+
+                        }
+
+                        //
                         thumb.setPreferredSize(new Dimension(50, 50));
                         thumb.setIcon(iconparcelle);
-                        //gestion listener pour le label
-                        thumb.addMouseListener(new MouseAdapter() {
-                            @Override
-                            public void mouseClicked(MouseEvent e) {
-                                //tester le changement d'icone
-
-                                if (thumb.getIcon() == icontest) {
-                                    thumb.setIcon(iconpatate1);
-                                } else {
-                                    thumb.setIcon(icontest);
-                                }
-                            }
-
-                        });
                         //ajout au panel
-                        gc.gridx=j;
-                        gc.gridy=i;
+                        gc.gridx = j;
+                        gc.gridy = i;
                         //creation de l'objet  Parcelle
                         Parcelle parcelle = new Parcelle(0, false, false, Parcelle.typeChamps.vide);
                         //ajout aux tableaux
                         ListParcelleGUI.add(thumb);
                         ListParcelleModele.add(parcelle);
+
+                        //gestion listener pour le label
+                        thumb.addMouseListener(new MouseAdapter() {
+                            @Override
+                            public void mouseClicked(MouseEvent e) {
+                                //on recupere la position de la parcelle en question dans la liste des GUI
+                                int indexParcelle = ListParcelleGUI.indexOf(thumb);
+
+                                //on travaille sur l'objet Parcelle se trouvant a la même position dans ListParcelleModele
+                                //tester le changement d'icone
+                                if (thumb.getIcon() == icontest) {
+                                    thumb.setIcon(iconpatate1);
+                                    ListParcelleModele.get(indexParcelle).champs = Parcelle.typeChamps.patate;
+                                } else {
+                                    thumb.setIcon(icontest);
+                                    ListParcelleModele.get(indexParcelle).champs = Parcelle.typeChamps.test;
+                                }
+
+                                System.out.println(ListParcelleModele.get(indexParcelle).toString());
+                            }
+
+                        });
                     }
                 }
                 panel.add(thumb, gc);
@@ -177,6 +192,26 @@ public class Plateau {
     }
 
 
+    //Les différents test
+    public boolean testIntersection(int i, int j) {
+        if ((i == 0 || i == 3 || i == 6 || i == 9) && (j == 0 || j == 3 || j == 6 || j == 9 || j == 12)) {
+            return true;
+        } else
+            return false;
+    }
+
+    public boolean testCanalHori(int i, int j) {
+        if (i == 0 || i == 3 || i == 6 || i == 9) {
+            if (j == 1 || j == 4 || j == 7 || j == 10 || j == 13) {
+                return true;
+            }
+            return false;
+        } else
+            return false;
+    }
+
+
+    //Creation et affichage du plateau
     public void creationFenetre() {
 
 

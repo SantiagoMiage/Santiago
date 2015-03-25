@@ -10,7 +10,8 @@ package plateau;
  * Created by Yannis Cipriani on 06/03/2015.
  */
 public class Parcelle {
-    int nbouvrier=0;
+    int nbouvrier;
+    int nbouvrieractif=0;
     boolean irrigué=false;
     boolean secheresse=false;
     typeChamps champs=typeChamps.vide;
@@ -30,7 +31,22 @@ public Parcelle(int nbouvrier, boolean irrigué, boolean secheresse, typeChamps 
 }
 
 
+    @Override
+    public String toString() {
+        return "Parcelle{" +
+                "nbouvrier=" + nbouvrier +
+                ", irrigué=" + irrigué +
+                ", secheresse=" + secheresse +
+                ", champs=" + champs +
+                '}';
+    }
 
-  
-  
+//Fonction d ajout ouvrier
+
+
+
+//
+
+
+
 }
