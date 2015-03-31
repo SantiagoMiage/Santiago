@@ -22,10 +22,16 @@ public class Plateau {
     //Tableaux relatifs aux Parcelles
     ArrayList<JLabel> ListParcelleGUI = new ArrayList<JLabel>();
     ArrayList<Parcelle> ListParcelleModele = new ArrayList<Parcelle>();
+    //Tableaux relatifs aux Canaux
+    ArrayList<JLabel> ListCanauxGUI = new ArrayList<JLabel>();
+    ArrayList<Canal> ListCanauxModele = new ArrayList<Canal>();
     //Tableaux relatifs aux Intersections
     ArrayList<Intersection> ListIntersect = new ArrayList<Intersection>();
+
+    /*
     private JLabel[][] tabParcelleGUI = new JLabel[8][6];   //tableau image
     private Parcelle[][] tabParcelleObjet = new Parcelle[8][6]; //tableau objet
+    */
     private JPanel panel = new JPanel(new GridBagLayout());
 
     public Plateau() {
@@ -83,8 +89,22 @@ public class Plateau {
                 iconcanalvertirrigue = new ImageIcon(url_canalvertirrigue),
                 iconintersection = new ImageIcon(url_intersection);
 
+
+        //compteur pour enregistrer les coordonées des Parcelles
         int compteurIparcelle = 0;
         int compteurJparcelle = 0;
+        //compteur pour enregistrer les coordonées des canaux HOrizontaux
+        int xdebH = 0;
+        int ydebH = 0;
+        int xfinH = 0;
+        int yfinH = 0;
+        //compteur pour enregistrer les coordonées des canaux Verticaux
+        int xdebV = 0;
+        int ydebV = 0;
+        int xfinV = 0;
+        int yfinV = 2;
+
+        //Construction du Plateau
         for (int i = 0; i < 10; i++) {
 
             for (int j = 0; j < 13; j++) {
@@ -101,13 +121,34 @@ public class Plateau {
                     //ajout au tableau d'intersection
                     ListIntersect.add(inter);
                 } else {
-                    //si canal horizontal
-                    //  if (testCanalHori(i, j)) {
-                    if ((i == 0 || i == 3 || i == 6 || i == 9)) {
-                        if (j == 1 || j == 4 || j == 7 || j == 10 || j == 13) {
+                    //si canal
+                    if (testCanal(i) || testCanaldeux(j)) {
+
+
+                        //si canal horizontal
+                        if (testCanalHori(j)) {
+
+                            //on ajoute 2 a xfin
+                            xfinH = xfinH + 2;
+                            if (xfinH > 8) {
+                                xdebH = 0;
+                                xfinH = 2;
+                                ydebH = ydebH + 2;
+                                yfinH = yfinH + 2;
+                            }
+
+                            //on creer le canal
+                            final Canal canal = new Canal(false, xdebH, ydebH, xfinH, yfinH);
+                            //on enregistre le canal dans la liste modele
+                            ListCanauxModele.add(canal);
+                            //on modifie les compteurs
+                            xdebH = xfinH;
+                            //on travaille dessus
+
                             thumb.addMouseListener(new MouseAdapter() {
                                 @Override
                                 public void mouseClicked(MouseEvent e) {
+                                    System.out.println(canal.toString());
                                     //tester le changement d'icone pour canal irrigué
                                     if (thumb.getIcon() == iconcanalhori) {
                                         thumb.setIcon(iconcanalhorirrigue);
@@ -118,19 +159,42 @@ public class Plateau {
 
                             });
                             thumb.setIcon(iconcanalhori);
+                            //on enregistre l'image du canal dans la liste GUI
+                            ListCanauxGUI.add(thumb);
                             gc.gridwidth = 2;
                             gc.fill = GridBagConstraints.HORIZONTAL;
                             gc.gridx = j;
                             gc.gridy = i;
                         }
-                    } else if ((j == 0 || j == 3 || j == 6 || j == 9 || j == 12)) {
+                        //  }  else if (testCanaldeux(j)) {
+
                         //si canal vertical
-                        if (i == 1 || i == 4 || i == 7 || i == 10) {
+                        if (testCanalVerti(i)) {
+
+
+                            //on creer le canal
+                            final Canal canal = new Canal(false, xdebV, ydebV, xfinV, yfinV);
+                            //on enregistre le canal dans la liste modele
+                            ListCanauxModele.add(canal);
+                            //on modifie les compteurs
+                            if (xdebV > 7) {
+                                xdebV = 0;
+                                xfinV = 0;
+                                ydebV = yfinV;
+                                yfinV = ydebV + 2;
+                            } else {//a chaque tour
+                                xdebV = xdebV + 2;
+                                xfinV = xdebV;
+                                yfinV = ydebV + 2;
+                            }
+
+                            //on travaille dessus
+
                             thumb.setIcon(iconcanalverti);
                             thumb.addMouseListener(new MouseAdapter() {
                                 @Override
                                 public void mouseClicked(MouseEvent e) {
-
+                                    System.out.println(canal.toString());
                                     //tester le changement d'icone pour canal irrigué
                                     if (thumb.getIcon() == iconcanalverti) {
                                         thumb.setIcon(iconcanalvertirrigue);
@@ -148,22 +212,21 @@ public class Plateau {
                     } else {//si Parcelle
 
 
-                        //
                         thumb.setPreferredSize(new Dimension(50, 50));
                         thumb.setIcon(iconparcelle);
                         //ajout au panel
                         gc.gridx = j;
                         gc.gridy = i;
                         //creation de l'objet  Parcelle
-                        Parcelle parcelle = new Parcelle(0,0, false, false, Parcelle.typeChamps.vide,compteurIparcelle,compteurJparcelle);
+                        Parcelle parcelle = new Parcelle(0, 0, false, false, Parcelle.typeChamps.vide, compteurIparcelle, compteurJparcelle);
                         //ajout aux tableaux
                         ListParcelleGUI.add(thumb);
                         ListParcelleModele.add(parcelle);
                         //Calcul pour remplir correctement le tableau 8*6 de Parcelle
-                        if(compteurJparcelle<7){
+                        if (compteurJparcelle < 7) {
                             compteurJparcelle++;
-                        }else{
-                            compteurJparcelle=0;
+                        } else {
+                            compteurJparcelle = 0;
                             compteurIparcelle++;
                         }
                         //gestion listener pour le label
@@ -195,7 +258,7 @@ public class Plateau {
     }
 
 
-    //Les différents test
+    //Les différents tests
     public boolean testIntersection(int i, int j) {
         if ((i == 0 || i == 3 || i == 6 || i == 9) && (j == 0 || j == 3 || j == 6 || j == 9 || j == 12)) {
             return true;
@@ -203,16 +266,45 @@ public class Plateau {
             return false;
     }
 
-    public boolean testCanalHori(int i, int j) {
+    public boolean testCanal(int i) {
         if (i == 0 || i == 3 || i == 6 || i == 9) {
-            if (j == 1 || j == 4 || j == 7 || j == 10 || j == 13) {
-                return true;
-            }
+            return true;
+        } else {
             return false;
-        } else
-            return false;
+        }
     }
 
+    public boolean testCanaldeux(int j) {
+        if (j == 0 || j == 3 || j == 6 || j == 9 || j == 12) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean testCanalHori(int j) {
+        if (j == 1 || j == 4 || j == 7 || j == 10 || j == 13) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    public boolean testCanalVerti(int i) {
+        if (i == 1 || i == 4 || i == 7 || i == 10) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    public void swap(int a, int b) {
+        int save = a;
+        a = b;
+        b = save;
+    }
 
     //Creation et affichage du plateau
     public void creationFenetre() {
