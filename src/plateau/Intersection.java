@@ -4,7 +4,7 @@ package plateau;
  * Created by Yannis on 24/03/2015.
  */
 public class Intersection {
-    Canal source;
+    boolean irrigué= false;
     int i;
     int j;
 
@@ -14,8 +14,8 @@ public class Intersection {
     }
 
 
-    public Intersection(Canal source, int i, int j) {
-        this.source = source;
+    public Intersection(boolean irrigué, int i, int j) {
+        this.irrigué = irrigué;
         this.i = i;
         this.j = j;
     }
@@ -36,18 +36,18 @@ public class Intersection {
         this.j = j;
     }
 
-    public Canal isSource() {
-        return source;
+    public boolean isIrrigué() {
+        return irrigué;
     }
 
-    public void setSource(Canal source) {
-        this.source = source;
+    public void setIrrigué(boolean irrigué) {
+        this.irrigué = irrigué;
     }
 
     @Override
     public String toString() {
         return "Intersection{" +
-                "source=" + source +
+                "source=" + irrigué +
                 ", i=" + i +
                 ", j=" + j +
                 '}';
