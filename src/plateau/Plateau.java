@@ -149,11 +149,14 @@ public class Plateau {
                                 @Override
                                 public void mouseClicked(MouseEvent e) {
                                     System.out.println(canal.toString());
+                                    Irrigation(canal);
                                     //tester le changement d'icone pour canal irrigué
                                     if (thumb.getIcon() == iconcanalhori) {
                                         thumb.setIcon(iconcanalhorirrigue);
+                                        canal.setIrrigue(true);
                                     } else {
                                         thumb.setIcon(iconcanalhori);
+                                        canal.setIrrigue(false);
                                     }
                                 }
 
@@ -194,12 +197,16 @@ public class Plateau {
                             thumb.addMouseListener(new MouseAdapter() {
                                 @Override
                                 public void mouseClicked(MouseEvent e) {
+
                                     System.out.println(canal.toString());
+                                    Irrigation(canal);
                                     //tester le changement d'icone pour canal irrigué
                                     if (thumb.getIcon() == iconcanalverti) {
                                         thumb.setIcon(iconcanalvertirrigue);
+                                        canal.setIrrigue(true);
                                     } else {
                                         thumb.setIcon(iconcanalverti);
+                                        canal.setIrrigue(false);
                                     }
                                 }
 
@@ -246,7 +253,7 @@ public class Plateau {
                                     ListParcelleModele.get(indexParcelle).champs = Parcelle.typeChamps.test;
                                 }
 
-                                System.out.println(ListParcelleModele.get(indexParcelle).toString());
+                                System.out.println(ListParcelleModele.get(indexParcelle).toStringlight());
                             }
 
                         });
@@ -260,50 +267,70 @@ public class Plateau {
 
     //Les différents tests
     public boolean testIntersection(int i, int j) {
-        if ((i == 0 || i == 3 || i == 6 || i == 9) && (j == 0 || j == 3 || j == 6 || j == 9 || j == 12)) {
-            return true;
-        } else
-            return false;
+        return ((i == 0 || i == 3 || i == 6 || i == 9) && (j == 0 || j == 3 || j == 6 || j == 9 || j == 12));
+
     }
 
     public boolean testCanal(int i) {
-        if (i == 0 || i == 3 || i == 6 || i == 9) {
-            return true;
-        } else {
-            return false;
-        }
+        return (i == 0 || i == 3 || i == 6 || i == 9);
+
     }
 
     public boolean testCanaldeux(int j) {
-        if (j == 0 || j == 3 || j == 6 || j == 9 || j == 12) {
-            return true;
-        } else {
-            return false;
-        }
+        return (j == 0 || j == 3 || j == 6 || j == 9 || j == 12);
+
     }
 
     public boolean testCanalHori(int j) {
-        if (j == 1 || j == 4 || j == 7 || j == 10 || j == 13) {
-            return true;
-        } else {
-            return false;
-        }
+        return (j == 1 || j == 4 || j == 7 || j == 10 || j == 13);
 
     }
 
     public boolean testCanalVerti(int i) {
-        if (i == 1 || i == 4 || i == 7 || i == 10) {
-            return true;
-        } else {
-            return false;
-        }
+        return (i == 1 || i == 4 || i == 7 || i == 10);
 
     }
 
-    public void swap(int a, int b) {
-        int save = a;
-        a = b;
-        b = save;
+    //Test pour savoir si une parcelle est adjacente  a un canal vertical
+    public boolean trouveAdjacentVerti(Canal canal, Parcelle elem) {
+        return ((elem.numligne < canal.yfin) && (elem.numligne >= canal.ydeb) && ((elem.numcolonne == canal.xdeb) || (elem.numcolonne == canal.xdeb - 1)));
+    }
+
+    //Test pour savoir si une parcelle est adjacente  a un canal horizontal
+    public boolean trouveAdjacentHori(Canal canal, Parcelle elem) {
+        return ((elem.numcolonne < canal.xfin) && (elem.numcolonne >= canal.xdeb) && ((elem.numligne == canal.ydeb) || (elem.numligne == canal.ydeb - 1)));
+    }
+
+    //Renvoie la liste des Parcelles Adjacentes au canal
+    public ArrayList<Parcelle> listeParcellesAdjacentes(Canal canal) {
+        System.out.println("listeParcellesAdjacentes");
+        ArrayList<Parcelle> listeP = new ArrayList<Parcelle>();
+
+        for (Parcelle elem : ListParcelleModele) {
+            if (canal.estHorizontale()) {
+                System.out.println("listeParcAdj hori");
+                if (trouveAdjacentHori(canal, elem)) {
+                    listeP.add(elem);
+                }
+            } else if (canal.estVerticale()) {
+                if (trouveAdjacentVerti(canal, elem)) {
+                    listeP.add(elem);
+                }
+            }
+        }
+        return listeP;
+    }
+
+    //irrigue les Parcelles Adjacentes au canal
+    public void Irrigation(Canal canal) {
+        System.out.println("irrigation()");
+        ArrayList<Parcelle> listeP;
+        listeP = listeParcellesAdjacentes(canal);
+        System.out.println(listeP.toString());
+        for (Parcelle parcelle : listeP) {
+            System.out.println(parcelle.toString());
+            parcelle.irrigué = true;
+        }
     }
 
     //Creation et affichage du plateau

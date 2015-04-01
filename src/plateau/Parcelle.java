@@ -37,6 +37,14 @@ public class Parcelle {
         this.numcolonne = numcolonne;
     }
 
+    public int getNumligne() {
+        return numligne;
+    }
+
+    public int getNumcolonne() {
+        return numcolonne;
+    }
+
     @Override
     public String toString() {
         return "Parcelle{" +
@@ -45,6 +53,15 @@ public class Parcelle {
                 ", irrigué=" + irrigué +
                 ", secheresse=" + secheresse +
                 ", champs=" + champs +
+                ", numligne=" + numligne +
+                ", numcolonne=" + numcolonne +
+                '}';
+    }
+
+
+    public String toStringlight() {
+        return "Parcelle{" +
+                " irrigué=" + irrigué +
                 ", numligne=" + numligne +
                 ", numcolonne=" + numcolonne +
                 '}';
