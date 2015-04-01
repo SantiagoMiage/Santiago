@@ -13,6 +13,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by Yannis Cipriani on 16/03/2015.
@@ -26,6 +27,7 @@ public class Plateau {
     ArrayList<JLabel> ListCanauxGUI = new ArrayList<JLabel>();
     ArrayList<Canal> ListCanauxModele = new ArrayList<Canal>();
     //Tableaux relatifs aux Intersections
+    ArrayList<JLabel> ListIntersectGUI = new ArrayList<JLabel>();
     ArrayList<Intersection> ListIntersect = new ArrayList<Intersection>();
 
     /*
@@ -103,31 +105,37 @@ public class Plateau {
         int ydebV = 0;
         int xfinV = 0;
         int yfinV = 2;
+        //compteur pour enregistrer les intersections
+        int xIntersec = 0;
+        int yIntersec = 0;
 
         //Construction du Plateau
         for (int i = 0; i < 10; i++) {
-
             for (int j = 0; j < 13; j++) {
                 GridBagConstraints gc = new GridBagConstraints();
-
                 final JLabel thumb = new JLabel();
                 //si intersection
                 if (testIntersection(i, j)) {
+
                     thumb.setIcon(iconintersection);
                     gc.gridx = j;
                     gc.gridy = i;
                     //creation de l'objet  Intersection
-                    Intersection inter = new Intersection(i, j);
+                    if (xIntersec > 8) {
+                        xIntersec = 0;
+                        yIntersec = yIntersec + 2;
+
+                    }
+                    Intersection inter = new Intersection(xIntersec, yIntersec);
+                    xIntersec =  xIntersec + 2 ;
                     //ajout au tableau d'intersection
                     ListIntersect.add(inter);
+                    ListIntersectGUI.add(thumb);
                 } else {
                     //si canal
                     if (testCanal(i) || testCanaldeux(j)) {
-
-
                         //si canal horizontal
                         if (testCanalHori(j)) {
-
                             //on ajoute 2 a xfin
                             xfinH = xfinH + 2;
                             if (xfinH > 8) {
@@ -136,7 +144,6 @@ public class Plateau {
                                 ydebH = ydebH + 2;
                                 yfinH = yfinH + 2;
                             }
-
                             //on creer le canal
                             final Canal canal = new Canal(false, xdebH, ydebH, xfinH, yfinH);
                             //on enregistre le canal dans la liste modele
@@ -144,21 +151,24 @@ public class Plateau {
                             //on modifie les compteurs
                             xdebH = xfinH;
                             //on travaille dessus
-
                             thumb.addMouseListener(new MouseAdapter() {
                                 @Override
                                 public void mouseClicked(MouseEvent e) {
-                                    System.out.println(canal.toString());
-                                    Irrigation(canal);
-                                    //tester le changement d'icone pour canal irrigué
-                                    if (thumb.getIcon() == iconcanalhori) {
-                                        thumb.setIcon(iconcanalhorirrigue);
-                                        canal.setIrrigue(true);
-                                    } else {
-                                        thumb.setIcon(iconcanalhori);
-                                        canal.setIrrigue(false);
+                                    if (estIrriguable(canal)) {
+                                        System.out.println(canal.toString());
+                                        Irrigation(canal);
+
+                                        //tester le changement d'icone pour canal irrigué
+                                        if (thumb.getIcon() == iconcanalhori) {
+                                            thumb.setIcon(iconcanalhorirrigue);
+                                            canal.setIrrigue(true);
+                                        } else {
+                                            thumb.setIcon(iconcanalhori);
+                                            canal.setIrrigue(false);
+                                        }
                                     }
                                 }
+
 
                             });
                             thumb.setIcon(iconcanalhori);
@@ -169,12 +179,8 @@ public class Plateau {
                             gc.gridx = j;
                             gc.gridy = i;
                         }
-                        //  }  else if (testCanaldeux(j)) {
-
                         //si canal vertical
                         if (testCanalVerti(i)) {
-
-
                             //on creer le canal
                             final Canal canal = new Canal(false, xdebV, ydebV, xfinV, yfinV);
                             //on enregistre le canal dans la liste modele
@@ -190,23 +196,22 @@ public class Plateau {
                                 xfinV = xdebV;
                                 yfinV = ydebV + 2;
                             }
-
                             //on travaille dessus
-
                             thumb.setIcon(iconcanalverti);
                             thumb.addMouseListener(new MouseAdapter() {
                                 @Override
                                 public void mouseClicked(MouseEvent e) {
+                                    if (estIrriguable(canal)) {
 
-                                    System.out.println(canal.toString());
-                                    Irrigation(canal);
-                                    //tester le changement d'icone pour canal irrigué
-                                    if (thumb.getIcon() == iconcanalverti) {
-                                        thumb.setIcon(iconcanalvertirrigue);
-                                        canal.setIrrigue(true);
-                                    } else {
-                                        thumb.setIcon(iconcanalverti);
-                                        canal.setIrrigue(false);
+                                        Irrigation(canal);
+                                        //tester le changement d'icone pour canal irrigué
+                                        if (thumb.getIcon() == iconcanalverti) {
+                                            thumb.setIcon(iconcanalvertirrigue);
+                                            canal.setIrrigue(true);
+                                        } else {
+                                            thumb.setIcon(iconcanalverti);
+                                            canal.setIrrigue(false);
+                                        }
                                     }
                                 }
 
@@ -217,8 +222,6 @@ public class Plateau {
                             gc.gridy = i;
                         }
                     } else {//si Parcelle
-
-
                         thumb.setPreferredSize(new Dimension(50, 50));
                         thumb.setIcon(iconparcelle);
                         //ajout au panel
@@ -262,33 +265,30 @@ public class Plateau {
                 panel.add(thumb, gc);
             }
         }
+        initialisationSource();
     }
 
-
-    //Les différents tests
+    ///////////////////
+    ///////TESTS///////
+    ///////////////////
     public boolean testIntersection(int i, int j) {
         return ((i == 0 || i == 3 || i == 6 || i == 9) && (j == 0 || j == 3 || j == 6 || j == 9 || j == 12));
-
     }
 
     public boolean testCanal(int i) {
         return (i == 0 || i == 3 || i == 6 || i == 9);
-
     }
 
     public boolean testCanaldeux(int j) {
         return (j == 0 || j == 3 || j == 6 || j == 9 || j == 12);
-
     }
 
     public boolean testCanalHori(int j) {
         return (j == 1 || j == 4 || j == 7 || j == 10 || j == 13);
-
     }
 
     public boolean testCanalVerti(int i) {
         return (i == 1 || i == 4 || i == 7 || i == 10);
-
     }
 
     //Test pour savoir si une parcelle est adjacente  a un canal vertical
@@ -300,6 +300,55 @@ public class Plateau {
     public boolean trouveAdjacentHori(Canal canal, Parcelle elem) {
         return ((elem.numcolonne < canal.xfin) && (elem.numcolonne >= canal.xdeb) && ((elem.numligne == canal.ydeb) || (elem.numligne == canal.ydeb - 1)));
     }
+
+    //Test un canal si il peut etre irrigué (touche la source ou un autre canal)
+    public boolean estIrriguable(Canal canal) {
+
+        System.out.println("estIrriguable");
+        int xdeb = canal.getXdeb();
+        int ydeb = canal.getYdeb();
+        int xfin = canal.getXfin();
+        int yfin = canal.getYfin();
+        System.out.println(canal.toString());
+        boolean ok = false;
+        for (Intersection elem : ListIntersect) {
+            //si l'intersection est irrigué
+
+            if (elem.isIrrigué()) {
+                System.out.println("element est irrigué");
+                System.out.println(elem.toString());
+                //si les coordonnées correspondent au debut du canal
+                if ((xdeb == elem.getJ()) && (ydeb == elem.getI()) ) {
+                    //alors on renvoie vrai
+                    ok = true;
+                    System.out.println("ok deb");
+                    //on passe l'autre intersection (fin) a irrigue
+                    irrigueIntersection(yfin, xfin);
+                } else if ((xfin == elem.getJ()) && (yfin == elem.getI()) ) {  //si les coordonnées correspondent a la fin du canal
+                    ok = true;
+                    System.out.println("ok fin");
+                    //on passe l'autre intersection (debut) a irrigue
+                    irrigueIntersection(ydeb, xdeb);
+                }
+            }
+        }
+        return ok;
+
+    }
+
+    ///////////////////
+    /////FONCTION//////
+    ///////////////////
+
+    public void irrigueIntersection(int i, int j) {
+        for (Intersection elem : ListIntersect) {
+            if (elem.getI() == i && elem.getJ() == j) {
+                elem.setIrrigué(true);
+            }
+        }
+    }
+
+
 
     //Renvoie la liste des Parcelles Adjacentes au canal
     public ArrayList<Parcelle> listeParcellesAdjacentes(Canal canal) {
@@ -335,8 +384,6 @@ public class Plateau {
 
     //Creation et affichage du plateau
     public void creationFenetre() {
-
-
         JFrame fenetre = new JFrame();
         fenetre.setTitle("Santiago");
         fenetre.setPreferredSize(new Dimension(1000, 900));
@@ -347,6 +394,20 @@ public class Plateau {
         fenetre.setVisible(true);
 
     }
+
+    public void initialisationSource() {
+        String cheminsource = "/ressource/images/source.png";
+        URL url_source = this.getClass().getResource(cheminsource);
+        ImageIcon iconsource = new ImageIcon(url_source);
+
+        Random randomGenerator;
+        randomGenerator = new Random();
+        int index = randomGenerator.nextInt(ListIntersect.size());
+        ListIntersect.get(index).setIrrigué(true);
+        ListIntersectGUI.get(index).setIcon(iconsource);
+    }
+
+
 }
     
     

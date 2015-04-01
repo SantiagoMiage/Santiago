@@ -11,6 +11,7 @@ public class Santiago {
         Plateau p1 = new Plateau();
         p1.initialisation();
         p1.creationFenetre();
+
     }
 
 }
