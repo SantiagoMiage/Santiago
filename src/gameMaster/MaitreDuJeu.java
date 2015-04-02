@@ -39,6 +39,9 @@ public class MaitreDuJeu {
         initialisationPileParcelles();
     }
 
+    public void afficherJeu(){
+        this.plateau.creationFenetre();
+    }
 
     //Créer les différentes pile de parcelles pour la partie
     private void initialisationPileParcelles() {
@@ -131,5 +134,17 @@ public class MaitreDuJeu {
         parcelles.add(new Parcelle(2,false,false, Parcelle.typeChamps.haricot));
     }
 
+    public static void main(String[] args){
+
+        //A la place une interface graphique devras permettre de choisir les joueurs
+        ArrayList<Joueur> listeJoueurs = new ArrayList<Joueur>(4);
+        listeJoueurs.add(new Joueur("Matthieu", 10));
+        listeJoueurs.add(new Joueur("Yannis", 10));
+        listeJoueurs.add(new Joueur("Soraya", 10));
+        listeJoueurs.add(new Joueur("Thomas", 10));
+        MaitreDuJeu mj = new MaitreDuJeu(listeJoueurs);
+        mj.afficherJeu();
+
+    }
 
 }
