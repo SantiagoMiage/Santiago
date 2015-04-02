@@ -118,6 +118,7 @@ public class Plateau {
                 if (testIntersection(i, j)) {
 
                     thumb.setIcon(iconintersection);
+
                     gc.gridx = j;
                     gc.gridy = i;
                     //creation de l'objet  Intersection
@@ -126,17 +127,26 @@ public class Plateau {
                         yIntersec = yIntersec + 2;
 
                     }
-                    Intersection inter = new Intersection(xIntersec, yIntersec);
+                    final Intersection inter = new Intersection(xIntersec, yIntersec);
                     xIntersec =  xIntersec + 2 ;
                     //ajout au tableau d'intersection
                     ListIntersect.add(inter);
                     ListIntersectGUI.add(thumb);
+
+                    thumb.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+
+                                System.out.println(inter.toString());
+                        }
+                    });
+
                 } else {
                     //si canal
                     if (testCanal(i) || testCanaldeux(j)) {
                         //si canal horizontal
                         if (testCanalHori(j)) {
-                            //on ajoute 2 a xfin
+                            //on ajoute 2 a xfin car pas de 2
                             xfinH = xfinH + 2;
                             if (xfinH > 8) {
                                 xdebH = 0;
@@ -318,17 +328,17 @@ public class Plateau {
                 System.out.println("element est irrigué");
                 System.out.println(elem.toString());
                 //si les coordonnées correspondent au debut du canal
-                if ((xdeb == elem.getJ()) && (ydeb == elem.getI()) ) {
+                if ((xdeb == elem.getI()) && (ydeb == elem.getJ()) ) {
                     //alors on renvoie vrai
                     ok = true;
                     System.out.println("ok deb");
                     //on passe l'autre intersection (fin) a irrigue
-                    irrigueIntersection(yfin, xfin);
-                } else if ((xfin == elem.getJ()) && (yfin == elem.getI()) ) {  //si les coordonnées correspondent a la fin du canal
+                    irrigueIntersection(xfin, yfin);
+                } else if ((xfin == elem.getI()) && (yfin == elem.getJ())  ) {  //si les coordonnées correspondent a la fin du canal
                     ok = true;
                     System.out.println("ok fin");
                     //on passe l'autre intersection (debut) a irrigue
-                    irrigueIntersection(ydeb, xdeb);
+                    irrigueIntersection(xdeb, ydeb);
                 }
             }
         }
@@ -339,7 +349,7 @@ public class Plateau {
     ///////////////////
     /////FONCTION//////
     ///////////////////
-
+    //Retrouve et Irrigue l'Intersection avec les coordonnées en argument
     public void irrigueIntersection(int i, int j) {
         for (Intersection elem : ListIntersect) {
             if (elem.getI() == i && elem.getJ() == j) {
@@ -347,8 +357,6 @@ public class Plateau {
             }
         }
     }
-
-
 
     //Renvoie la liste des Parcelles Adjacentes au canal
     public ArrayList<Parcelle> listeParcellesAdjacentes(Canal canal) {
@@ -382,6 +390,19 @@ public class Plateau {
         }
     }
 
+    //Choisi aléatoirement une intersection et l'irrigue pour devenir la source de départ
+    public void initialisationSource() {
+        String cheminsource = "/ressource/images/source.png";
+        URL url_source = this.getClass().getResource(cheminsource);
+        ImageIcon iconsource = new ImageIcon(url_source);
+
+        Random randomGenerator;
+        randomGenerator = new Random();
+        int index = randomGenerator.nextInt(ListIntersect.size());
+        ListIntersect.get(index).setIrrigué(true);
+        ListIntersectGUI.get(index).setIcon(iconsource);
+    }
+
     //Creation et affichage du plateau
     public void creationFenetre() {
         JFrame fenetre = new JFrame();
@@ -395,17 +416,7 @@ public class Plateau {
 
     }
 
-    public void initialisationSource() {
-        String cheminsource = "/ressource/images/source.png";
-        URL url_source = this.getClass().getResource(cheminsource);
-        ImageIcon iconsource = new ImageIcon(url_source);
 
-        Random randomGenerator;
-        randomGenerator = new Random();
-        int index = randomGenerator.nextInt(ListIntersect.size());
-        ListIntersect.get(index).setIrrigué(true);
-        ListIntersectGUI.get(index).setIcon(iconsource);
-    }
 
 
 }
