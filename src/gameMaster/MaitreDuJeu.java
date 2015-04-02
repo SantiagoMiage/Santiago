@@ -1,5 +1,7 @@
 package gameMaster;
 
+import gui.FenetreGUI;
+import gui.PileParcelleGUI;
 import joueur.Joueur;
 import plateau.Parcelle;
 import plateau.PileParcelle;
@@ -10,7 +12,7 @@ import java.util.Collections;
 import java.util.Random;
 
 /**
- * Created by Crema on 18/03/2015.
+ * Created by Créma on 18/03/2015.
  */
 public class MaitreDuJeu {
 
@@ -18,6 +20,9 @@ public class MaitreDuJeu {
     private Plateau plateau; //le plateau de jeu
     private ArrayList<Joueur> joueurs; //la liste des joueurs dans la partie
     private ArrayList<PileParcelle> pileParcelles;
+    private PileParcelleGUI ppgui;
+    private FenetreGUI fenetre;
+
 
     public int getNbTours() {
         return nbTours;
@@ -35,8 +40,8 @@ public class MaitreDuJeu {
         this.joueurs = joueurs;
         //créer autant de pile de parcelle qu'il y a de joueurs
         this.pileParcelles = new ArrayList<PileParcelle>(joueurs.size());
-
         initialisationPileParcelles();
+        this.fenetre = new FenetreGUI();
     }
 
     public void afficherJeu(){
@@ -56,7 +61,7 @@ public class MaitreDuJeu {
         ArrayList<Parcelle> parcelles = new ArrayList<Parcelle>(45);
 
         //On créer les 45 tuiles
-        CreationParcelles(parcelles);
+        creationParcelles(parcelles);
 
         Collections.shuffle(parcelles, new Random(seed));
 
@@ -72,7 +77,19 @@ public class MaitreDuJeu {
         }
     }
 
-    private void CreationParcelles(ArrayList<Parcelle> parcelles) {
+    private void afficherPileParcelle() {
+        fenetre.creationParcelle(pileParcelles);
+    }
+
+    public void enchereParcelle(){
+        this.retournerPlantation();
+    }
+
+    private void retournerPlantation() {
+        fenetre.retournerParcelles();
+    }
+
+    private void creationParcelles(ArrayList<Parcelle> parcelles) {
         //les 6 patates avec 1 travailleur
         parcelles.add(new Parcelle(1,false,false, Parcelle.typeChamps.patate));
         parcelles.add(new Parcelle(1,false,false, Parcelle.typeChamps.patate));
@@ -143,8 +160,11 @@ public class MaitreDuJeu {
         listeJoueurs.add(new Joueur("Soraya", 10));
         listeJoueurs.add(new Joueur("Thomas", 10));
         MaitreDuJeu mj = new MaitreDuJeu(listeJoueurs);
-        mj.afficherJeu();
+        //mj.afficherJeu();
+        mj.afficherPileParcelle();
 
     }
+
+
 
 }
