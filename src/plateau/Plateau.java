@@ -36,6 +36,10 @@ public class Plateau {
     */
     private JPanel panel = new JPanel(new GridBagLayout());
 
+    public JPanel getPanel() {
+        return panel;
+    }
+
     public Plateau() {
 
     }
@@ -415,8 +419,6 @@ public class Plateau {
         fenetre.setVisible(true);
 
     }
-
-
 
 
 }
