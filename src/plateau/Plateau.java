@@ -318,17 +318,17 @@ public class Plateau {
                 System.out.println("element est irrigue");
                 System.out.println(elem.toString());
                 //si les coordonnées correspondent au debut du canal
-                if ((xdeb == elem.getJ()) && (ydeb == elem.getI()) ) {
+                if ((xdeb == elem.getI()) && (ydeb == elem.getJ()) ) {
                     //alors on renvoie vrai
                     ok = true;
                     System.out.println("ok deb");
                     //on passe l'autre intersection (fin) a irrigue
-                    irrigueIntersection(yfin, xfin);
-                } else if ((xfin == elem.getJ()) && (yfin == elem.getI()) ) {  //si les coordonnées correspondent a la fin du canal
+                    irrigueIntersection(xfin, yfin);
+                } else if ((xfin == elem.getI()) && (yfin == elem.getJ())  ) {  //si les coordonnées correspondent a la fin du canal
                     ok = true;
                     System.out.println("ok fin");
                     //on passe l'autre intersection (debut) a irrigue
-                    irrigueIntersection(ydeb, xdeb);
+                    irrigueIntersection(xdeb, ydeb);
                 }
             }
         }
