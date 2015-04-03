@@ -4,7 +4,7 @@ package plateau;
  * Created by Yannis on 24/03/2015.
  */
 public class Intersection {
-    boolean irrigué= false;
+    boolean irrigue= false;
     int i;
     int j;
 
@@ -14,8 +14,8 @@ public class Intersection {
     }
 
 
-    public Intersection(boolean irrigué, int i, int j) {
-        this.irrigué = irrigué;
+    public Intersection(boolean irrigue, int i, int j) {
+        this.irrigue = irrigue;
         this.i = i;
         this.j = j;
     }
@@ -36,18 +36,18 @@ public class Intersection {
         this.j = j;
     }
 
-    public boolean isIrrigué() {
-        return irrigué;
+    public boolean isirrigue() {
+        return irrigue;
     }
 
-    public void setIrrigué(boolean irrigué) {
-        this.irrigué = irrigué;
+    public void setirrigue(boolean irrigue) {
+        this.irrigue = irrigue;
     }
 
     @Override
     public String toString() {
         return "Intersection{" +
-                "source=" + irrigué +
+                "source=" + irrigue +
                 ", i=" + i +
                 ", j=" + j +
                 '}';

@@ -12,25 +12,25 @@ package plateau;
 public class Parcelle {
     int nbouvrier;
     int nbouvrieractif = 0;
-    boolean irrigué = false;
+    boolean irrigue = false;
     boolean secheresse = false;
     typeChamps champs = typeChamps.vide;
     int numligne;
     int numcolonne;
 
 
-    public Parcelle(int nbouvrier, boolean irrigué, boolean secheresse, typeChamps champs) {
+    public Parcelle(int nbouvrier, boolean irrigue, boolean secheresse, typeChamps champs) {
         this.nbouvrier = nbouvrier;
-        this.irrigué = irrigué;
+        this.irrigue = irrigue;
         this.secheresse = secheresse;
         this.champs = champs;
 
     }
 
-    public Parcelle(int nbouvrier, int nbouvrieractif, boolean irrigué, boolean secheresse, typeChamps champs, int numligne, int numcolonne) {
+    public Parcelle(int nbouvrier, int nbouvrieractif, boolean irrigue, boolean secheresse, typeChamps champs, int numligne, int numcolonne) {
         this.nbouvrier = nbouvrier;
         this.nbouvrieractif = nbouvrieractif;
-        this.irrigué = irrigué;
+        this.irrigue = irrigue;
         this.secheresse = secheresse;
         this.champs = champs;
         this.numligne = numligne;
@@ -50,7 +50,7 @@ public class Parcelle {
         return "Parcelle{" +
                 "nbouvrier=" + nbouvrier +
                 ", nbouvrieractif=" + nbouvrieractif +
-                ", irrigué=" + irrigué +
+                ", irrigue=" + irrigue +
                 ", secheresse=" + secheresse +
                 ", champs=" + champs +
                 ", numligne=" + numligne +
@@ -61,7 +61,7 @@ public class Parcelle {
 
     public String toStringlight() {
         return "Parcelle{" +
-                " irrigué=" + irrigué +
+                " irrigue=" + irrigue +
                 ", numligne=" + numligne +
                 ", numcolonne=" + numcolonne +
                 '}';

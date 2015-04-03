@@ -158,7 +158,7 @@ public class Plateau {
                                         System.out.println(canal.toString());
                                         Irrigation(canal);
 
-                                        //tester le changement d'icone pour canal irrigué
+                                        //tester le changement d'icone pour canal irrigue
                                         if (thumb.getIcon() == iconcanalhori) {
                                             thumb.setIcon(iconcanalhorirrigue);
                                             canal.setIrrigue(true);
@@ -204,7 +204,7 @@ public class Plateau {
                                     if (estIrriguable(canal)) {
 
                                         Irrigation(canal);
-                                        //tester le changement d'icone pour canal irrigué
+                                        //tester le changement d'icone pour canal irrigue
                                         if (thumb.getIcon() == iconcanalverti) {
                                             thumb.setIcon(iconcanalvertirrigue);
                                             canal.setIrrigue(true);
@@ -301,7 +301,7 @@ public class Plateau {
         return ((elem.numcolonne < canal.xfin) && (elem.numcolonne >= canal.xdeb) && ((elem.numligne == canal.ydeb) || (elem.numligne == canal.ydeb - 1)));
     }
 
-    //Test un canal si il peut etre irrigué (touche la source ou un autre canal)
+    //Test un canal si il peut etre irrigue (touche la source ou un autre canal)
     public boolean estIrriguable(Canal canal) {
 
         System.out.println("estIrriguable");
@@ -312,10 +312,10 @@ public class Plateau {
         System.out.println(canal.toString());
         boolean ok = false;
         for (Intersection elem : ListIntersect) {
-            //si l'intersection est irrigué
+            //si l'intersection est irrigue
 
-            if (elem.isIrrigué()) {
-                System.out.println("element est irrigué");
+            if (elem.isirrigue()) {
+                System.out.println("element est irrigue");
                 System.out.println(elem.toString());
                 //si les coordonnées correspondent au debut du canal
                 if ((xdeb == elem.getJ()) && (ydeb == elem.getI()) ) {
@@ -343,7 +343,7 @@ public class Plateau {
     public void irrigueIntersection(int i, int j) {
         for (Intersection elem : ListIntersect) {
             if (elem.getI() == i && elem.getJ() == j) {
-                elem.setIrrigué(true);
+                elem.setirrigue(true);
             }
         }
     }
@@ -378,7 +378,7 @@ public class Plateau {
         System.out.println(listeP.toString());
         for (Parcelle parcelle : listeP) {
             System.out.println(parcelle.toString());
-            parcelle.irrigué = true;
+            parcelle.irrigue = true;
         }
     }
 
@@ -403,7 +403,7 @@ public class Plateau {
         Random randomGenerator;
         randomGenerator = new Random();
         int index = randomGenerator.nextInt(ListIntersect.size());
-        ListIntersect.get(index).setIrrigué(true);
+        ListIntersect.get(index).setirrigue(true);
         ListIntersectGUI.get(index).setIcon(iconsource);
     }
 
