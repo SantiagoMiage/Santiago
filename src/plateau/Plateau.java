@@ -408,6 +408,9 @@ public class Plateau {
     }
 
 
+    public JPanel getPanel() {
+        return panel;
+    }
 }
     
     
