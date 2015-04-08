@@ -1,5 +1,7 @@
 package joueur;
 
+import plateau.Parcelle;
+
 /**
  * Created by Crema on 06/03/2015.
  */
@@ -8,6 +10,8 @@ public class Joueur {
     private String pseudo;
     private int argent;
     private int score;
+    private Parcelle parcelleMain;
+    
 
     public Joueur(String pseudo, int argent){
         this.pseudo=pseudo;

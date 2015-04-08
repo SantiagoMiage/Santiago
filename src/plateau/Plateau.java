@@ -66,6 +66,8 @@ public class Plateau {
         URL url_bambou1 = this.getClass().getResource(cheminbambou1);
         String cheminharicot1 = "/ressource/images/haricot1.png";
         URL url_haricot1 = this.getClass().getResource(cheminharicot1);
+        String cheminvide = "/ressource/images/vide.png";
+        URL url_vide = this.getClass().getResource(cheminvide);
         String chemintest = "/ressource/images/test.png";
         URL url_test = this.getClass().getResource(chemintest);
         //Les canals
@@ -88,6 +90,7 @@ public class Plateau {
                 iconbanane1 = new ImageIcon(url_banane1),
                 iconbambou1 = new ImageIcon(url_bambou1),
                 iconharicot1 = new ImageIcon(url_haricot1),
+                iconvide = new ImageIcon(url_vide),
                 icontest = new ImageIcon(url_test),
                 iconcanalhori = new ImageIcon(url_canalhori),
                 iconcanalhorirrigue = new ImageIcon(url_canalhorirrigue),
@@ -252,12 +255,12 @@ public class Plateau {
 
                                 //on travaille sur l'objet Parcelle se trouvant a la même position dans ListParcelleModele
                                 //tester le changement d'icone
-                                if (thumb.getIcon() == icontest) {
+                                if (thumb.getIcon() == iconparcelle) {
                                     thumb.setIcon(iconpatate1);
                                     ListParcelleModele.get(indexParcelle).champs = Parcelle.typeChamps.patate;
                                 } else {
-                                    thumb.setIcon(icontest);
-                                    ListParcelleModele.get(indexParcelle).champs = Parcelle.typeChamps.test;
+                                    thumb.setIcon(iconvide);
+                                    ListParcelleModele.get(indexParcelle).champs = Parcelle.typeChamps.vide;
                                 }
 
                                 System.out.println(ListParcelleModele.get(indexParcelle).toStringlight());

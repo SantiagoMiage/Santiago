@@ -15,6 +15,11 @@ public class PileParcelle {
         pileParcelle = new ArrayList<Parcelle>(11);
     }
 
+
+    public ArrayList<Parcelle> getPileParcelle() {
+        return pileParcelle;
+    }
+
     //Ajout d'une parcelle a la pile de parcelle
     //Appelé lors de l'initialisation de la partie
     public void AjoutParcelle(Parcelle p){
@@ -38,13 +43,16 @@ public class PileParcelle {
 
     //Retire de la liste la parcelle affichée lors des enchères
     public void popParcelle(){
-        this.pileParcelle.remove(0);
+        if (!this.pileParcelle.isEmpty()) {
+            this.pileParcelle.remove(0);
+        }
     }
 
-    //Retourne la parcelle parcelle de la liste
+    //Retourne la premiere parcelle de la liste
     public Parcelle getParcelle(){
         return this.pileParcelle.get(0);
     }
+
 
     public int getNbParcelle(){
         return this.pileParcelle.size();
