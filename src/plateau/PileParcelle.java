@@ -1,5 +1,7 @@
 package plateau;
 
+import javax.swing.*;
+import java.net.URL;
 import java.util.ArrayList;
 
 /**
@@ -24,6 +26,16 @@ public class PileParcelle {
         System.out.println(this.pileParcelle.get(0));
     }
 
+    public int recupNbouvrierDessus(){
+        return this.pileParcelle.get(0).getNbouvrier();
+    }
+
+
+    //Renvoie le type de la parcelle au sommet de la pile
+    public Parcelle.typeChamps recupTypeDessus(){
+        return this.pileParcelle.get(0).champs;
+    }
+
     //Retire de la liste la parcelle affichée lors des enchères
     public void popParcelle(){
         this.pileParcelle.remove(0);
@@ -37,4 +49,8 @@ public class PileParcelle {
     public int getNbParcelle(){
         return this.pileParcelle.size();
     }
+
+
+
+
 }
