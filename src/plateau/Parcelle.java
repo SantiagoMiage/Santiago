@@ -19,6 +19,14 @@ public class Parcelle {
     int numcolonne;
 
 
+    public boolean isIrrigue() {
+        return irrigue;
+    }
+
+    public void setIrrigue(boolean irrigue) {
+        this.irrigue = irrigue;
+    }
+
     public Parcelle(int nbouvrier, boolean irrigue, boolean secheresse, typeChamps champs) {
         this.nbouvrier = nbouvrier;
         this.irrigue = irrigue;
