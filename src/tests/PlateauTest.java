@@ -38,8 +38,8 @@ public class PlateauTest {
 
     //faire la meme avec trouveAdjacentHori(canal,elem)
 
-        @Test
-        public void testTrouveAdjacentHori(){
+    @Test
+    public void testTrouveAdjacentHori(){
         Plateau p = new Plateau();
         Canal canal = new Canal(false,2,4,4,4);
         Parcelle elem1 = new Parcelle(1,0,false,false, Parcelle.typeChamps.vide,3,2);
@@ -54,6 +54,20 @@ public class PlateauTest {
         assertTrue(p.trouveAdjacentHori(canal, elem3));
         assertTrue(p.trouveAdjacentHori(canal, elem4));
         assertFalse(p.trouveAdjacentHori(canal, elem5));
+
+    }
+
+    @Test
+    public void testIrrigation(){
+        Plateau p = new Plateau();
+        Canal canal = new Canal(false,2,4,4,4);
+        p.Irrigation(canal);
+        ArrayList<Parcelle> listeP;
+        listeP = p.listeParcellesAdjacentes(canal);
+        for (Parcelle parcelle : listeP) {
+            assertTrue(parcelle.isIrrigue());
+        }
+
 
     }
 
