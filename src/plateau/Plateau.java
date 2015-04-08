@@ -254,10 +254,10 @@ public class Plateau {
                                 //tester le changement d'icone
                                 if (thumb.getIcon() == icontest) {
                                     thumb.setIcon(iconpatate1);
-                                    ListParcelleModele.get(indexParcelle).champs = Parcelle.typeChamps.patate;
+                                    ListParcelleModele.get(indexParcelle).setChamps(Parcelle.typeChamps.patate);
                                 } else {
                                     thumb.setIcon(icontest);
-                                    ListParcelleModele.get(indexParcelle).champs = Parcelle.typeChamps.test;
+                                    ListParcelleModele.get(indexParcelle).setChamps(Parcelle.typeChamps.test);
                                 }
 
                                 System.out.println(ListParcelleModele.get(indexParcelle).toStringlight());
@@ -297,12 +297,12 @@ public class Plateau {
 
     //Test pour savoir si une parcelle est adjacente  a un canal vertical
     public boolean trouveAdjacentVerti(Canal canal, Parcelle elem) {
-        return ((elem.numligne < canal.yfin) && (elem.numligne >= canal.ydeb) && ((elem.numcolonne == canal.xdeb) || (elem.numcolonne == canal.xdeb - 1)));
+        return ((elem.getNumligne() < canal.yfin) && (elem.getNumligne() >= canal.ydeb) && ((elem.getNumcolonne() == canal.xdeb) || (elem.getNumcolonne() == canal.xdeb - 1)));
     }
 
     //Test pour savoir si une parcelle est adjacente  a un canal horizontal
     public boolean trouveAdjacentHori(Canal canal, Parcelle elem) {
-        return ((elem.numcolonne < canal.xfin) && (elem.numcolonne >= canal.xdeb) && ((elem.numligne == canal.ydeb) || (elem.numligne == canal.ydeb - 1)));
+        return ((elem.getNumcolonne() < canal.xfin) && (elem.getNumcolonne() >= canal.xdeb) && ((elem.getNumligne() == canal.ydeb) || (elem.getNumligne() == canal.ydeb - 1)));
     }
 
     //Test un canal si il peut etre irrigue (touche la source ou un autre canal)
@@ -382,7 +382,7 @@ public class Plateau {
         System.out.println(listeP.toString());
         for (Parcelle parcelle : listeP) {
             System.out.println(parcelle.toString());
-            parcelle.irrigue = true;
+            parcelle.setIrrigue(true);
         }
     }
 
