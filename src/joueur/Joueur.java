@@ -11,7 +11,7 @@ public class Joueur {
     private int argent;
     private int score;
     private Parcelle parcelleMain;
-    
+
 
     public Joueur(String pseudo, int argent){
         this.pseudo=pseudo;
