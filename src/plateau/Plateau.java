@@ -257,10 +257,10 @@ public class Plateau {
                                 //tester le changement d'icone
                                 if (thumb.getIcon() == iconparcelle) {
                                     thumb.setIcon(iconpatate1);
-                                    ListParcelleModele.get(indexParcelle).champs = Parcelle.typeChamps.patate;
+                                    ListParcelleModele.get(indexParcelle).setChamps(Parcelle.typeChamps.patate);
                                 } else {
                                     thumb.setIcon(iconvide);
-                                    ListParcelleModele.get(indexParcelle).champs = Parcelle.typeChamps.vide;
+                                    ListParcelleModele.get(indexParcelle).setChamps(Parcelle.typeChamps.vide);
                                 }
 
                                 System.out.println(ListParcelleModele.get(indexParcelle).toStringlight());
@@ -300,12 +300,12 @@ public class Plateau {
 
     //Test pour savoir si une parcelle est adjacente  a un canal vertical
     public boolean trouveAdjacentVerti(Canal canal, Parcelle elem) {
-        return ((elem.numligne < canal.yfin) && (elem.numligne >= canal.ydeb) && ((elem.numcolonne == canal.xdeb) || (elem.numcolonne == canal.xdeb - 1)));
+        return ((elem.getNumligne() < canal.yfin) && (elem.getNumligne() >= canal.ydeb) && ((elem.getNumcolonne() == canal.xdeb) || (elem.getNumcolonne() == canal.xdeb - 1)));
     }
 
     //Test pour savoir si une parcelle est adjacente  a un canal horizontal
     public boolean trouveAdjacentHori(Canal canal, Parcelle elem) {
-        return ((elem.numcolonne < canal.xfin) && (elem.numcolonne >= canal.xdeb) && ((elem.numligne == canal.ydeb) || (elem.numligne == canal.ydeb - 1)));
+        return ((elem.getNumcolonne() < canal.xfin) && (elem.getNumcolonne() >= canal.xdeb) && ((elem.getNumligne() == canal.ydeb) || (elem.getNumligne() == canal.ydeb - 1)));
     }
 
     //Test un canal si il peut etre irrigue (touche la source ou un autre canal)
@@ -322,18 +322,14 @@ public class Plateau {
             //si l'intersection est irrigue
 
             if (elem.isirrigue()) {
-                System.out.println("element est irrigue");
-                System.out.println(elem.toString());
                 //si les coordonnées correspondent au debut du canal
                 if ((xdeb == elem.getI()) && (ydeb == elem.getJ()) ) {
                     //alors on renvoie vrai
                     ok = true;
-                    System.out.println("ok deb");
                     //on passe l'autre intersection (fin) a irrigue
                     irrigueIntersection(xfin, yfin);
                 } else if ((xfin == elem.getI()) && (yfin == elem.getJ())  ) {  //si les coordonnées correspondent a la fin du canal
                     ok = true;
-                    System.out.println("ok fin");
                     //on passe l'autre intersection (debut) a irrigue
                     irrigueIntersection(xdeb, ydeb);
                 }
@@ -364,7 +360,7 @@ public class Plateau {
 
         for (Parcelle elem : ListParcelleModele) {
             if (canal.estHorizontale()) {
-                System.out.println("listeParcAdj hori");
+
                 if (trouveAdjacentHori(canal, elem)) {
                     listeP.add(elem);
                 }
@@ -385,7 +381,7 @@ public class Plateau {
         System.out.println(listeP.toString());
         for (Parcelle parcelle : listeP) {
             System.out.println(parcelle.toString());
-            parcelle.irrigue = true;
+            parcelle.setIrrigue(true);
         }
     }
 
