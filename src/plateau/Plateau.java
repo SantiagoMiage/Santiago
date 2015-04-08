@@ -410,11 +410,6 @@ public class Plateau {
         ListIntersect.get(index).setirrigue(true);
         ListIntersectGUI.get(index).setIcon(iconsource);
     }
-
-
-    public JPanel getPanel() {
-        return panel;
-    }
 }
     
     
