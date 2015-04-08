@@ -33,7 +33,7 @@ public class PileParcelle {
 
     //Renvoie le type de la parcelle au sommet de la pile
     public Parcelle.typeChamps recupTypeDessus(){
-        return this.pileParcelle.get(0).champs;
+        return this.pileParcelle.get(0).getChamps();
     }
 
     //Retire de la liste la parcelle affichée lors des enchères
