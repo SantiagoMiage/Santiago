@@ -14,7 +14,7 @@ public class FenetreGUI {
 
     private PileParcelleGUI pileParcelleGUI;
     private Plateau plateau;
-    private JPanel panel = new JPanel(new GridBagLayout());
+    private JPanel panel = new JPanel(new GridLayout(1,2,10,10));
 
     public FenetreGUI(){
         pileParcelleGUI = null;
@@ -28,7 +28,7 @@ public class FenetreGUI {
     }
 
     public void retournerParcelles(){
-        pileParcelleGUI.retournerParcelles();
+    //    pileParcelleGUI.retournerParcelles();
     }
 
     public void creationParcelle(ArrayList<PileParcelle> pileParcelles) {

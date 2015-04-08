@@ -45,6 +45,10 @@ public class Plateau {
         this.panel = panel;
     }
 
+    public JPanel getPanel() {
+        return panel;
+    }
+
     public void initialisation() {
 
         panel.setSize(new Dimension(600, 500));
