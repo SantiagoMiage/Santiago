@@ -10,14 +10,21 @@ package plateau;
  * Created by Yannis Cipriani on 06/03/2015.
  */
 public class Parcelle {
-    int nbouvrier;
-    int nbouvrieractif = 0;
-    boolean irrigue = false;
-    boolean secheresse = false;
-    typeChamps champs = typeChamps.vide;
-    int numligne;
-    int numcolonne;
+    private int nbouvrier;
+    private int nbouvrieractif = 0;
+    private boolean irrigue = false;
+    private boolean secheresse = false;
+    private typeChamps champs = typeChamps.vide;
+    private int numligne;
+    private int numcolonne;
 
+    public typeChamps getChamps() {
+        return champs;
+    }
+
+    public void setChamps(typeChamps champs) {
+        this.champs = champs;
+    }
 
     public boolean isIrrigue() {
         return irrigue;
