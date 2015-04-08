@@ -62,23 +62,43 @@ public class PileParcelleGUI {
         URL url = null;
         switch (pileParcelles.get(compt).recupTypeDessus()) {
             case patate:
-                chemin = "/ressource/images/patate1.png";
+                if (pileParcelles.get(compt).recupNbouvrierDessus()==1) {
+                    chemin = "/ressource/images/patate1.png";
+                }else{
+                    chemin = "/ressource/images/patate2.png";
+                }
                 break;
 
             case piment:
-                chemin = "/ressource/images/piment1.png";
+                if (pileParcelles.get(compt).recupNbouvrierDessus()==1) {
+                    chemin = "/ressource/images/piment1.png";
+                }else{
+                    chemin = "/ressource/images/piment2.png";
+                }
                 break;
 
             case banane:
-                chemin = "/ressource/images/banane1.png";
+                if (pileParcelles.get(compt).recupNbouvrierDessus()==1) {
+                    chemin = "/ressource/images/banane1.png";
+                }else{
+                    chemin = "/ressource/images/banane2.png";
+                }
                 break;
 
             case bambou:
-                chemin = "/ressource/images/bambou1.png";
+                if (pileParcelles.get(compt).recupNbouvrierDessus()==1) {
+                    chemin = "/ressource/images/bambou1.png";
+                }else{
+                    chemin = "/ressource/images/bambou2.png";
+                }
                 break;
 
             case haricot:
-                chemin = "/ressource/images/haricot1.png";
+                if (pileParcelles.get(compt).recupNbouvrierDessus()==1) {
+                    chemin = "/ressource/images/haricot1.png";
+                }else{
+                    chemin = "/ressource/images/haricot2.png";
+                }
                 break;
 
             case vide:

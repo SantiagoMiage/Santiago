@@ -26,6 +26,11 @@ public class PileParcelle {
         System.out.println(this.pileParcelle.get(0));
     }
 
+    public int recupNbouvrierDessus(){
+        return this.pileParcelle.get(0).getNbouvrier();
+    }
+
+
     //Renvoie le type de la parcelle au sommet de la pile
     public Parcelle.typeChamps recupTypeDessus(){
         return this.pileParcelle.get(0).champs;

@@ -40,14 +40,14 @@ public class Plateau {
 
     }
 
+    public JPanel getPanel() {
+        return panel;
+    }
 
     public Plateau(JPanel panel) {
         this.panel = panel;
     }
 
-    public JPanel getPanel() {
-        return panel;
-    }
 
     public void initialisation() {
 

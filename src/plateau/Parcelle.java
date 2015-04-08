@@ -37,6 +37,10 @@ public class Parcelle {
         this.numcolonne = numcolonne;
     }
 
+    public int getNbouvrier() {
+        return nbouvrier;
+    }
+
     public int getNumligne() {
         return numligne;
     }
