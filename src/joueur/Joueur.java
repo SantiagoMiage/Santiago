@@ -6,6 +6,15 @@ import plateau.Parcelle;
  * Created by Crema on 06/03/2015.
  */
 public class Joueur {
+    @Override
+    public String toString() {
+        return "Joueur{" +
+                "pseudo='" + pseudo + '\'' +
+                ", argent=" + argent +
+                ", score=" + score +
+                ", parcelleMain=" + parcelleMain +
+                '}';
+    }
 
     private String pseudo;
     private int argent;
