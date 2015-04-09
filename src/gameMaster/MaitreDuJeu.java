@@ -22,6 +22,7 @@ public class MaitreDuJeu {
     private ArrayList<PileParcelle> pileParcelles;
     private PileParcelleGUI ppgui;
     private FenetreGUI fenetre;
+    private Joueur j_actif;
 
 
     public int getNbTours() {
@@ -45,7 +46,7 @@ public class MaitreDuJeu {
     }
 
     public void afficherJeu(){
-        this.plateau.creationFenetre();
+        this.fenetre.creationFenetre();
     }
 
     //Créer les différentes pile de parcelles pour la partie
@@ -83,6 +84,11 @@ public class MaitreDuJeu {
 
     public void enchereParcelle(){
         this.retournerPlantation();
+        fenetre.choixParcelle(j_actif, pileParcelles);
+    }
+
+    public void setJoueur(Joueur joueur) {
+        this.j_actif = joueur;
     }
 
     private void retournerPlantation() {
@@ -160,10 +166,13 @@ public class MaitreDuJeu {
         listeJoueurs.add(new Joueur("Soraya", 10));
         listeJoueurs.add(new Joueur("Thomas", 10));
         MaitreDuJeu mj = new MaitreDuJeu(listeJoueurs);
-        //mj.afficherJeu();
-        mj.afficherPileParcelle();
+        mj.afficherJeu();
+        //mj.afficherPileParcelle();
+        mj.setJoueur(listeJoueurs.get(0));
+        mj.enchereParcelle();
 
     }
+
 
 
 
