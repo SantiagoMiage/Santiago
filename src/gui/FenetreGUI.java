@@ -1,6 +1,7 @@
 package gui;
 
 import joueur.Joueur;
+import plateau.Parcelle;
 import plateau.PileParcelle;
 import plateau.Plateau;
 
@@ -41,13 +42,12 @@ public class FenetreGUI {
 
     //A finir doit gérer le choix de la parcelle d'un joueur
     //Pour l'instant ajoute le panel de PileParcelleGUI
-    public void choixParcelle(Joueur j_actif, ArrayList<PileParcelle> pileParcelles) {
+    public Parcelle choixParcelle(Joueur j_actif, ArrayList<PileParcelle> pileParcelles) {
         System.out.println("Creation pile Parcelle");
         creationParcelle(pileParcelles);
         System.out.println(j_actif);
-        pileParcelleGUI.choixParcelle(j_actif);
-
-
+        Parcelle pChoisie=pileParcelleGUI.choixParcelle(j_actif);
+        return pChoisie;
     }
 
     public void creationFenetre() {

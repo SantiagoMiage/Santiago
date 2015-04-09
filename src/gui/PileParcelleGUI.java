@@ -17,9 +17,11 @@ import java.util.ArrayList;
  */
 public class PileParcelleGUI {
 
+    Thread threadAttenteChoixPile;
     private ArrayList<PileParcelle> pileParcelles;
     private JPanel panel = new JPanel(new GridLayout(4, 1, 5, 5));
     private boolean encherencours;
+    private Parcelle parcelleChoisie = null;
 
     public PileParcelleGUI(ArrayList<PileParcelle> pileParcelles) {
         this.pileParcelles = pileParcelles;
@@ -50,6 +52,9 @@ public class PileParcelleGUI {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     if (encherencours) {
+                        //recuperer la parcelle
+                        parcelleChoisie = pileParcelles.get(indice).getParcelle();
+
                         if (pileParcelles.get(indice).getPileParcelle().size() > 1) {
                             //retirer limage
                             pileParcelles.get(indice).popParcelle();
@@ -60,6 +65,8 @@ public class PileParcelleGUI {
                             pileParcelles.get(indice).popParcelle();
                             thumb.setIcon(iconvide);
                         }
+
+                        threadAttenteChoixPile.notify();
                         //stocker la parcelle dans la main du joueur
                     }
 
@@ -142,7 +149,19 @@ public class PileParcelleGUI {
     public Parcelle choixParcelle(Joueur j_actif) {
         setEnchereEnCours(true);
         //TODO wait for click utilisateur
-        return null;
+        Thread t = new Thread();
+        threadAttenteChoixPile = t;
+        threadAttenteChoixPile.start();
+        try {
+            threadAttenteChoixPile.wait();
+        } catch (InterruptedException e) {}
+
+        //quand le thread est fini, on return parcelleChoisi
+
+        return parcelleChoisie;
+
+
+       // return null;
     }
 
     private void setEnchereEnCours(boolean b) {

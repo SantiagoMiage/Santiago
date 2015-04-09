@@ -84,7 +84,8 @@ public class MaitreDuJeu {
 
     public void enchereParcelle(){
         this.retournerPlantation();
-        fenetre.choixParcelle(j_actif, pileParcelles);
+        Parcelle pChoisie = fenetre.choixParcelle(j_actif, pileParcelles);
+        System.out.println(pChoisie.toString());
     }
 
     public void setJoueur(Joueur joueur) {

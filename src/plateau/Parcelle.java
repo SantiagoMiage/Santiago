@@ -35,6 +35,7 @@ public class Parcelle {
         this.irrigue = irrigue;
     }
 
+
     public Parcelle(int nbouvrier, boolean irrigue, boolean secheresse, typeChamps champs) {
         this.nbouvrier = nbouvrier;
         this.irrigue = irrigue;
