@@ -49,19 +49,19 @@ public class PileParcelleGUI {
             thumb.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                if (encherencours) {
-                    if (pileParcelles.get(indice).getPileParcelle().size() > 1) {
-                        //retirer limage
-                        pileParcelles.get(indice).popParcelle();
-                        //afficher  la parcelle suivante
-                        retournerParcelles(thumb, indice);
-                    } else {
-                        //retirer limage
-                        pileParcelles.get(indice).popParcelle();
-                        thumb.setIcon(iconvide);
+                    if (encherencours) {
+                        if (pileParcelles.get(indice).getPileParcelle().size() > 1) {
+                            //retirer limage
+                            pileParcelles.get(indice).popParcelle();
+                            //afficher  la parcelle suivante
+                            retournerParcelles(thumb, indice);
+                        } else {
+                            //retirer limage
+                            pileParcelles.get(indice).popParcelle();
+                            thumb.setIcon(iconvide);
+                        }
+                        //stocker la parcelle dans la main du joueur
                     }
-                    //stocker la parcelle dans la main du joueur
-                }
 
                 }
 
@@ -139,9 +139,6 @@ public class PileParcelleGUI {
         return panel;
     }
 
-
-}
-
     public Parcelle choixParcelle(Joueur j_actif) {
         setEnchereEnCours(true);
         //TODO wait for click utilisateur
@@ -151,3 +148,5 @@ public class PileParcelleGUI {
     private void setEnchereEnCours(boolean b) {
         encherencours = true;
     }
+
+}
