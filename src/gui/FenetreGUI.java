@@ -23,6 +23,7 @@ public class FenetreGUI {
         this.plateau.initialisation();
     }
 
+    //Créer une pile parcelle et la retourne
     public JPanel initialisationPileParcelle(ArrayList<PileParcelle> pileParcelles){
         pileParcelleGUI = new PileParcelleGUI(pileParcelles);
         return pileParcelleGUI.affichagePileParcelle();
@@ -32,11 +33,14 @@ public class FenetreGUI {
     //    pileParcelleGUI.retournerParcelles();
     }
 
+    //Ajoute le panel de PileParcelleGUI dans la fenêtre
     public void creationParcelle(ArrayList<PileParcelle> pileParcelles) {
         panel.add(initialisationPileParcelle(pileParcelles));
 
     }
 
+    //A finir doit gérer le choix de la parcelle d'un joueur
+    //Pour l'instant ajoute le panel de PileParcelleGUI
     public void choixParcelle(Joueur j_actif, ArrayList<PileParcelle> pileParcelles) {
         System.out.println("Creation pile Parcelle");
         creationParcelle(pileParcelles);
