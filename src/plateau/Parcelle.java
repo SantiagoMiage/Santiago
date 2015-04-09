@@ -18,6 +18,7 @@ public class Parcelle {
     private int numligne;
     private int numcolonne;
 
+
     public typeChamps getChamps() {
         return champs;
     }

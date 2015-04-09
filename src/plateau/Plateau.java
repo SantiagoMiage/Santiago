@@ -169,10 +169,10 @@ public class Plateau {
                                         if (thumb.getIcon() == iconcanalhori) {
                                             thumb.setIcon(iconcanalhorirrigue);
                                             canal.setIrrigue(true);
-                                        } else {
+                                        } /*else {
                                             thumb.setIcon(iconcanalhori);
                                             canal.setIrrigue(false);
-                                        }
+                                        }*/
                                     }
                                 }
 
@@ -215,10 +215,10 @@ public class Plateau {
                                         if (thumb.getIcon() == iconcanalverti) {
                                             thumb.setIcon(iconcanalvertirrigue);
                                             canal.setIrrigue(true);
-                                        } else {
+                                        } /*else {
                                             thumb.setIcon(iconcanalverti);
                                             canal.setIrrigue(false);
-                                        }
+                                        }*/
                                     }
                                 }
 
@@ -257,10 +257,10 @@ public class Plateau {
                                 //tester le changement d'icone
                                 if (thumb.getIcon() == iconparcelle) {
                                     thumb.setIcon(iconpatate1);
-                                    ListParcelleModele.get(indexParcelle).setChamps(Parcelle.typeChamps.patate);
+                                    ListParcelleModele.get(indexParcelle).setChamps(Parcelle.typeChamps.patate) ;
                                 } else {
                                     thumb.setIcon(iconvide);
-                                    ListParcelleModele.get(indexParcelle).setChamps(Parcelle.typeChamps.vide);
+                                    ListParcelleModele.get(indexParcelle).setChamps(Parcelle.typeChamps.vide) ;
                                 }
 
                                 System.out.println(ListParcelleModele.get(indexParcelle).toStringlight());
@@ -300,7 +300,7 @@ public class Plateau {
 
     //Test pour savoir si une parcelle est adjacente  a un canal vertical
     public boolean trouveAdjacentVerti(Canal canal, Parcelle elem) {
-        return ((elem.getNumligne() < canal.yfin) && (elem.getNumligne() >= canal.ydeb) && ((elem.getNumcolonne() == canal.xdeb) || (elem.getNumcolonne() == canal.xdeb - 1)));
+        return ((elem.getNumligne() < canal.yfin) && (elem.getNumligne() >= canal.ydeb) && ((elem.getNumcolonne()== canal.xdeb) || (elem.getNumcolonne() == canal.xdeb - 1)));
     }
 
     //Test pour savoir si une parcelle est adjacente  a un canal horizontal

@@ -17,7 +17,7 @@ public class PileParcelleGUI {
 
     private ArrayList<PileParcelle> pileParcelles;
     private JPanel panel = new JPanel(new GridLayout(4, 1, 5, 5));
-
+    private boolean encherencours;
 
     public PileParcelleGUI(ArrayList<PileParcelle> pileParcelles) {
         this.pileParcelles = pileParcelles;
@@ -33,7 +33,7 @@ public class PileParcelleGUI {
         final ImageIcon iconvide = new ImageIcon(url_vide);
 
 
-        panel.setSize(new Dimension(50, 215));
+        panel.setSize(new Dimension(215, 50));
         //Possibilité 2 : instanciation puis définition du libellé
         // int compt = 0;
         for (int i = 0; i < 4; i++) {
@@ -47,7 +47,7 @@ public class PileParcelleGUI {
             thumb.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-
+                if (encherencours) {
                     if (pileParcelles.get(indice).getPileParcelle().size() > 1) {
                         //retirer limage
                         pileParcelles.get(indice).popParcelle();
@@ -59,7 +59,7 @@ public class PileParcelleGUI {
                         thumb.setIcon(iconvide);
                     }
                     //stocker la parcelle dans la main du joueur
-
+                }
 
                 }
 

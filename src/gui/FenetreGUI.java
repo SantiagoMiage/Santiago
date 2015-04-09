@@ -34,12 +34,14 @@ public class FenetreGUI {
 
     public void creationParcelle(ArrayList<PileParcelle> pileParcelles) {
         panel.add(initialisationPileParcelle(pileParcelles));
+
     }
 
     public void choixParcelle(Joueur j_actif, ArrayList<PileParcelle> pileParcelles) {
         System.out.println("Creation pile Parcelle");
         creationParcelle(pileParcelles);
         System.out.println(j_actif);
+
 
     }
 
@@ -49,7 +51,8 @@ public class FenetreGUI {
         fenetre.setPreferredSize(new Dimension(1000, 900));
         fenetre.setContentPane(panel);
         panel.add(plateau.getPanel());
-        //panel.add(initialisationPileParcelle(pileParcelles));
+
+               //panel.add(initialisationPileParcelle(pileParcelles));
         fenetre.pack();
         fenetre.setLocationRelativeTo(null);
         fenetre.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
