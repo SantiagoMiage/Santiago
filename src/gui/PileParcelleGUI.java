@@ -1,6 +1,8 @@
 package gui;
 
 
+import joueur.Joueur;
+import plateau.Parcelle;
 import plateau.PileParcelle;
 
 import javax.swing.*;
@@ -137,4 +139,15 @@ public class PileParcelleGUI {
         return panel;
     }
 
+
 }
+
+    public Parcelle choixParcelle(Joueur j_actif) {
+        setEnchereEnCours(true);
+        //TODO wait for click utilisateur
+        return null;
+    }
+
+    private void setEnchereEnCours(boolean b) {
+        encherencours = true;
+    }
