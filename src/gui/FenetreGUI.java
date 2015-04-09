@@ -45,6 +45,7 @@ public class FenetreGUI {
         System.out.println("Creation pile Parcelle");
         creationParcelle(pileParcelles);
         System.out.println(j_actif);
+        pileParcelleGUI.choixParcelle(j_actif);
 
 
     }
