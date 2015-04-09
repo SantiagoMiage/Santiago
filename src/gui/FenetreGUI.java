@@ -1,5 +1,6 @@
 package gui;
 
+import joueur.Joueur;
 import plateau.PileParcelle;
 import plateau.Plateau;
 
@@ -32,17 +33,26 @@ public class FenetreGUI {
     }
 
     public void creationParcelle(ArrayList<PileParcelle> pileParcelles) {
+        panel.add(initialisationPileParcelle(pileParcelles));
+    }
+
+    public void choixParcelle(Joueur j_actif, ArrayList<PileParcelle> pileParcelles) {
+        System.out.println("Creation pile Parcelle");
+        creationParcelle(pileParcelles);
+        System.out.println(j_actif);
+
+    }
+
+    public void creationFenetre() {
         JFrame fenetre = new JFrame();
         fenetre.setTitle("Santiago");
         fenetre.setPreferredSize(new Dimension(1000, 900));
         fenetre.setContentPane(panel);
         panel.add(plateau.getPanel());
-        panel.add(initialisationPileParcelle(pileParcelles));
+        //panel.add(initialisationPileParcelle(pileParcelles));
         fenetre.pack();
         fenetre.setLocationRelativeTo(null);
         fenetre.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         fenetre.setVisible(true);
-
     }
-
 }
