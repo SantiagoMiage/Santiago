@@ -51,6 +51,7 @@ public class PileParcelleGUI {
             thumb.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
+                    System.out.println(encherencours);
                     if (encherencours) {
                         //recuperer la parcelle
                         parcelleChoisie = pileParcelles.get(indice).getParcelle();
@@ -65,9 +66,10 @@ public class PileParcelleGUI {
                             pileParcelles.get(indice).popParcelle();
                             thumb.setIcon(iconvide);
                         }
-
-                        threadAttenteChoixPile.notify();
-                        //stocker la parcelle dans la main du joueur
+                        synchronized (threadAttenteChoixPile) {
+                            threadAttenteChoixPile.notify();
+                            //stocker la parcelle dans la main du joueur
+                        }
                     }
 
                 }
@@ -152,20 +154,27 @@ public class PileParcelleGUI {
         Thread t = new Thread();
         threadAttenteChoixPile = t;
         threadAttenteChoixPile.start();
-        try {
-            threadAttenteChoixPile.wait();
-        } catch (InterruptedException e) {}
+        synchronized (threadAttenteChoixPile){
+            while(parcelleChoisie == null) {
+                System.out.println("att");
+                try {
+                    threadAttenteChoixPile.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            System.out.println("clik");
+            //quand le thread est fini, on return parcelleChoisie
+            setEnchereEnCours(false);
+            return parcelleChoisie;
+        }
 
-        //quand le thread est fini, on return parcelleChoisi
 
-        return parcelleChoisie;
-
-
-       // return null;
+       // return parcelleChoisie;
     }
 
     private void setEnchereEnCours(boolean b) {
-        encherencours = true;
+        encherencours = b;
     }
 
 }
