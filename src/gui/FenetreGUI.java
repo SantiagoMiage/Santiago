@@ -63,4 +63,50 @@ public class FenetreGUI {
         fenetre.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         fenetre.setVisible(true);
     }
+
+    //popup qui demande le montant que le joueur fait pour l'enchère
+    public int offreJoueur(Joueur j_actif, int[] montantEnchere) {
+        int montantInt = -1;
+        String montant = "";
+        String mess = "Combien voulez mettre? Offre déjà faites : ";
+        mess+= montantPrisString(montantEnchere);
+        boolean gogol = false;
+        do try {
+            JOptionPane jop = new JOptionPane();
+            if(!gogol) {
+                montant = jop.showInputDialog(null, mess, "Enchère parcelle ! "+j_actif.getPseudo(), JOptionPane.QUESTION_MESSAGE);
+            }else{
+                montant = jop.showInputDialog(null, mess + " Nombre Positif plz !", "Enchère parcelle ! "+j_actif.getPseudo(), JOptionPane.QUESTION_MESSAGE);
+
+            }
+            montantInt = Integer.parseInt(montant);
+            if(montantInt < 0) gogol = true;
+        } catch (Exception e) {
+            gogol = true;
+        }while(montantInt < 0 || montantdejaPris(montantInt, montantEnchere));
+        return montantInt;
+    }
+
+    private String montantPrisString(int[] montantEnchere) {
+        String mess = "";
+        if(montantEnchere[0] < 0){
+            return "Aucune ";
+        }
+        for(int i = 0; i<montantEnchere.length; i++){
+            if(montantEnchere[i] > -1){
+                mess+=montantEnchere[i]+" ";
+            }
+        }
+        return mess;
+    }
+
+    //vérifie que le proposition du joueur n'a pas déjà été prise
+    private boolean montantdejaPris(int montantInt, int[] montantEnchere) {
+        boolean dejaPris = false;
+        for(int i = 0; i<montantEnchere.length; i++){
+            if(montantInt == montantEnchere[i])
+                dejaPris = true;
+        }
+        return dejaPris;
+    }
 }
