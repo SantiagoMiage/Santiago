@@ -82,8 +82,19 @@ public class MaitreDuJeu {
         fenetre.creationParcelle(pileParcelles);
     }
 
+
+    //gère la première phase du jeu les enchères pour les parcelles
     public void enchereParcelle(){
+        int[] montantEnchere = new int[joueurs.size()];
+        for(int i = 0; i<joueurs.size();i++){
+            montantEnchere[i] = -1;
+        }
         this.retournerPlantation();
+        for(int i = 0; i<joueurs.size();i++){
+            j_actif = joueurs.get(i);
+            montantEnchere[i] = fenetre.offreJoueur(j_actif, montantEnchere);
+
+        }
         Parcelle pChoisie = fenetre.choixParcelle(j_actif, pileParcelles);
         System.out.println(pChoisie.toString());
     }
