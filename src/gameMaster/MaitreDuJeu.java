@@ -46,7 +46,7 @@ public class MaitreDuJeu {
     }
 
     public void afficherJeu(){
-        this.fenetre.creationFenetre();
+        this.fenetre.creationFenetre(pileParcelles);
     }
 
     //Créer les différentes pile de parcelles pour la partie
@@ -95,8 +95,35 @@ public class MaitreDuJeu {
             montantEnchere[i] = fenetre.offreJoueur(j_actif, montantEnchere);
 
         }
-        Parcelle pChoisie = fenetre.choixParcelle(j_actif, pileParcelles);
-        System.out.println(pChoisie.toString());
+        ArrayList<Joueur> toursJoueurs = triJoueurTour(montantEnchere);
+        for(int i = 0; i<joueurs.size(); i++){
+            j_actif = toursJoueurs.get(i);
+            Parcelle pChoisie = fenetre.choixParcelle(j_actif, pileParcelles);
+            j_actif.setParcelleMain(pChoisie);
+            System.out.println("Voici le choix");
+            System.out.println(pChoisie.toString());
+        }
+    }
+
+    //Retourne une liste de joueurs trié pour la phase de tour 1
+    private ArrayList<Joueur> triJoueurTour(int[] montantEnchere) {
+        ArrayList<Joueur> res = new ArrayList<Joueur>(joueurs.size());
+        int max = -1;
+        int maxExclu = 10000;
+        int pos = -1;
+        for(int j = 0; j<joueurs.size(); j++) {
+            for (int i = 0; i < joueurs.size(); i++) {
+                if (max < montantEnchere[i] && montantEnchere[i] < maxExclu) {
+                    max = montantEnchere[i];
+                    pos = i;
+                }
+            }
+            maxExclu = max;
+            System.out.println(pos);
+            res.add(joueurs.get(pos));
+            max = -1;
+        }
+        return res;
     }
 
     public void setJoueur(Joueur joueur) {
