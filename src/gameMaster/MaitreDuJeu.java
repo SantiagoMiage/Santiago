@@ -93,6 +93,7 @@ public class MaitreDuJeu {
         }
         majConstructeurCanal(montantEnchere);
         ArrayList<Joueur> toursJoueurs = triJoueurTour(montantEnchere);
+        joueurs = toursJoueurs;
         for(int i = 0; i<joueurs.size(); i++){
             j_actif = toursJoueurs.get(i);
             Parcelle pChoisie = fenetre.choixParcelle(j_actif, pileParcelles);
