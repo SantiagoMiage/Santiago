@@ -99,8 +99,12 @@ public class FenetreGUI {
     }
 
     //vérifie que le proposition du joueur n'a pas déjà été prise
+    //0 équivaut à passer donc 0 est exclue de la comparaison
     private boolean montantdejaPris(int montantInt, int[] montantEnchere) {
         boolean dejaPris = false;
+        if(montantInt == 0){
+            return dejaPris;
+        }
         for(int i = 0; i<montantEnchere.length; i++){
             if(montantInt == montantEnchere[i])
                 dejaPris = true;
