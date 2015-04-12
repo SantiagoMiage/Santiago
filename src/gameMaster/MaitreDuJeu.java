@@ -23,6 +23,7 @@ public class MaitreDuJeu {
     private PileParcelleGUI ppgui;
     private FenetreGUI fenetre;
     private Joueur j_actif;
+    private Joueur constructeurCanal;
 
 
     public int getNbTours() {
@@ -95,6 +96,7 @@ public class MaitreDuJeu {
             montantEnchere[i] = fenetre.offreJoueur(j_actif, montantEnchere);
 
         }
+        majConstructeurCanal(montantEnchere);
         ArrayList<Joueur> toursJoueurs = triJoueurTour(montantEnchere);
         for(int i = 0; i<joueurs.size(); i++){
             j_actif = toursJoueurs.get(i);
@@ -104,6 +106,29 @@ public class MaitreDuJeu {
             System.out.println(pChoisie.toString());
         }
     }
+
+    //Met a jour le constructeur de canal
+    //C'est le joueur qui a fait à le plus petite enchère ou le premier à avoir mis 0
+    public void majConstructeurCanal(int[] montantEnchere){
+        int min = 10000;
+        int pos = -1;
+        for (int i = 0; i < joueurs.size(); i++) {
+            if(montantEnchere[i]<min){
+                min = montantEnchere[i];
+                pos = i;
+            }
+        }
+        setConstructeurCanal(joueurs.get(pos));
+    }
+
+    public void setConstructeurCanal(Joueur j){
+        constructeurCanal = j;
+    }
+
+    public Joueur getConstructeurCanal() {
+        return constructeurCanal;
+    }
+
 
     //Retourne une liste de joueurs trié pour la phase de tour 1
     private ArrayList<Joueur> triJoueurTour(int[] montantEnchere) {
