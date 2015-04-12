@@ -48,6 +48,13 @@ public class FenetreGUI {
         return pChoisie;
     }
 
+    public void depotParcelle(Joueur j_actif) {
+        System.out.println("Depot  Parcelle");
+        System.out.println(j_actif);
+        plateau.depotParcelle(j_actif);
+    }
+
+
     public void creationFenetre(ArrayList<PileParcelle> pileParcelles) {
         JFrame fenetre = new JFrame();
         fenetre.setTitle("Santiago");

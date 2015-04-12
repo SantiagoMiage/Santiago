@@ -26,15 +26,7 @@ public class MaitreDuJeu {
     private Joueur constructeurCanal;
 
 
-    public int getNbTours() {
-        return nbTours;
-    }
-
-    public ArrayList<PileParcelle> getPileParcelles() {
-        return pileParcelles;
-    }
-
-    public MaitreDuJeu(ArrayList<Joueur> joueurs){
+    public MaitreDuJeu(ArrayList<Joueur> joueurs) {
         this.nbTours = 0;
         this.plateau = new Plateau();
         this.plateau.initialisation();
@@ -54,7 +46,7 @@ public class MaitreDuJeu {
     private void initialisationPileParcelles() {
 
         //on init les piles parcelles
-        for(int i = 0; i<joueurs.size(); i++){
+        for (int i = 0; i < joueurs.size(); i++) {
             pileParcelles.add(new PileParcelle());
         }
 
@@ -68,11 +60,11 @@ public class MaitreDuJeu {
         Collections.shuffle(parcelles, new Random(seed));
 
         //Si on est à 4 joueurs on retire une parcelle du jeu
-        if(nbPile == 4){
+        if (nbPile == 4) {
             parcelles.remove(0);
         }
-        while(!parcelles.isEmpty()){
-            for(int i = 0; i<nbPile;  i++){
+        while (!parcelles.isEmpty()) {
+            for (int i = 0; i < nbPile; i++) {
                 pileParcelles.get(i).AjoutParcelle(parcelles.get(0));
                 parcelles.remove(0);
             }
@@ -83,15 +75,14 @@ public class MaitreDuJeu {
         fenetre.creationParcelle(pileParcelles);
     }
 
-
     //gère la première phase du jeu les enchères pour les parcelles
-    public void enchereParcelle(){
+    public void enchereParcelle() {
         int[] montantEnchere = new int[joueurs.size()];
-        for(int i = 0; i<joueurs.size();i++){
+        for (int i = 0; i < joueurs.size(); i++) {
             montantEnchere[i] = -1;
         }
         this.retournerPlantation();
-        for(int i = 0; i<joueurs.size();i++){
+        for (int i = 0; i < joueurs.size(); i++) {
             j_actif = joueurs.get(i);
             montantEnchere[i] = fenetre.offreJoueur(j_actif, montantEnchere);
 
@@ -161,6 +152,14 @@ public class MaitreDuJeu {
         return res;
     }
 
+    //gère la deuxieme phase du jeu le depot de la parcelle en main des joueurs
+    public void depotParcelle() {
+        for (int i = 0; i < joueurs.size(); i++) {
+            j_actif = joueurs.get(i);
+            fenetre.depotParcelle(j_actif);
+        }
+    }
+
     public void setJoueur(Joueur joueur) {
         this.j_actif = joueur;
     }
@@ -171,60 +170,60 @@ public class MaitreDuJeu {
 
     private void creationParcelles(ArrayList<Parcelle> parcelles) {
         //les 6 patates avec 1 travailleur
-        parcelles.add(new Parcelle(1,false,false, Parcelle.typeChamps.patate));
-        parcelles.add(new Parcelle(1,false,false, Parcelle.typeChamps.patate));
-        parcelles.add(new Parcelle(1,false,false, Parcelle.typeChamps.patate));
-        parcelles.add(new Parcelle(1,false,false, Parcelle.typeChamps.patate));
-        parcelles.add(new Parcelle(1,false,false, Parcelle.typeChamps.patate));
-        parcelles.add(new Parcelle(1,false,false, Parcelle.typeChamps.patate));
+        parcelles.add(new Parcelle(1, false, false, Parcelle.typeChamps.patate));
+        parcelles.add(new Parcelle(1, false, false, Parcelle.typeChamps.patate));
+        parcelles.add(new Parcelle(1, false, false, Parcelle.typeChamps.patate));
+        parcelles.add(new Parcelle(1, false, false, Parcelle.typeChamps.patate));
+        parcelles.add(new Parcelle(1, false, false, Parcelle.typeChamps.patate));
+        parcelles.add(new Parcelle(1, false, false, Parcelle.typeChamps.patate));
         //les 3 patates avec 2 travailleurs
-        parcelles.add(new Parcelle(2,false,false, Parcelle.typeChamps.patate));
-        parcelles.add(new Parcelle(2,false,false, Parcelle.typeChamps.patate));
-        parcelles.add(new Parcelle(2,false,false, Parcelle.typeChamps.patate));
+        parcelles.add(new Parcelle(2, false, false, Parcelle.typeChamps.patate));
+        parcelles.add(new Parcelle(2, false, false, Parcelle.typeChamps.patate));
+        parcelles.add(new Parcelle(2, false, false, Parcelle.typeChamps.patate));
 
         //les 6 piments avec 1 travailleur
-        parcelles.add(new Parcelle(1,false,false, Parcelle.typeChamps.piment));
-        parcelles.add(new Parcelle(1,false,false, Parcelle.typeChamps.piment));
-        parcelles.add(new Parcelle(1,false,false, Parcelle.typeChamps.piment));
-        parcelles.add(new Parcelle(1,false,false, Parcelle.typeChamps.piment));
-        parcelles.add(new Parcelle(1,false,false, Parcelle.typeChamps.piment));
-        parcelles.add(new Parcelle(1,false,false, Parcelle.typeChamps.piment));
+        parcelles.add(new Parcelle(1, false, false, Parcelle.typeChamps.piment));
+        parcelles.add(new Parcelle(1, false, false, Parcelle.typeChamps.piment));
+        parcelles.add(new Parcelle(1, false, false, Parcelle.typeChamps.piment));
+        parcelles.add(new Parcelle(1, false, false, Parcelle.typeChamps.piment));
+        parcelles.add(new Parcelle(1, false, false, Parcelle.typeChamps.piment));
+        parcelles.add(new Parcelle(1, false, false, Parcelle.typeChamps.piment));
         //les 3 piments avec 2 travailleurs
-        parcelles.add(new Parcelle(2,false,false, Parcelle.typeChamps.piment));
-        parcelles.add(new Parcelle(2,false,false, Parcelle.typeChamps.piment));
-        parcelles.add(new Parcelle(2,false,false, Parcelle.typeChamps.piment));
+        parcelles.add(new Parcelle(2, false, false, Parcelle.typeChamps.piment));
+        parcelles.add(new Parcelle(2, false, false, Parcelle.typeChamps.piment));
+        parcelles.add(new Parcelle(2, false, false, Parcelle.typeChamps.piment));
 
         //les 6 bananes avec 1 travailleur
-        parcelles.add(new Parcelle(1,false,false, Parcelle.typeChamps.banane));
-        parcelles.add(new Parcelle(1,false,false, Parcelle.typeChamps.banane));
-        parcelles.add(new Parcelle(1,false,false, Parcelle.typeChamps.banane));
-        parcelles.add(new Parcelle(1,false,false, Parcelle.typeChamps.banane));
-        parcelles.add(new Parcelle(1,false,false, Parcelle.typeChamps.banane));
-        parcelles.add(new Parcelle(1,false,false, Parcelle.typeChamps.banane));
+        parcelles.add(new Parcelle(1, false, false, Parcelle.typeChamps.banane));
+        parcelles.add(new Parcelle(1, false, false, Parcelle.typeChamps.banane));
+        parcelles.add(new Parcelle(1, false, false, Parcelle.typeChamps.banane));
+        parcelles.add(new Parcelle(1, false, false, Parcelle.typeChamps.banane));
+        parcelles.add(new Parcelle(1, false, false, Parcelle.typeChamps.banane));
+        parcelles.add(new Parcelle(1, false, false, Parcelle.typeChamps.banane));
         //les 3 bananes avec 2 travailleurs
-        parcelles.add(new Parcelle(2,false,false, Parcelle.typeChamps.banane));
-        parcelles.add(new Parcelle(2,false,false, Parcelle.typeChamps.banane));
-        parcelles.add(new Parcelle(2,false,false, Parcelle.typeChamps.banane));
+        parcelles.add(new Parcelle(2, false, false, Parcelle.typeChamps.banane));
+        parcelles.add(new Parcelle(2, false, false, Parcelle.typeChamps.banane));
+        parcelles.add(new Parcelle(2, false, false, Parcelle.typeChamps.banane));
 
         //les 6 bambous avec 1 travailleur
-        parcelles.add(new Parcelle(1,false,false, Parcelle.typeChamps.bambou));
-        parcelles.add(new Parcelle(1,false,false, Parcelle.typeChamps.bambou));
-        parcelles.add(new Parcelle(1,false,false, Parcelle.typeChamps.bambou));
-        parcelles.add(new Parcelle(1,false,false, Parcelle.typeChamps.bambou));
-        parcelles.add(new Parcelle(1,false,false, Parcelle.typeChamps.bambou));
-        parcelles.add(new Parcelle(1,false,false, Parcelle.typeChamps.bambou));
+        parcelles.add(new Parcelle(1, false, false, Parcelle.typeChamps.bambou));
+        parcelles.add(new Parcelle(1, false, false, Parcelle.typeChamps.bambou));
+        parcelles.add(new Parcelle(1, false, false, Parcelle.typeChamps.bambou));
+        parcelles.add(new Parcelle(1, false, false, Parcelle.typeChamps.bambou));
+        parcelles.add(new Parcelle(1, false, false, Parcelle.typeChamps.bambou));
+        parcelles.add(new Parcelle(1, false, false, Parcelle.typeChamps.bambou));
         //les 3 bambous avec 2 travailleurs
-        parcelles.add(new Parcelle(2,false,false, Parcelle.typeChamps.bambou));
-        parcelles.add(new Parcelle(2,false,false, Parcelle.typeChamps.bambou));
-        parcelles.add(new Parcelle(2,false,false, Parcelle.typeChamps.bambou));
+        parcelles.add(new Parcelle(2, false, false, Parcelle.typeChamps.bambou));
+        parcelles.add(new Parcelle(2, false, false, Parcelle.typeChamps.bambou));
+        parcelles.add(new Parcelle(2, false, false, Parcelle.typeChamps.bambou));
 
         //les 6 haricots avec 1 travailleur
-        parcelles.add(new Parcelle(1,false,false, Parcelle.typeChamps.haricot));
-        parcelles.add(new Parcelle(1,false,false, Parcelle.typeChamps.haricot));
-        parcelles.add(new Parcelle(1,false,false, Parcelle.typeChamps.haricot));
-        parcelles.add(new Parcelle(1,false,false, Parcelle.typeChamps.haricot));
-        parcelles.add(new Parcelle(1,false,false, Parcelle.typeChamps.haricot));
-        parcelles.add(new Parcelle(1,false,false, Parcelle.typeChamps.haricot));
+        parcelles.add(new Parcelle(1, false, false, Parcelle.typeChamps.haricot));
+        parcelles.add(new Parcelle(1, false, false, Parcelle.typeChamps.haricot));
+        parcelles.add(new Parcelle(1, false, false, Parcelle.typeChamps.haricot));
+        parcelles.add(new Parcelle(1, false, false, Parcelle.typeChamps.haricot));
+        parcelles.add(new Parcelle(1, false, false, Parcelle.typeChamps.haricot));
+        parcelles.add(new Parcelle(1, false, false, Parcelle.typeChamps.haricot));
         //les 3 haricots avec 2 travailleurs
         parcelles.add(new Parcelle(2,false,false, Parcelle.typeChamps.haricot));
         parcelles.add(new Parcelle(2,false,false, Parcelle.typeChamps.haricot));
@@ -244,7 +243,7 @@ public class MaitreDuJeu {
         //mj.afficherPileParcelle();
         mj.setJoueur(listeJoueurs.get(0));
         mj.enchereParcelle();
-
+        mj.depotParcelle();
     }
 
 

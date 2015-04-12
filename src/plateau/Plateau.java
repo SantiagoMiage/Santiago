@@ -7,6 +7,8 @@
 package plateau;
 
 
+import joueur.Joueur;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -30,24 +32,26 @@ public class Plateau {
     ArrayList<JLabel> ListIntersectGUI = new ArrayList<JLabel>();
     ArrayList<Intersection> ListIntersect = new ArrayList<Intersection>();
 
-    /*
-    private JLabel[][] tabParcelleGUI = new JLabel[8][6];   //tableau image
-    private Parcelle[][] tabParcelleObjet = new Parcelle[8][6]; //tableau objet
-    */
+    JLabel parcelleChoisie = null;
+    boolean depotencours = false;
+
+    //les threads
+    Thread threadAttenteDepotParcelle;
+
+
     private JPanel panel = new JPanel(new GridBagLayout());
 
     public Plateau() {
 
     }
 
-    public JPanel getPanel() {
-        return panel;
-    }
-
     public Plateau(JPanel panel) {
         this.panel = panel;
     }
 
+    public JPanel getPanel() {
+        return panel;
+    }
 
     public void initialisation() {
 
@@ -134,7 +138,7 @@ public class Plateau {
 
                     }
                     Intersection inter = new Intersection(xIntersec, yIntersec);
-                    xIntersec =  xIntersec + 2 ;
+                    xIntersec = xIntersec + 2;
                     //ajout au tableau d'intersection
                     ListIntersect.add(inter);
                     ListIntersectGUI.add(thumb);
@@ -250,20 +254,18 @@ public class Plateau {
                         thumb.addMouseListener(new MouseAdapter() {
                             @Override
                             public void mouseClicked(MouseEvent e) {
-                                //on recupere la position de la parcelle en question dans la liste des GUI
-                                int indexParcelle = ListParcelleGUI.indexOf(thumb);
 
-                                //on travaille sur l'objet Parcelle se trouvant a la même position dans ListParcelleModele
-                                //tester le changement d'icone
-                                if (thumb.getIcon() == iconparcelle) {
-                                    thumb.setIcon(iconpatate1);
-                                    ListParcelleModele.get(indexParcelle).setChamps(Parcelle.typeChamps.patate) ;
-                                } else {
-                                    thumb.setIcon(iconvide);
-                                    ListParcelleModele.get(indexParcelle).setChamps(Parcelle.typeChamps.vide) ;
+                                if (depotencours) {
+
+                                    parcelleChoisie = thumb;
+                                    //message avertissant le thread
+
+                                    synchronized (threadAttenteDepotParcelle) {
+                                        threadAttenteDepotParcelle.notify();
+                                        //stocker la parcelle dans la main du joueur
+                                    }
                                 }
 
-                                System.out.println(ListParcelleModele.get(indexParcelle).toStringlight());
                             }
 
                         });
@@ -300,7 +302,7 @@ public class Plateau {
 
     //Test pour savoir si une parcelle est adjacente  a un canal vertical
     public boolean trouveAdjacentVerti(Canal canal, Parcelle elem) {
-        return ((elem.getNumligne() < canal.yfin) && (elem.getNumligne() >= canal.ydeb) && ((elem.getNumcolonne()== canal.xdeb) || (elem.getNumcolonne() == canal.xdeb - 1)));
+        return ((elem.getNumligne() < canal.yfin) && (elem.getNumligne() >= canal.ydeb) && ((elem.getNumcolonne() == canal.xdeb) || (elem.getNumcolonne() == canal.xdeb - 1)));
     }
 
     //Test pour savoir si une parcelle est adjacente  a un canal horizontal
@@ -323,12 +325,12 @@ public class Plateau {
 
             if (elem.isirrigue()) {
                 //si les coordonnées correspondent au debut du canal
-                if ((xdeb == elem.getI()) && (ydeb == elem.getJ()) ) {
+                if ((xdeb == elem.getI()) && (ydeb == elem.getJ())) {
                     //alors on renvoie vrai
                     ok = true;
                     //on passe l'autre intersection (fin) a irrigue
                     irrigueIntersection(xfin, yfin);
-                } else if ((xfin == elem.getI()) && (yfin == elem.getJ())  ) {  //si les coordonnées correspondent a la fin du canal
+                } else if ((xfin == elem.getI()) && (yfin == elem.getJ())) {  //si les coordonnées correspondent a la fin du canal
                     ok = true;
                     //on passe l'autre intersection (debut) a irrigue
                     irrigueIntersection(xdeb, ydeb);
@@ -350,8 +352,6 @@ public class Plateau {
             }
         }
     }
-
-
 
     //Renvoie la liste des Parcelles Adjacentes au canal
     public ArrayList<Parcelle> listeParcellesAdjacentes(Canal canal) {
@@ -411,21 +411,124 @@ public class Plateau {
     }
 
 
+    //permet de deposer sur le plateau la parcelle que l'on a en main
+    public void depotParcelle(Joueur joueur) {
+
+        depotencours = true;
+        parcelleChoisie = null;
+        Thread t = new Thread();
+        threadAttenteDepotParcelle = t;
+        threadAttenteDepotParcelle.start();
+        synchronized (threadAttenteDepotParcelle) {
+            while (parcelleChoisie == null) {
+                System.out.println("att");
+                System.out.println(depotencours);
+                try {
+                    threadAttenteDepotParcelle.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            System.out.println("clik");
+            depotencours = false;
+
+        }
+
+
+    }
+
+    public void deposerParcelle(Joueur joueur) {
+
+        //on recupere la position de la parcelle sur laquel le joueur a cliquer
+        int indexParcelle = ListParcelleGUI.indexOf(parcelleChoisie);
+        //on recupere la parcelle que le joueur posse (a obtenu dans la phase d'enchere)
+        Parcelle parcelleMain = joueur.getParcelleMain();
+        //on met a jour la liste des parcelles du plateau
+        ListParcelleModele.set(indexParcelle, parcelleMain);
+        //on modifie l'Affichage de la parcelle sur le plateau
+        retournerParcelle(parcelleChoisie, parcelleMain);
+        ListParcelleGUI.set(indexParcelle, parcelleChoisie);
+        //on vide la main du joueur
+        joueur.setParcelleMain(null);
+
+        System.out.println(ListParcelleModele.get(indexParcelle).toStringlight());
+    }
+
+    //TODO affiche la parcelle nouvellemtn placé
+    public void retournerParcelle(JLabel thumb, Parcelle parcelle) {
+        String chemin = null;
+        URL url = null;
+        switch (parcelle.getChamps()) {
+            case patate:
+                if (parcelle.getNbouvrier() == 1) {
+                    chemin = "/ressource/images/patate1.png";
+                } else {
+                    chemin = "/ressource/images/patate2.png";
+                }
+                break;
+
+            case piment:
+                if (parcelle.getNbouvrier() == 1) {
+                    chemin = "/ressource/images/piment1.png";
+                } else {
+                    chemin = "/ressource/images/piment2.png";
+                }
+                break;
+
+            case banane:
+                if (parcelle.getNbouvrier() == 1) {
+                    chemin = "/ressource/images/banane1.png";
+                } else {
+                    chemin = "/ressource/images/banane2.png";
+                }
+                break;
+
+            case bambou:
+                if (parcelle.getNbouvrier() == 1) {
+                    chemin = "/ressource/images/bambou1.png";
+                } else {
+                    chemin = "/ressource/images/bambou2.png";
+                }
+                break;
+
+            case haricot:
+                if (parcelle.getNbouvrier() == 1) {
+                    chemin = "/ressource/images/haricot1.png";
+                } else {
+                    chemin = "/ressource/images/haricot2.png";
+                }
+                break;
+
+            case vide:
+                chemin = "/ressource/images/vide.png";
+                break;
+
+            case test:
+                chemin = "/ressource/images/test.png";
+                break;
+            default:
+                chemin = "/ressource/images/vide.png";
+        }
+        url = this.getClass().getResource(chemin);
+        ImageIcon icon = new ImageIcon(url);
+        thumb.setIcon(icon);
+
+    }
 }
-    
-    
-    
-    
-    
 
-    
 
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
