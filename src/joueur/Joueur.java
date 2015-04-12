@@ -19,6 +19,15 @@ public class Joueur {
     private String pseudo;
     private int argent;
     private int score;
+
+    public Parcelle getParcelleMain() {
+        return parcelleMain;
+    }
+
+    public void setParcelleMain(Parcelle parcelleMain) {
+        this.parcelleMain = parcelleMain;
+    }
+
     private Parcelle parcelleMain;
 
 
