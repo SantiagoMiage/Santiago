@@ -136,17 +136,27 @@ public class MaitreDuJeu {
         int max = -1;
         int maxExclu = 10000;
         int pos = -1;
+        //tries les joueurs qui ont misé
         for(int j = 0; j<joueurs.size(); j++) {
             for (int i = 0; i < joueurs.size(); i++) {
-                if (max < montantEnchere[i] && montantEnchere[i] < maxExclu) {
+                if (montantEnchere[i] !=0 && max < montantEnchere[i] && montantEnchere[i] < maxExclu) {
                     max = montantEnchere[i];
                     pos = i;
                 }
             }
             maxExclu = max;
             System.out.println(pos);
-            res.add(joueurs.get(pos));
+            if (pos != -1 && montantEnchere[pos] != 0) {
+                res.add(joueurs.get(pos));
+            }
             max = -1;
+            pos = -1;
+        }
+        //tri les joueurs qui ont passé
+        for(int i = joueurs.size()-1; i>-1; i--){
+            if(montantEnchere[i] == 0){
+                res.add(joueurs.get(i));
+            }
         }
         return res;
     }
