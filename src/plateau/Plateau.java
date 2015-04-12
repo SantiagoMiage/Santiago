@@ -431,6 +431,7 @@ public class Plateau {
             }
             System.out.println("clik");
             depotencours = false;
+            deposerParcelle(joueur);
 
         }
 
