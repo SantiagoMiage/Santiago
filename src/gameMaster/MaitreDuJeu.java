@@ -26,6 +26,10 @@ public class MaitreDuJeu {
     private Joueur constructeurCanal;
 
 
+    public ArrayList<PileParcelle> getPileParcelles() {
+        return pileParcelles;
+    }
+
     public MaitreDuJeu(ArrayList<Joueur> joueurs) {
         this.nbTours = 0;
         this.plateau = new Plateau();
@@ -245,8 +249,4 @@ public class MaitreDuJeu {
         mj.enchereParcelle();
         mj.depotParcelle();
     }
-
-
-
-
 }
