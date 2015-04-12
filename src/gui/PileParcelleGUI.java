@@ -150,13 +150,14 @@ public class PileParcelleGUI {
 
     public Parcelle choixParcelle(Joueur j_actif) {
         setEnchereEnCours(true);
-        //TODO wait for click utilisateur
+        parcelleChoisie = null;
         Thread t = new Thread();
         threadAttenteChoixPile = t;
         threadAttenteChoixPile.start();
         synchronized (threadAttenteChoixPile){
             while(parcelleChoisie == null) {
                 System.out.println("att");
+                System.out.println(encherencours);
                 try {
                     threadAttenteChoixPile.wait();
                 } catch (InterruptedException e) {
@@ -168,9 +169,6 @@ public class PileParcelleGUI {
             setEnchereEnCours(false);
             return parcelleChoisie;
         }
-
-
-       // return parcelleChoisie;
     }
 
     private void setEnchereEnCours(boolean b) {
