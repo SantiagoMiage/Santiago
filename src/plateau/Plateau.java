@@ -444,6 +444,10 @@ public class Plateau {
         int indexParcelle = ListParcelleGUI.indexOf(parcelleChoisie);
         //on recupere la parcelle que le joueur posse (a obtenu dans la phase d'enchere)
         Parcelle parcelleMain = joueur.getParcelleMain();
+        //on rempli les ouvriers
+        parcelleMain.setNbouvrieractif(parcelleMain.getNbouvrier());
+        //on affiche le nombre d ouvrier actif sur la parcelle
+        
         //on met a jour la liste des parcelles du plateau
         ListParcelleModele.set(indexParcelle, parcelleMain);
         //on modifie l'Affichage de la parcelle sur le plateau
@@ -507,6 +511,7 @@ public class Plateau {
             case test:
                 chemin = "/ressource/images/test.png";
                 break;
+
             default:
                 chemin = "/ressource/images/vide.png";
         }
