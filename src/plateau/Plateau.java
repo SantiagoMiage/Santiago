@@ -395,6 +395,7 @@ public class Plateau {
         fenetre.setLocationRelativeTo(null);
         fenetre.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         fenetre.setVisible(true);
+        fenetre.setResizable(false);
 
     }
 
@@ -447,7 +448,7 @@ public class Plateau {
         //on rempli les ouvriers
         parcelleMain.setNbouvrieractif(parcelleMain.getNbouvrier());
         //on affiche le nombre d ouvrier actif sur la parcelle
-        
+
         //on met a jour la liste des parcelles du plateau
         ListParcelleModele.set(indexParcelle, parcelleMain);
         //on modifie l'Affichage de la parcelle sur le plateau

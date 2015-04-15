@@ -30,8 +30,8 @@ public class FenetreGUI {
         return pileParcelleGUI.affichagePileParcelle();
     }
 
-    public void retournerParcelles(){
-    //    pileParcelleGUI.retournerParcelles();
+    public void retournerLesPilesParcelles(){
+        pileParcelleGUI.retournerLesPilesParcelles();
     }
 
     //Ajoute le panel de PileParcelleGUI dans la fenêtre

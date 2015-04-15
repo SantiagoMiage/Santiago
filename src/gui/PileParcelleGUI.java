@@ -19,6 +19,7 @@ public class PileParcelleGUI {
 
     Thread threadAttenteChoixPile;
     private ArrayList<PileParcelle> pileParcelles;
+    private ArrayList<JLabel> pileParcellesGUI;
     private JPanel panel = new JPanel(new GridLayout(4, 1, 5, 5));
     private boolean encherencours;
     private Parcelle parcelleChoisie = null;
@@ -46,26 +47,31 @@ public class PileParcelleGUI {
             thumb.setPreferredSize(new Dimension(50, 50));
             thumb.setIcon(iconparcelle);
             //   pileParcellesGUI.add(thumb);
-            retournerParcelles(thumb, indice);
+            //    retournerParcelles(thumb, indice);
 
             thumb.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     System.out.println(encherencours);
+                    //on remplit la liste des Jlabel des 4 piles pour travailelr dessus plus tard
+                    System.out.println("add");
+                    pileParcellesGUI.add(thumb);
+                    System.out.println("liste" + pileParcellesGUI.toString());
                     if (encherencours) {
-                        //recuperer la parcelle
-                        parcelleChoisie = pileParcelles.get(indice).getParcelle();
-
-                        if (pileParcelles.get(indice).getPileParcelle().size() > 1) {
-                            //retirer limage
-                            pileParcelles.get(indice).popParcelle();
-                            //afficher  la parcelle suivante
-                           // retournerParcelles(thumb, indice);
-                            thumb.setIcon(iconvide);
-                        } else {
-                            //retirer limage
-                            pileParcelles.get(indice).popParcelle();
-                            thumb.setIcon(iconvide);
+                        if (thumb.getIcon() != iconvide) {
+                            //recuperer la parcelle
+                            parcelleChoisie = pileParcelles.get(indice).getParcelle();
+                            if (pileParcelles.get(indice).getPileParcelle().size() > 1) {
+                                //retirer limage
+                                pileParcelles.get(indice).popParcelle();
+                                //afficher  la parcelle suivante
+                                // retournerParcelles(thumb, indice);
+                                thumb.setIcon(iconvide);
+                            } else {
+                                //retirer limage
+                                pileParcelles.get(indice).popParcelle();
+                                thumb.setIcon(iconvide);
+                            }
                         }
                         synchronized (threadAttenteChoixPile) {
                             threadAttenteChoixPile.notify();
@@ -85,6 +91,7 @@ public class PileParcelleGUI {
 
     //TODO afficher les parcelles sur les piles
     public void retournerParcelles(JLabel thumb, int compt) {
+        System.out.println("retournerParcelles");
         String chemin = null;
         URL url = null;
         switch (pileParcelles.get(compt).recupTypeDessus()) {
@@ -141,6 +148,19 @@ public class PileParcelleGUI {
         url = this.getClass().getResource(chemin);
         ImageIcon icon = new ImageIcon(url);
         thumb.setIcon(icon);
+    }
+
+    //retourneretourner la parcelle au sommet de chacunes des 4 piles
+    public void retournerLesPilesParcelles() {
+        System.out.println("retournerLesPilesParcelles");
+        int compteur = 0;
+        //pour chacune des 4 piles , retourner la parcelle au sommet de la pile
+        for (JLabel jLabel : pileParcellesGUI) {
+            JLabel thumb = jLabel;
+            retournerParcelles(thumb, compteur);
+            compteur++;
+        }
+
 
     }
 
@@ -155,8 +175,8 @@ public class PileParcelleGUI {
         Thread t = new Thread();
         threadAttenteChoixPile = t;
         threadAttenteChoixPile.start();
-        synchronized (threadAttenteChoixPile){
-            while(parcelleChoisie == null) {
+        synchronized (threadAttenteChoixPile) {
+            while (parcelleChoisie == null) {
                 System.out.println("att");
                 System.out.println(encherencours);
                 try {

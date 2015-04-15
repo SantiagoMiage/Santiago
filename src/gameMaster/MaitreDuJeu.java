@@ -42,6 +42,8 @@ public class MaitreDuJeu {
         this.fenetre = new FenetreGUI();
     }
 
+
+
     public void afficherJeu(){
         this.fenetre.creationFenetre(pileParcelles);
     }
@@ -170,7 +172,7 @@ public class MaitreDuJeu {
     }
 
     private void retournerPlantation() {
-        fenetre.retournerParcelles();
+        fenetre.retournerLesPilesParcelles();
     }
 
     private void creationParcelles(ArrayList<Parcelle> parcelles) {
@@ -247,6 +249,8 @@ public class MaitreDuJeu {
         mj.afficherJeu();
         //mj.afficherPileParcelle();
         mj.setJoueur(listeJoueurs.get(0));
+        mj.enchereParcelle();
+        mj.depotParcelle();
         mj.enchereParcelle();
         mj.depotParcelle();
     }
