@@ -19,7 +19,7 @@ public class PileParcelleGUI {
 
     Thread threadAttenteChoixPile;
     private ArrayList<PileParcelle> pileParcelles;
-    private ArrayList<JLabel> pileParcellesGUI;
+    ArrayList<JLabel> pileParcellesGUI=new ArrayList<JLabel>();;
     private JPanel panel = new JPanel(new GridLayout(4, 1, 5, 5));
     private boolean encherencours;
     private Parcelle parcelleChoisie = null;
@@ -48,14 +48,14 @@ public class PileParcelleGUI {
             thumb.setIcon(iconparcelle);
             //   pileParcellesGUI.add(thumb);
             //    retournerParcelles(thumb, indice);
-
+            pileParcellesGUI.add(thumb);
             thumb.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     System.out.println(encherencours);
                     //on remplit la liste des Jlabel des 4 piles pour travailelr dessus plus tard
                     System.out.println("add");
-                    pileParcellesGUI.add(thumb);
+
                     System.out.println("liste" + pileParcellesGUI.toString());
                     if (encherencours) {
                         if (thumb.getIcon() != iconvide) {
@@ -153,6 +153,7 @@ public class PileParcelleGUI {
     //retourneretourner la parcelle au sommet de chacunes des 4 piles
     public void retournerLesPilesParcelles() {
         System.out.println("retournerLesPilesParcelles");
+        System.out.println(pileParcellesGUI.toString());
         int compteur = 0;
         //pour chacune des 4 piles , retourner la parcelle au sommet de la pile
         for (JLabel jLabel : pileParcellesGUI) {
