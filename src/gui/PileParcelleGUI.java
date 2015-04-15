@@ -60,7 +60,8 @@ public class PileParcelleGUI {
                             //retirer limage
                             pileParcelles.get(indice).popParcelle();
                             //afficher  la parcelle suivante
-                            retournerParcelles(thumb, indice);
+                           // retournerParcelles(thumb, indice);
+                            thumb.setIcon(iconvide);
                         } else {
                             //retirer limage
                             pileParcelles.get(indice).popParcelle();
