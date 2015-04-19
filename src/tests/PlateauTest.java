@@ -67,9 +67,12 @@ public class PlateauTest {
         for (Parcelle parcelle : listeP) {
             assertTrue(parcelle.isIrrigue());
         }
-
-
     }
 
-
+    @Test
+    public void testEstIrriguable(){
+        Plateau p = new Plateau();
+        Canal canal = new Canal(false,2,4,4,4);
+        assertTrue(true);
+    }
 }
