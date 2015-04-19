@@ -69,6 +69,10 @@ public class FenetreGUI {
         fenetre.setVisible(true);
     }
 
+    public boolean enchereOk(Joueur j_actif, int montantInt,int[] montantEnchere ){
+        return montantInt < 0 || montantdejaPris(montantInt, montantEnchere) || montantInt > j_actif.getArgent();
+    }
+
     //popup qui demande le montant que le joueur fait pour l'enchère
     public int offreJoueur(Joueur j_actif, int[] montantEnchere) {
         int montantInt = -1;
@@ -88,7 +92,7 @@ public class FenetreGUI {
             if(montantInt < 0) gogol = true;
         } catch (Exception e) {
             gogol = true;
-        }while(montantInt < 0 || montantdejaPris(montantInt, montantEnchere) || montantInt > j_actif.getArgent());
+        }while(enchereOk(j_actif, montantInt, montantEnchere));
         return montantInt;
     }
 
