@@ -23,6 +23,11 @@ public class MaitreDuJeu {
     private PileParcelleGUI ppgui;
     private FenetreGUI fenetre;
     private Joueur j_actif;
+
+    public FenetreGUI getFenetre() {
+        return fenetre;
+    }
+
     private Joueur constructeurCanal;
 
 
@@ -42,7 +47,9 @@ public class MaitreDuJeu {
         this.fenetre = new FenetreGUI();
     }
 
-
+    public Plateau getPlateau() {
+        return plateau;
+    }
 
     public void afficherJeu(){
         this.fenetre.creationFenetre(pileParcelles);
@@ -254,4 +261,6 @@ public class MaitreDuJeu {
         mj.enchereParcelle();
         mj.depotParcelle();
     }
+
+
 }
