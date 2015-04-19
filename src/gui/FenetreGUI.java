@@ -88,7 +88,7 @@ public class FenetreGUI {
             if(montantInt < 0) gogol = true;
         } catch (Exception e) {
             gogol = true;
-        }while(montantInt < 0 || montantdejaPris(montantInt, montantEnchere));
+        }while(montantInt < 0 || montantdejaPris(montantInt, montantEnchere) || montantInt > j_actif.getArgent());
         return montantInt;
     }
 
