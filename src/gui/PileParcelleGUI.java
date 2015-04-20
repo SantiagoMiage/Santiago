@@ -15,6 +15,7 @@ import java.util.ArrayList;
 /**
  * Created by Crema on 02/04/2015.
  */
+
 public class PileParcelleGUI {
 
     Thread threadAttenteChoixPile;

@@ -256,13 +256,14 @@ public class Plateau {
                             public void mouseClicked(MouseEvent e) {
 
                                 if (depotencours) {
+                                    if (thumb.getIcon()== iconparcelle) {
+                                        parcelleChoisie = thumb;
+                                        //message avertissant le thread
 
-                                    parcelleChoisie = thumb;
-                                    //message avertissant le thread
-
-                                    synchronized (threadAttenteDepotParcelle) {
-                                        threadAttenteDepotParcelle.notify();
-                                        //stocker la parcelle dans la main du joueur
+                                        synchronized (threadAttenteDepotParcelle) {
+                                            threadAttenteDepotParcelle.notify();
+                                            //stocker la parcelle dans la main du joueur
+                                        }
                                     }
                                 }
 
