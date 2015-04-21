@@ -20,7 +20,7 @@ import java.util.Random;
 /**
  * Created by Yannis Cipriani on 16/03/2015.
  */
-public class Plateau {
+public class Plateau extends JApplet {
 
     //Tableaux relatifs aux Parcelles
     ArrayList<JLabel> ListParcelleGUI = new ArrayList<JLabel>();
@@ -166,17 +166,12 @@ public class Plateau {
                                 @Override
                                 public void mouseClicked(MouseEvent e) {
                                     if (estIrriguable(canal)) {
-                                        System.out.println(canal.toString());
                                         Irrigation(canal);
-
                                         //tester le changement d'icone pour canal irrigue
                                         if (thumb.getIcon() == iconcanalhori) {
                                             thumb.setIcon(iconcanalhorirrigue);
                                             canal.setIrrigue(true);
-                                        } /*else {
-                                            thumb.setIcon(iconcanalhori);
-                                            canal.setIrrigue(false);
-                                        }*/
+                                        }
                                     }
                                 }
 
@@ -256,7 +251,7 @@ public class Plateau {
                             public void mouseClicked(MouseEvent e) {
 
                                 if (depotencours) {
-                                    if (thumb.getIcon()== iconparcelle) {
+                                    if (thumb.getIcon() == iconparcelle) {
                                         parcelleChoisie = thumb;
                                         //message avertissant le thread
 
@@ -264,6 +259,9 @@ public class Plateau {
                                             threadAttenteDepotParcelle.notify();
                                             //stocker la parcelle dans la main du joueur
                                         }
+
+                                        //Desssiner un Rectangle et modifier sa couleur de fond
+                                        colorierOuvrier(thumb);
                                     }
                                 }
 
@@ -313,13 +311,10 @@ public class Plateau {
 
     //Test un canal si il peut etre irrigue (touche la source ou un autre canal)
     public boolean estIrriguable(Canal canal) {
-
-        System.out.println("estIrriguable");
         int xdeb = canal.getXdeb();
         int ydeb = canal.getYdeb();
         int xfin = canal.getXfin();
         int yfin = canal.getYfin();
-        System.out.println(canal.toString());
         boolean ok = false;
         for (Intersection elem : ListIntersect) {
             //si l'intersection est irrigue
@@ -346,6 +341,58 @@ public class Plateau {
     /////FONCTION//////
     ///////////////////
 
+    public void colorierOuvrier(JLabel thumb) {
+        Parcelle parcelle = guiToModeleParcelle(thumb);
+        //recup le nb ouvrier de la parcelle correspondant au thumb
+        int nbouv = parcelle.getNbouvrier();
+
+        //recuperer la position de la parcelle
+        int posx = thumb.getX();
+        int posy = thumb.getY();
+        System.out.println("posx " + posx + "posy " + posy);
+
+        //calcul de la position du premier carré de couleur
+        final int posxcarre = posx + 5;
+        final int posycarre = posy + 5;
+
+
+        //coloriage du premier ouvrier
+        JPanel aDessiner = new JPanel() {
+            public void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.setColor(Color.black);
+                g.fillRect(10, 10, 10, 10);
+                System.out.println(posxcarre + " " + posycarre);
+            }
+        };
+       // panel.add(aDessiner);
+        panel.getParent().add(aDessiner,0);
+      //  panel.getParent().add(aDessiner,1);
+       // panel.getParent().add(aDessiner,2);
+       // panel.add(aDessiner);
+
+        //coloriage du second ouvrier si il y en a un
+    /*    if (nbouv > 1) {
+            //calcul de la position du second carré de couleur
+            int posxcarredeux = posxcarre + 15;
+            int posycarredeux = posycarre;
+            //coloriage du second ouvrier
+        }
+*/
+    }
+
+
+    public JLabel modeleToGuiIParcelle(Parcelle parcelle) {
+        int index = ListParcelleModele.indexOf(parcelle);
+        return ListParcelleGUI.get(index);
+    }
+
+    public Parcelle guiToModeleParcelle(JLabel thumb) {
+        int index = ListParcelleGUI.indexOf(thumb);
+        return ListParcelleModele.get(index);
+    }
+
+
     public void irrigueIntersection(int i, int j) {
         for (Intersection elem : ListIntersect) {
             if (elem.getI() == i && elem.getJ() == j) {
@@ -356,9 +403,7 @@ public class Plateau {
 
     //Renvoie la liste des Parcelles Adjacentes au canal
     public ArrayList<Parcelle> listeParcellesAdjacentes(Canal canal) {
-        System.out.println("listeParcellesAdjacentes");
         ArrayList<Parcelle> listeP = new ArrayList<Parcelle>();
-
         for (Parcelle elem : ListParcelleModele) {
             if (canal.estHorizontale()) {
 
@@ -376,29 +421,13 @@ public class Plateau {
 
     //irrigue les Parcelles Adjacentes au canal
     public void Irrigation(Canal canal) {
-        System.out.println("irrigation()");
         ArrayList<Parcelle> listeP;
         listeP = listeParcellesAdjacentes(canal);
-        System.out.println(listeP.toString());
         for (Parcelle parcelle : listeP) {
-            System.out.println(parcelle.toString());
             parcelle.setIrrigue(true);
         }
     }
 
-    //Creation et affichage du plateau
-    public void creationFenetre() {
-        JFrame fenetre = new JFrame();
-        fenetre.setTitle("Santiago");
-        fenetre.setPreferredSize(new Dimension(1000, 900));
-        fenetre.setContentPane(panel);
-        fenetre.pack();
-        fenetre.setLocationRelativeTo(null);
-        fenetre.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        fenetre.setVisible(true);
-        fenetre.setResizable(false);
-
-    }
 
     public void initialisationSource() {
         String cheminsource = "/ressource/images/source.png";
@@ -423,21 +452,15 @@ public class Plateau {
         threadAttenteDepotParcelle.start();
         synchronized (threadAttenteDepotParcelle) {
             while (parcelleChoisie == null) {
-                System.out.println("att");
-                System.out.println(depotencours);
                 try {
                     threadAttenteDepotParcelle.wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
-            System.out.println("clik");
             depotencours = false;
             deposerParcelle(joueur);
-
         }
-
-
     }
 
     public void deposerParcelle(Joueur joueur) {
@@ -457,9 +480,8 @@ public class Plateau {
         ListParcelleGUI.set(indexParcelle, parcelleChoisie);
         //on vide la main du joueur
         joueur.setParcelleMain(null);
-
-        System.out.println(ListParcelleModele.get(indexParcelle).toStringlight());
     }
+
 
     //TODO affiche la parcelle nouvellemtn placé
     public void retournerParcelle(JLabel thumb, Parcelle parcelle) {
@@ -522,6 +544,32 @@ public class Plateau {
         thumb.setIcon(icon);
 
     }
+
+
+    private static class Jeton extends JPanel {
+        public void paintComponent(Graphics g) {
+            super.paintComponent(g);
+
+            // Tracer une ligne rouge entre les points (x=5, y=30) et (x=50, y=70)
+            g.setColor(Color.red);
+            g.drawLine(5, 30, 50, 70);
+            //carre
+            g.setColor(Color.blue);
+            g.fillRect(100, 100, 50, 50);
+
+            g.drawRect(10, 10, 50, 60);
+            g.fillRect(65, 65, 30, 40);
+
+
+        }
+
+        public Dimension getPreferredSize() {
+            return new Dimension(10, 10); // appropriate constants
+        }
+
+    }
+
+
 }
 
 
