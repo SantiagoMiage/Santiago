@@ -89,7 +89,6 @@ public class PileParcelleGUI {
         }
     }
 
-    //TODO afficher les parcelles sur les piles
     public void retournerParcelles(JLabel thumb, int compt) {
         System.out.println("retournerParcelles");
         String chemin = null;
