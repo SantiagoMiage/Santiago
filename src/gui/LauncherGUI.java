@@ -14,7 +14,11 @@ import java.util.ArrayList;
 /**
  * Created by Crema on 21/04/2015.
  */
-public class LauncherGUI extends JFrame {
+public class LauncherGUI {
+
+    public JPanel getPanel() {
+        return panel;
+    }
 
     private JPanel panel = new JPanel();
     private JButton boutonRejoindre = new JButton("Rejoindre partie");
@@ -22,20 +26,20 @@ public class LauncherGUI extends JFrame {
     private JButton boutonSolo = new JButton("Creer partie en local");
     private JLabel labelPseudo = new JLabel("Entrez votre pseudo");
     private JLabel info = new JLabel(" ");
-    private JTextField jtf = new JTextField("  Pseudo  ");
+    public JTextField jtf = new JTextField("  Pseudo  ");
+
+    public String pseudo2String;
+    public String pseudo3String;
+    public String pseudo4String;
 
     public LauncherGUI() {
         String cheminparcelle = "/ressource/images/santiago.jpg";
         URL url_parcelle = this.getClass().getResource(cheminparcelle);
         final ImageIcon fondLauncher = new ImageIcon(url_parcelle);
 
-        this.setTitle("Launcher Santiago");
-        this.setSize(500, 450);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setLocationRelativeTo(null);
+
         //this.setUndecorated(true);
-        setContentPane(new JLabel(fondLauncher));
-        this.setLayout(new GridBagLayout());
+        JLabel fond = new JLabel(fondLauncher);
 
         //L'objet servant à positionner les composants
         GridBagConstraints gbc = new GridBagConstraints();
@@ -45,27 +49,23 @@ public class LauncherGUI extends JFrame {
         gbc.gridy = 0;
         gbc.gridheight = 1;
         gbc.gridwidth = 1;
-        this.add(info, gbc);
+        panel.add(info, gbc);
         gbc.gridx = 0;
         gbc.gridy = 1;
-        this.add(labelPseudo, gbc);
+        panel.add(labelPseudo, gbc);
         gbc.gridx = 1;
         gbc.gridy = 1;
-        this.add(jtf, gbc);
+        panel.add(jtf, gbc);
         //gbc.gridwidth = GridBagConstraints.REMAINDER;
         gbc.gridx = 0;
         gbc.gridy = 2;
-        this.add(boutonCreer, gbc);
+        panel.add(boutonCreer, gbc);
         gbc.gridx = 1;
         gbc.gridy = 2;
-        this.add(boutonRejoindre, gbc);
+        panel.add(boutonRejoindre, gbc);
         gbc.gridx = 0;
         gbc.gridy = 3;
-        this.add(boutonSolo, gbc);
-
-        this.getContentPane().add(panel);
-
-        this.setVisible(true);
+        panel.add(boutonSolo, gbc);
 
         boutonCreer.addActionListener(new BoutonCreerListener());
         boutonRejoindre.addActionListener(new BoutonRejoindreListener());
@@ -121,25 +121,11 @@ public class LauncherGUI extends JFrame {
             JOptionPane pseudo2 = new JOptionPane();
             JOptionPane pseudo3 = new JOptionPane();
             JOptionPane pseudo4 = new JOptionPane();
-            String pseudo2String = pseudo2.showInputDialog(null, "Entrez le pseudo joueur 2", "Pseudo joueur 2! ", JOptionPane.QUESTION_MESSAGE);
-            String pseudo3String = pseudo3.showInputDialog(null, "Entrez le pseudo joueur 3", "Pseudo joueur 3! ", JOptionPane.QUESTION_MESSAGE);
-            String pseudo4String = pseudo4.showInputDialog(null, "Entrez le pseudo joueur 4", "Pseudo joueur 4! ", JOptionPane.QUESTION_MESSAGE);
+            pseudo2String = pseudo2.showInputDialog(null, "Entrez le pseudo joueur 2", "Pseudo joueur 2! ", JOptionPane.QUESTION_MESSAGE);
+            pseudo3String = pseudo3.showInputDialog(null, "Entrez le pseudo joueur 3", "Pseudo joueur 3! ", JOptionPane.QUESTION_MESSAGE);
+            pseudo4String = pseudo4.showInputDialog(null, "Entrez le pseudo joueur 4", "Pseudo joueur 4! ", JOptionPane.QUESTION_MESSAGE);
 
-            ArrayList<Joueur> listeJoueurs = new ArrayList<Joueur>(4);
-            listeJoueurs.add(new Joueur(jtf.getText(), 10));
-            listeJoueurs.add(new Joueur(pseudo2String, 10));
-            listeJoueurs.add(new Joueur(pseudo3String, 10));
-            listeJoueurs.add(new Joueur(pseudo4String, 10));
-            MaitreDuJeu mj = new MaitreDuJeu(listeJoueurs);
-            LauncherGUI.this.dispose();
-            mj.jouerPartie();
         }
 
     }
-
-    public static void main(String[] args){
-        LauncherGUI launcher = new LauncherGUI();
-
-    }
-
 }

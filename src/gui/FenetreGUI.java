@@ -17,11 +17,20 @@ public class FenetreGUI {
     private PileParcelleGUI pileParcelleGUI;
     private Plateau plateau;
     private JPanel panel = new JPanel(new GridLayout(1, 2, 10, 10));
+    private LauncherGUI launcher = new LauncherGUI();
+    JFrame fenetre;
+
+
+    public LauncherGUI getLauncher() {
+        return launcher;
+    }
 
     public FenetreGUI() {
         pileParcelleGUI = null;
         this.plateau = new Plateau();
+
         this.plateau.initialisation();
+        fenetre = new JFrame();
     }
 
     //Créer une pile parcelle et la retourne
@@ -53,15 +62,18 @@ public class FenetreGUI {
         plateau.depotParcelle(j_actif);
     }
 
-
-    public void creationFenetre(ArrayList<PileParcelle> pileParcelles) {
-        JFrame fenetre = new JFrame();
-        fenetre.setTitle("Santiago");
-        fenetre.setPreferredSize(new Dimension(1000, 900));
+    public void creationPlateau(ArrayList<PileParcelle> pileParcelles){
+        fenetre.getContentPane().removeAll();
         fenetre.setContentPane(panel);
-        //fenetre.setResizable(false);
         panel.add(plateau.getPanel());
         creationParcelle(pileParcelles);
+        fenetre.revalidate();
+    }
+
+    public void creationLauncher() {
+        fenetre.setTitle("Santiago");
+        fenetre.setPreferredSize(new Dimension(1000, 900));
+        fenetre.setContentPane(launcher.getPanel());
         fenetre.pack();
         fenetre.setLocationRelativeTo(null);
         fenetre.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

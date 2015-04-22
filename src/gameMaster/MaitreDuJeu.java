@@ -47,12 +47,23 @@ public class MaitreDuJeu {
         this.fenetre = new FenetreGUI();
     }
 
+    public MaitreDuJeu() {
+        this.nbTours = 0;
+        this.plateau = new Plateau();
+        this.plateau.initialisation();
+        //this.plateau.creationFenetre();
+        this.joueurs = joueurs;
+        //créer autant de pile de parcelle qu'il y a de joueurs
+        this.fenetre = new FenetreGUI();
+    }
+
     public Plateau getPlateau() {
         return plateau;
     }
 
     public void afficherJeu(){
-        this.fenetre.creationFenetre(pileParcelles);
+        System.out.println(pileParcelles);
+        this.fenetre.creationPlateau(pileParcelles);
     }
 
     //Créer les différentes pile de parcelles pour la partie
@@ -174,7 +185,7 @@ public class MaitreDuJeu {
         }
     }
 
-    public void setJoueur(Joueur joueur) {
+    public void setJ_actif(Joueur joueur) {
         this.j_actif = joueur;
     }
 
@@ -247,7 +258,7 @@ public class MaitreDuJeu {
     public void jouerPartie(){
         afficherJeu();
         //mj.afficherPileParcelle();
-        setJoueur(joueurs.get(0));
+        setJ_actif(joueurs.get(0));
         enchereParcelle();
         depotParcelle();
         enchereParcelle();
@@ -258,18 +269,40 @@ public class MaitreDuJeu {
 
         //A la place une interface graphique devras permettre de choisir les joueurs
         ArrayList<Joueur> listeJoueurs = new ArrayList<Joueur>(4);
-        listeJoueurs.add(new Joueur("Matthieu", 10));
-        listeJoueurs.add(new Joueur("Yannis", 10));
-        listeJoueurs.add(new Joueur("Soraya", 10));
-        listeJoueurs.add(new Joueur("Thomas", 10));
-        MaitreDuJeu mj = new MaitreDuJeu(listeJoueurs);
+
+        MaitreDuJeu mj = new MaitreDuJeu();
+        mj.afficherLauncher();
+        while(mj.fenetre.getLauncher().pseudo4String == null){
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        listeJoueurs.add(new Joueur(mj.fenetre.getLauncher().jtf.getText(),10));
+        listeJoueurs.add(new Joueur(mj.fenetre.getLauncher().pseudo2String,10));
+        listeJoueurs.add(new Joueur(mj.fenetre.getLauncher().pseudo3String,10));
+        listeJoueurs.add(new Joueur(mj.fenetre.getLauncher().pseudo4String,10));
+        mj.setJoueur(listeJoueurs);
+        System.out.println("set Joueur");
         mj.afficherJeu();
         //mj.afficherPileParcelle();
-        mj.setJoueur(listeJoueurs.get(0));
+        mj.setJ_actif(listeJoueurs.get(0));
         mj.enchereParcelle();
         mj.depotParcelle();
         mj.enchereParcelle();
         mj.depotParcelle();
+    }
+
+    private void setJoueur(ArrayList<Joueur> listeJoueurs) {
+        joueurs = listeJoueurs;
+        this.pileParcelles = new ArrayList<PileParcelle>(joueurs.size());
+        initialisationPileParcelles();
+    }
+
+    private void afficherLauncher() {
+        fenetre.creationLauncher();
+
     }
 
 
