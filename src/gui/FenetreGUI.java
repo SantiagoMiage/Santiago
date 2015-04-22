@@ -16,7 +16,8 @@ public class FenetreGUI {
 
     private PileParcelleGUI pileParcelleGUI;
     private Plateau plateau;
-    private JPanel panel = new JPanel(new GridLayout(1, 2, 10, 10));
+    private MainJoueurGUI mainJoueurGUI;
+    private JPanel panel = new JPanel(new GridBagLayout());
     private LauncherGUI launcher = new LauncherGUI();
     JFrame fenetre;
 
@@ -28,7 +29,6 @@ public class FenetreGUI {
     public FenetreGUI() {
         pileParcelleGUI = null;
         this.plateau = new Plateau();
-
         this.plateau.initialisation();
         fenetre = new JFrame();
     }
@@ -49,6 +49,19 @@ public class FenetreGUI {
 
     }
 
+
+    //Créer une pile parcelle et la retourne
+    public JPanel initialisationMainJoueur( ) {
+        mainJoueurGUI = new MainJoueurGUI();
+        return mainJoueurGUI.affichageMain();
+    }
+
+    //Ajoute le panel de PileParcelleGUI dans la fenêtre
+    public void creationMainJoueur() {
+        panel.add(initialisationMainJoueur());
+
+    }
+
     //A finir doit gérer le choix de la parcelle d'un joueur
     //Pour l'instant ajoute le panel de PileParcelleGUI
     public Parcelle choixParcelle(Joueur j_actif, ArrayList<PileParcelle> pileParcelles) {
@@ -65,8 +78,11 @@ public class FenetreGUI {
     public void creationPlateau(ArrayList<PileParcelle> pileParcelles){
         fenetre.getContentPane().removeAll();
         fenetre.setContentPane(panel);
+        //Ajout des 3 sous-panels principaux
         panel.add(plateau.getPanel());
         creationParcelle(pileParcelles);
+        creationMainJoueur();
+
         fenetre.revalidate();
     }
 

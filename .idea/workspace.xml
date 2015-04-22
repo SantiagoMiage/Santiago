@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e603f1a3-2510-4602-a8e1-7c94453933a2" name="Default" comment="Le joueur peut deposer sa parcelle seulement sur une case vide">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/gui/MainJoueurGUI.java" />
+    <list default="true" id="e603f1a3-2510-4602-a8e1-7c94453933a2" name="Default" comment="Merge remote-tracking branch 'origin/master'&#10;&#10;Conflicts:&#10;&#9;src/gui/FenetreGUI.java&#10;">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/gui/FenetreGUI.java" afterPath="$PROJECT_DIR$/src/gui/FenetreGUI.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/gameMaster/MaitreDuJeu.java" afterPath="$PROJECT_DIR$/src/gameMaster/MaitreDuJeu.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/gui/PileParcelleGUI.java" afterPath="$PROJECT_DIR$/src/gui/PileParcelleGUI.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/plateau/Plateau.java" afterPath="$PROJECT_DIR$/src/plateau/Plateau.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Santiago.iws" />
@@ -40,8 +37,8 @@
       <file leaf-file-name="PileParcelleGUI.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/gui/PileParcelleGUI.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-4.200466" vertical-offset="2499" max-vertical-offset="3162">
-              <caret line="50" column="38" selection-start-line="50" selection-start-column="38" selection-end-line="50" selection-end-column="38" />
+            <state vertical-scroll-proportion="0.4848485" vertical-offset="2019" max-vertical-offset="3111">
+              <caret line="144" column="0" selection-start-line="144" selection-start-column="0" selection-end-line="144" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -62,7 +59,7 @@
       <file leaf-file-name="Plateau.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/plateau/Plateau.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="663" max-vertical-offset="9673">
+            <state vertical-scroll-proportion="0.0" vertical-offset="1938" max-vertical-offset="9673">
               <caret line="57" column="42" selection-start-line="57" selection-start-column="42" selection-end-line="57" selection-end-column="42" />
               <folding>
                 <element signature="e#0#22505#0" expanded="true" />
@@ -100,11 +97,13 @@
       <file leaf-file-name="MaitreDuJeu.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/gameMaster/MaitreDuJeu.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="673" max-vertical-offset="4522">
-              <caret line="54" column="0" selection-start-line="54" selection-start-column="0" selection-end-line="54" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="894" max-vertical-offset="5270">
+              <caret line="65" column="0" selection-start-line="65" selection-start-column="0" selection-end-line="65" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#1474#1475#0" expanded="true" />
+                <element signature="e#2254#2264#0" expanded="false" />
+                <element signature="e#4632#4640#0" expanded="false" />
+                <marker date="1429719563892" expanded="false" signature="11518:11526" placeholder="&lt;~&gt;" />
               </folding>
             </state>
           </provider>
@@ -113,9 +112,14 @@
       <file leaf-file-name="FenetreGUI.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/gui/FenetreGUI.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="916" max-vertical-offset="2380">
-              <caret line="76" column="47" selection-start-line="76" selection-start-column="47" selection-end-line="76" selection-end-column="47" />
-              <folding />
+            <state vertical-scroll-proportion="0.0" vertical-offset="408" max-vertical-offset="2567">
+              <caret line="83" column="29" selection-start-line="83" selection-start-column="29" selection-end-line="83" selection-end-column="29" />
+              <folding>
+                <element signature="e#543#544#0" expanded="true" />
+                <element signature="e#574#575#0" expanded="true" />
+                <element signature="e#1052#1053#0" expanded="true" />
+                <element signature="e#1112#1113#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -833,7 +837,13 @@
       <option name="project" value="LOCAL" />
       <updated>1429636975546</updated>
     </task>
-    <option name="localTasksCounter" value="37" />
+    <task id="LOCAL-00037" summary="Creation de la classe MainJoueurGUI pour l'affichage des mains&#10;Préparation du panel principal pour l'affichage des mains">
+      <created>1429719548956</created>
+      <option name="number" value="00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1429719548956</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -927,7 +937,6 @@
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
-    <MESSAGE value="Mise en place des images pour les canaux irrigués , et des listeners sur les canaux" />
     <MESSAGE value="Création de la classe Intersection&#10;Modificfication de la classe Canal&#10;Un canal possède désormais 2 intersections , celle de début et celle de fin" />
     <MESSAGE value="Remplacement des 2 tableaux traitant le GUI pour le premier , l'objet Parcelle pour le second , par 2 ArrayList , chaque Objet Parcelle a son GUI enregistré au même emplacement dans les 2 tableaux respectifs." />
     <MESSAGE value="Modifications extremement minimes" />
@@ -952,7 +961,8 @@
     <MESSAGE value="Debuggage de la fonction qui retourne la parcelle au sommet de chacune des piles" />
     <MESSAGE value="Le joueur peut deposer sa parcelle seulement sur une case vide" />
     <MESSAGE value="Afficher des carrés de couleur symbolisant le nombre d'ouvriers actif , lors du depot d'une parcelle" />
-    <option name="LAST_COMMIT_MESSAGE" value="Afficher des carrés de couleur symbolisant le nombre d'ouvriers actif , lors du depot d'une parcelle" />
+    <MESSAGE value="Creation de la classe MainJoueurGUI pour l'affichage des mains&#10;Préparation du panel principal pour l'affichage des mains" />
+    <option name="LAST_COMMIT_MESSAGE" value="Creation de la classe MainJoueurGUI pour l'affichage des mains&#10;Préparation du panel principal pour l'affichage des mains" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -969,7 +979,12 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="170" max-vertical-offset="2057">
           <caret line="17" column="28" selection-start-line="17" selection-start-column="28" selection-end-line="17" selection-end-column="28" />
-          <folding />
+          <folding>
+            <element signature="e#543#544#0" expanded="true" />
+            <element signature="e#574#575#0" expanded="true" />
+            <element signature="e#1052#1053#0" expanded="true" />
+            <element signature="e#1112#1113#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1009,7 +1024,9 @@
           <caret line="63" column="9" selection-start-line="63" selection-start-column="9" selection-end-line="63" selection-end-column="9" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#1474#1475#0" expanded="true" />
+            <element signature="e#2254#2264#0" expanded="false" />
+            <element signature="e#4632#4640#0" expanded="false" />
+            <marker date="1429719563892" expanded="false" signature="11518:11526" placeholder="&lt;~&gt;" />
           </folding>
         </state>
       </provider>
@@ -1018,7 +1035,12 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="1704" max-vertical-offset="2091">
           <caret line="59" column="21" selection-start-line="59" selection-start-column="21" selection-end-line="59" selection-end-column="21" />
-          <folding />
+          <folding>
+            <element signature="e#543#544#0" expanded="true" />
+            <element signature="e#574#575#0" expanded="true" />
+            <element signature="e#1052#1053#0" expanded="true" />
+            <element signature="e#1112#1113#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1355,6 +1377,19 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/gameMaster/MaitreDuJeu.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="894" max-vertical-offset="5270">
+          <caret line="65" column="0" selection-start-line="65" selection-start-column="0" selection-end-line="65" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#2254#2264#0" expanded="false" />
+            <element signature="e#4632#4640#0" expanded="false" />
+            <marker date="1429719563892" expanded="false" signature="11518:11526" placeholder="&lt;~&gt;" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/plateau/Plateau.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="663" max-vertical-offset="9673">
@@ -1365,17 +1400,6 @@
             <element signature="e#668#678#0" expanded="true" />
             <element signature="e#15600#15882#0" expanded="true" />
             <element signature="e#15881#15882#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/gameMaster/MaitreDuJeu.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="673" max-vertical-offset="4522">
-          <caret line="54" column="0" selection-start-line="54" selection-start-column="0" selection-end-line="54" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1474#1475#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1392,16 +1416,21 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/gui/FenetreGUI.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="916" max-vertical-offset="2380">
-          <caret line="76" column="47" selection-start-line="76" selection-start-column="47" selection-end-line="76" selection-end-column="47" />
-          <folding />
+        <state vertical-scroll-proportion="0.0" vertical-offset="408" max-vertical-offset="2567">
+          <caret line="83" column="29" selection-start-line="83" selection-start-column="29" selection-end-line="83" selection-end-column="29" />
+          <folding>
+            <element signature="e#543#544#0" expanded="true" />
+            <element signature="e#574#575#0" expanded="true" />
+            <element signature="e#1052#1053#0" expanded="true" />
+            <element signature="e#1112#1113#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/gui/PileParcelleGUI.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-4.200466" vertical-offset="2499" max-vertical-offset="3162">
-          <caret line="50" column="38" selection-start-line="50" selection-start-column="38" selection-end-line="50" selection-end-column="38" />
+        <state vertical-scroll-proportion="0.4848485" vertical-offset="2019" max-vertical-offset="3111">
+          <caret line="144" column="0" selection-start-line="144" selection-start-column="0" selection-end-line="144" selection-end-column="0" />
           <folding />
         </state>
       </provider>

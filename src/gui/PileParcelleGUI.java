@@ -39,16 +39,13 @@ public class PileParcelleGUI {
         final ImageIcon iconvide = new ImageIcon(url_vide);
 
         panel.setBorder(BorderFactory.createLineBorder(Color.black));
-      //  panel.setSize(new Dimension(215, 50));
+
         //Possibilité 2 : instanciation puis définition du libellé
-        // int compt = 0;
         for (int i = 0; i < 4; i++) {
             final int indice = i;
             final JLabel thumb = new JLabel();
             thumb.setPreferredSize(new Dimension(100, 100));
             thumb.setIcon(iconparcelle);
-            //   pileParcellesGUI.add(thumb);
-            //    retournerParcelles(thumb, indice);
             pileParcellesGUI.add(thumb);
             thumb.addMouseListener(new MouseAdapter() {
                 @Override
