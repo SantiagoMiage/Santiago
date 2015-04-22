@@ -244,6 +244,16 @@ public class MaitreDuJeu {
         parcelles.add(new Parcelle(2,false,false, Parcelle.typeChamps.haricot));
     }
 
+    public void jouerPartie(){
+        afficherJeu();
+        //mj.afficherPileParcelle();
+        setJoueur(joueurs.get(0));
+        enchereParcelle();
+        depotParcelle();
+        enchereParcelle();
+        depotParcelle();
+    }
+
     public static void main(String[] args){
 
         //A la place une interface graphique devras permettre de choisir les joueurs

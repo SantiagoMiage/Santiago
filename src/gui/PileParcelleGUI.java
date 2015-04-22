@@ -59,6 +59,7 @@ public class PileParcelleGUI {
 
                     System.out.println("liste" + pileParcellesGUI.toString());
                     if (encherencours) {
+                        System.out.println("lel");
                         if (thumb.getIcon() != iconvide) {
                             //recuperer la parcelle
                             parcelleChoisie = pileParcelles.get(indice).getParcelle();
