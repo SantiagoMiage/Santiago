@@ -38,14 +38,14 @@ public class PileParcelleGUI {
         URL url_vide = this.getClass().getResource(cheminvide);
         final ImageIcon iconvide = new ImageIcon(url_vide);
 
-
-        panel.setSize(new Dimension(215, 50));
+        panel.setBorder(BorderFactory.createLineBorder(Color.black));
+      //  panel.setSize(new Dimension(215, 50));
         //Possibilité 2 : instanciation puis définition du libellé
         // int compt = 0;
         for (int i = 0; i < 4; i++) {
             final int indice = i;
             final JLabel thumb = new JLabel();
-            thumb.setPreferredSize(new Dimension(50, 50));
+            thumb.setPreferredSize(new Dimension(100, 100));
             thumb.setIcon(iconparcelle);
             //   pileParcellesGUI.add(thumb);
             //    retournerParcelles(thumb, indice);
@@ -55,11 +55,7 @@ public class PileParcelleGUI {
                 public void mouseClicked(MouseEvent e) {
                     System.out.println(encherencours);
                     //on remplit la liste des Jlabel des 4 piles pour travailelr dessus plus tard
-                    System.out.println("add");
-
-                    System.out.println("liste" + pileParcellesGUI.toString());
                     if (encherencours) {
-                        System.out.println("lel");
                         if (thumb.getIcon() != iconvide) {
                             //recuperer la parcelle
                             parcelleChoisie = pileParcelles.get(indice).getParcelle();
@@ -84,10 +80,9 @@ public class PileParcelleGUI {
                 }
 
             });
+
+            thumb.setBorder(BorderFactory.createLineBorder(Color.red));
             panel.add(thumb);
-            //    compt++;
-
-
         }
     }
 

@@ -268,8 +268,8 @@ public class MaitreDuJeu {
         mj.setJoueur(listeJoueurs.get(0));
         mj.enchereParcelle();
         mj.depotParcelle();
-        mj.enchereParcelle();
-        mj.depotParcelle();
+        //mj.enchereParcelle();
+       // mj.depotParcelle();
     }
 
 

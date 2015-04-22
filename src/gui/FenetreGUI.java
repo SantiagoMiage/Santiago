@@ -16,10 +16,12 @@ public class FenetreGUI {
 
     private PileParcelleGUI pileParcelleGUI;
     private Plateau plateau;
-    private JPanel panel = new JPanel(new GridLayout(1, 2, 10, 10));
-
+    private MainJoueurGUI mainJoueurGUI;
+   // private JPanel panel = new JPanel(new GridLayout(1, 3, 10, 10));
+   private JPanel panel = new JPanel(new GridBagLayout());
     public FenetreGUI() {
         pileParcelleGUI = null;
+        mainJoueurGUI = null;
         this.plateau = new Plateau();
         this.plateau.initialisation();
     }
@@ -54,14 +56,31 @@ public class FenetreGUI {
     }
 
 
+    //Ajoute le panel de MainJoueur dans la fenêtre
+    public void creationMainJoueur() {
+        mainJoueurGUI = new MainJoueurGUI();
+        panel.add(mainJoueurGUI.affichageMain());
+
+    }
+
     public void creationFenetre(ArrayList<PileParcelle> pileParcelles) {
         JFrame fenetre = new JFrame();
         fenetre.setTitle("Santiago");
-        fenetre.setPreferredSize(new Dimension(1000, 900));
+        fenetre.setPreferredSize(new Dimension(1500, 900));
         fenetre.setContentPane(panel);
-        //fenetre.setResizable(false);
+
+/*
+        GridBagConstraints gc = new GridBagConstraints();
+        gc.gridwidth = 10;
+        gc.fill = GridBagConstraints.HORIZONTAL;
+        */
+//Ajout des differents panel au panel principal
         panel.add(plateau.getPanel());
         creationParcelle(pileParcelles);
+        creationMainJoueur();
+
+
+
         fenetre.pack();
         fenetre.setLocationRelativeTo(null);
         fenetre.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

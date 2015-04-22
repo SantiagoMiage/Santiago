@@ -55,8 +55,8 @@ public class Plateau extends JApplet {
 
     public void initialisation() {
 
-        panel.setSize(new Dimension(600, 500));
-
+        panel.setSize(new Dimension(500, 500));
+        panel.setBorder(BorderFactory.createLineBorder(Color.blue));
         //pour la performance , on instancie seulement  au début , pour ne pas devoir le faire plus tard dans le listener, gain
         String cheminparcelle = "/ressource/images/parcelle.png";
         URL url_parcelle = this.getClass().getResource(cheminparcelle);
