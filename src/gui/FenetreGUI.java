@@ -16,14 +16,21 @@ public class FenetreGUI {
 
     private PileParcelleGUI pileParcelleGUI;
     private Plateau plateau;
-    private MainJoueurGUI mainJoueurGUI;
-   // private JPanel panel = new JPanel(new GridLayout(1, 3, 10, 10));
-   private JPanel panel = new JPanel(new GridBagLayout());
+    private JPanel panel = new JPanel(new GridLayout(1, 2, 10, 10));
+    private LauncherGUI launcher = new LauncherGUI();
+    JFrame fenetre;
+
+
+    public LauncherGUI getLauncher() {
+        return launcher;
+    }
+
     public FenetreGUI() {
         pileParcelleGUI = null;
-        mainJoueurGUI = null;
         this.plateau = new Plateau();
+
         this.plateau.initialisation();
+        fenetre = new JFrame();
     }
 
     //Créer une pile parcelle et la retourne
@@ -55,32 +62,18 @@ public class FenetreGUI {
         plateau.depotParcelle(j_actif);
     }
 
-
-    //Ajoute le panel de MainJoueur dans la fenêtre
-    public void creationMainJoueur() {
-        mainJoueurGUI = new MainJoueurGUI();
-        panel.add(mainJoueurGUI.affichageMain());
-
-    }
-
-    public void creationFenetre(ArrayList<PileParcelle> pileParcelles) {
-        JFrame fenetre = new JFrame();
-        fenetre.setTitle("Santiago");
-        fenetre.setPreferredSize(new Dimension(1500, 900));
+    public void creationPlateau(ArrayList<PileParcelle> pileParcelles){
+        fenetre.getContentPane().removeAll();
         fenetre.setContentPane(panel);
-
-/*
-        GridBagConstraints gc = new GridBagConstraints();
-        gc.gridwidth = 10;
-        gc.fill = GridBagConstraints.HORIZONTAL;
-        */
-//Ajout des differents panel au panel principal
         panel.add(plateau.getPanel());
         creationParcelle(pileParcelles);
-        creationMainJoueur();
+        fenetre.revalidate();
+    }
 
-
-
+    public void creationLauncher() {
+        fenetre.setTitle("Santiago");
+        fenetre.setPreferredSize(new Dimension(1000, 900));
+        fenetre.setContentPane(launcher.getPanel());
         fenetre.pack();
         fenetre.setLocationRelativeTo(null);
         fenetre.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
