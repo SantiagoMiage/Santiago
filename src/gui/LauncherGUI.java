@@ -39,6 +39,10 @@ public class LauncherGUI {
         return client;
     }
 
+    public void setInfo(String info) {
+        this.info.setText(info);
+    }
+
     private Boolean client = false;
 
 
