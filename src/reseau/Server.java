@@ -68,8 +68,12 @@ public class Server {
 
     }
 
-    public String getPseudo(){
-        return clientCo.get(0).pseudoJoueur;
+    public String getPseudo(int id){
+        return clientCo.get(id).pseudoJoueur;
+    }
+
+    public int getNbCo(){
+        return numConnections;
     }
 }
 
@@ -96,6 +100,7 @@ class Server2Connection implements Runnable {
 
     public void run() {
         String line;
+        System.out.println("client thread crée");
         try {
             boolean serverStop = false;
 
@@ -107,7 +112,7 @@ class Server2Connection implements Runnable {
                 //1 = pseudo
                 if(n == 1){
                     pseudoJoueur = is.readLine();
-
+                    System.out.println(pseudoJoueur);
                 }
                 if(serverStop){
                     break;
