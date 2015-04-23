@@ -7,6 +7,8 @@ import joueur.Proposition;
 import plateau.Parcelle;
 import plateau.PileParcelle;
 import plateau.Plateau;
+import reseau.Client;
+import reseau.Server;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,7 +27,26 @@ public class MaitreDuJeu {
     private FenetreGUI fenetre;
     private Joueur j_actif;
     private Joueur constructeurCanal;
+    private Server serv =null;
+    private Client cli =null;
+    private Boolean local = false;
 
+    public void setLocal(Boolean local) {
+        this.local = local;
+    }
+
+    public Boolean getLocal() {
+
+        return local;
+    }
+
+    public void setServ(Server serv) {
+        this.serv = serv;
+    }
+
+    public void setCli(Client cli) {
+        this.cli = cli;
+    }
 
     public MaitreDuJeu(ArrayList<Joueur> joueurs) {
         this.nbTours = 0;
@@ -291,6 +312,25 @@ public class MaitreDuJeu {
 
     }
 
+    private void jouerPartieLocal(ArrayList<Joueur> listeJoueurs) {
+        setJoueur(listeJoueurs);
+        afficherJeu();
+        //mj.afficherPileParcelle();
+        setJ_actif(listeJoueurs.get(0));
+        enchereParcelle();
+        depotParcelle();
+        soudoiementConstructeur();
+        System.out.println("tour fini");
+    }
+
+    public Server getServ() {
+        return serv;
+    }
+
+    public Client getCli() {
+        return cli;
+    }
+
     public static void main(String[] args){
 
         //A la place une interface graphique devras permettre de choisir les joueurs
@@ -298,25 +338,40 @@ public class MaitreDuJeu {
 
         MaitreDuJeu mj = new MaitreDuJeu();
         mj.afficherLauncher();
-        while(mj.fenetre.getLauncher().pseudo4String == null){
+        while(mj.getCli() == null && mj.getServ() == null){
             try {
                 Thread.sleep(200);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            if(mj.fenetre.getLauncher().getServer()){
+                mj.setServ(new Server(6789));
+                mj.getServ().startServer();
+            }
+            if(mj.fenetre.getLauncher().getClient()){
+                mj.setCli(new Client());
+                mj.getCli().lancer();
+                mj.getCli().sendPseudo(mj.fenetre.getLauncher().jtf.getText());
+            }
+            if(mj.fenetre.getLauncher().pseudo4String != null){
+                listeJoueurs.add(new Joueur(mj.fenetre.getLauncher().jtf.getText(),10));
+                listeJoueurs.add(new Joueur(mj.fenetre.getLauncher().pseudo2String,10));
+                listeJoueurs.add(new Joueur(mj.fenetre.getLauncher().pseudo3String,10));
+                listeJoueurs.add(new Joueur(mj.fenetre.getLauncher().pseudo4String, 10));
+                mj.setLocal(true);
+            }
+            if(mj.getLocal()) {
+                mj.jouerPartieLocal(listeJoueurs);
+            }
+            if(mj.getServ() != null){
+
+            }
+            if(mj.getCli() != null){
+
+            }
         }
-        listeJoueurs.add(new Joueur(mj.fenetre.getLauncher().jtf.getText(),10));
-        listeJoueurs.add(new Joueur(mj.fenetre.getLauncher().pseudo2String,10));
-        listeJoueurs.add(new Joueur(mj.fenetre.getLauncher().pseudo3String,10));
-        listeJoueurs.add(new Joueur(mj.fenetre.getLauncher().pseudo4String,10));
-        mj.setJoueur(listeJoueurs);
-        mj.afficherJeu();
-        //mj.afficherPileParcelle();
-        mj.setJ_actif(listeJoueurs.get(0));
-        mj.enchereParcelle();
-        mj.depotParcelle();
-        mj.soudoiementConstructeur();
-        System.out.println("tour fini");
+
+
 
 
     }
