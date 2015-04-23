@@ -312,6 +312,13 @@ public class MaitreDuJeu {
 
     }
 
+    private void jouerPartieServeur(ArrayList<Joueur> listeJoueurs) {
+        setJoueur(listeJoueurs);
+        afficherJeu();
+        //mj.afficherPileParcelle();
+        setJ_actif(listeJoueurs.get(0));
+    }
+
     private void jouerPartieLocal(ArrayList<Joueur> listeJoueurs) {
         setJoueur(listeJoueurs);
         afficherJeu();
@@ -338,7 +345,7 @@ public class MaitreDuJeu {
 
         MaitreDuJeu mj = new MaitreDuJeu();
         mj.afficherLauncher();
-        while(mj.getCli() == null && mj.getServ() == null){
+        while(mj.getCli() == null && mj.getServ() == null && !mj.getLocal()){
             try {
                 Thread.sleep(200);
             } catch (InterruptedException e) {
@@ -364,7 +371,27 @@ public class MaitreDuJeu {
                 mj.jouerPartieLocal(listeJoueurs);
             }
             if(mj.getServ() != null){
+                String pseudo = null;
+                listeJoueurs.add(new Joueur(mj.fenetre.getLauncher().jtf.getText(),10));
+                while(mj.getServ().getNbCo() != 3){
+                    int jrestant = 3-mj.getServ().getNbCo();
+                    mj.fenetre.getLauncher().setInfo("Attente de " + jrestant +"joueur");
+                }
+                mj.fenetre.getLauncher().setInfo("Tout les joueurs sont connecté début de la partie");
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                for(int i =0; i<3; i++){
+                    while(mj.getServ().getPseudo(i) == "unknow"){
+                        mj.fenetre.getLauncher().setInfo("Tout les joueurs sont connecté début de la partie");
+                    }
+                    listeJoueurs.add(new Joueur(pseudo = mj.getServ().getPseudo(i), 10));
+                    System.out.println(pseudo);
+                }
 
+                mj.jouerPartieServeur(listeJoueurs);
             }
             if(mj.getCli() != null){
 
@@ -375,4 +402,6 @@ public class MaitreDuJeu {
 
 
     }
+
+
 }
