@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * Created by Yannis on 23/04/2015.
  */
 public class Proposition {
-    int numProposition;
+
     ArrayList<Joueur> listJoueur = new ArrayList<Joueur>();
     ArrayList<Integer> listMontant = new ArrayList<Integer>();
     Canal canal ;
@@ -58,13 +58,6 @@ public class Proposition {
         this.listMontant = listmontant;
     }
 
-    public int getNumProposition() {
-        return numProposition;
-    }
-
-    public void setNumProposition(int numProposition) {
-        this.numProposition = numProposition;
-    }
 
     public Canal getCanal() {
         return canal;
@@ -76,8 +69,8 @@ public class Proposition {
 
     @Override
     public String toString() {
-        return "Proposition{"  + numProposition +
-                ", listJoueur=" + listJoueur +
+        return "Proposition{"  +
+                ", listJoueur=" + listJoueur.toString() +
                 ", listmontant=" + listMontant +
                 ", total=" + total() +
                 '}';

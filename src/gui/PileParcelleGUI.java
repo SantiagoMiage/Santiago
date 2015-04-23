@@ -156,8 +156,6 @@ public class PileParcelleGUI {
             retournerParcelles(thumb, compteur);
             compteur++;
         }
-
-
     }
 
     public JPanel affichagePileParcelle() {

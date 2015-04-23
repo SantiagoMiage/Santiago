@@ -31,6 +31,7 @@ public class MaitreDuJeu {
     private Client cli =null;
     private Boolean local = false;
 
+
     public void setLocal(Boolean local) {
         this.local = local;
     }
@@ -197,6 +198,7 @@ public class MaitreDuJeu {
             j_actif = joueurs.get(i);
             fenetre.propositionCanalJoueur(j_actif, listProposition);
             System.out.println("yolo i"+ i);
+            System.out.println(listProposition.toString());
         }
 
         //on affiche la liste au constructeur (qui contient aussi sa proposition) il choisit une proposition
@@ -317,8 +319,11 @@ public class MaitreDuJeu {
         afficherJeu();
         //mj.afficherPileParcelle();
         setJ_actif(listeJoueurs.get(0));
+        System.out.println("ENCHERE PARCELLE");
         enchereParcelle();
+        System.out.println("DEPOT PARCELLE");
         depotParcelle();
+        System.out.println("SOUDOIEMENT CONSTRUCTEUR");
         soudoiementConstructeur();
         System.out.println("tour fini");
     }
@@ -338,7 +343,7 @@ public class MaitreDuJeu {
 
         MaitreDuJeu mj = new MaitreDuJeu();
         mj.afficherLauncher();
-        while(mj.getCli() == null && mj.getServ() == null){
+        while(mj.getCli() == null && mj.getServ() == null && !mj.getLocal()){
             try {
                 Thread.sleep(200);
             } catch (InterruptedException e) {
@@ -370,9 +375,5 @@ public class MaitreDuJeu {
 
             }
         }
-
-
-
-
     }
 }
