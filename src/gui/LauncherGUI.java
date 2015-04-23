@@ -2,6 +2,8 @@ package gui;
 
 import gameMaster.MaitreDuJeu;
 import joueur.Joueur;
+import reseau.Client;
+import reseau.Server;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,7 +28,19 @@ public class LauncherGUI {
     private JButton boutonSolo = new JButton("Creer partie en local");
     private JLabel labelPseudo = new JLabel("Entrez votre pseudo");
     private JLabel info = new JLabel(" ");
-    public JTextField jtf = new JTextField("  Pseudo  ");
+    public JTextField jtf = new JTextField("Pseudonyme");
+    private Boolean server = false;
+
+    public Boolean getServer() {
+        return server;
+    }
+
+    public Boolean getClient() {
+        return client;
+    }
+
+    private Boolean client = false;
+
 
     public String pseudo2String;
     public String pseudo3String;
@@ -77,42 +91,16 @@ public class LauncherGUI {
         public void actionPerformed(ActionEvent arg0) {
 
             info.setText("En attente de joueurs");
-            ServerSocket socketserver  ;
-            Socket socketduserveur ;
+            server = true;
 
-            try {
-
-                socketserver = new ServerSocket(2009);
-                socketduserveur = socketserver.accept();
-                info.setText("quelqu'un s'est connecté !");
-
-                socketserver.close();
-                socketduserveur.close();
-
-            }catch (IOException e) {
-                e.printStackTrace();
-            }
         }
 
     }
 
     class BoutonRejoindreListener implements ActionListener {
         public void actionPerformed(ActionEvent arg0) {
-            Socket socket;
+            client = true;
 
-            try {
-
-                socket = new Socket(InetAddress.getLocalHost(),2009);
-                socket.close();
-
-            }catch (UnknownHostException e) {
-
-                e.printStackTrace();
-            }catch (IOException e) {
-
-                e.printStackTrace();
-            }
-            labelPseudo.setText("Vous avez cliqué sur le bouton 1");
         }
     }
 
