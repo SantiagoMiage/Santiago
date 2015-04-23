@@ -19,8 +19,9 @@ import java.util.ArrayList;
 public class PileParcelleGUI {
 
     Thread threadAttenteChoixPile;
+    ArrayList<JLabel> pileParcellesGUI = new ArrayList<JLabel>();
     private ArrayList<PileParcelle> pileParcelles;
-    ArrayList<JLabel> pileParcellesGUI=new ArrayList<JLabel>();;
+    ;
     private JPanel panel = new JPanel(new GridLayout(4, 1, 5, 5));
     private boolean encherencours;
     private Parcelle parcelleChoisie = null;
@@ -135,6 +136,7 @@ public class PileParcelleGUI {
             case test:
                 chemin = "/ressource/images/test.png";
                 break;
+
             default:
                 chemin = "/ressource/images/vide.png";
         }

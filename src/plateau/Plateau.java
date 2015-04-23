@@ -33,10 +33,13 @@ public class Plateau extends JApplet {
     ArrayList<Intersection> ListIntersect = new ArrayList<Intersection>();
 
     JLabel parcelleChoisie = null;
+    JLabel canalChoisi = null;
     boolean depotencours = false;
+    boolean propositionCanalEncours = false;
 
     //les threads
     Thread threadAttenteDepotParcelle;
+    Thread threadAttenteChoixCanalProposition;
 
 
     private JPanel panel = new JPanel(new GridBagLayout());
@@ -165,17 +168,27 @@ public class Plateau extends JApplet {
                             thumb.addMouseListener(new MouseAdapter() {
                                 @Override
                                 public void mouseClicked(MouseEvent e) {
-                                    if (estIrriguable(canal)) {
-                                        Irrigation(canal);
-                                        //tester le changement d'icone pour canal irrigue
-                                        if (thumb.getIcon() == iconcanalhori) {
-                                            thumb.setIcon(iconcanalhorirrigue);
-                                            canal.setIrrigue(true);
+
+                                    if (propositionCanalEncours) {
+
+                                        if (estIrriguable(canal)) {
+                                            canalChoisi = thumb;
+                                            synchronized (threadAttenteChoixCanalProposition) {
+                                                threadAttenteChoixCanalProposition.notify();
+
+                                            }
                                         }
+                                            /*Irrigation(canal);
+                                            tester le changement d'icone pour canal irrigue
+                                            if (thumb.getIcon() == iconcanalhori) {
+                                                thumb.setIcon(iconcanalhorirrigue);
+                                                canal.setIrrigue(true);
+                                            }
+                                            */
+
                                     }
+
                                 }
-
-
                             });
                             thumb.setIcon(iconcanalhori);
                             //on enregistre l'image du canal dans la liste GUI
@@ -203,25 +216,37 @@ public class Plateau extends JApplet {
                                 yfinV = ydebV + 2;
                             }
                             //on travaille dessus
-                            thumb.setIcon(iconcanalverti);
+
                             thumb.addMouseListener(new MouseAdapter() {
                                 @Override
                                 public void mouseClicked(MouseEvent e) {
-                                    if (estIrriguable(canal)) {
 
+                                    if (propositionCanalEncours) {
+                                        if (estIrriguable(canal)) {
+                                            canalChoisi = thumb;
+                                            synchronized (threadAttenteChoixCanalProposition) {
+                                                threadAttenteChoixCanalProposition.notify();
+
+                                            }
+                                        }
+                                        /*
                                         Irrigation(canal);
-                                        //tester le changement d'icone pour canal irrigue
+                                        tester le changement d'icone pour canal irrigue
                                         if (thumb.getIcon() == iconcanalverti) {
                                             thumb.setIcon(iconcanalvertirrigue);
                                             canal.setIrrigue(true);
-                                        } /*else {
-                                            thumb.setIcon(iconcanalverti);
-                                            canal.setIrrigue(false);
+                                        }
                                         }*/
+
+
                                     }
+
                                 }
 
                             });
+                            thumb.setIcon(iconcanalverti);
+                            //on enregistre l'image du canal dans la liste GUI
+                            ListCanauxGUI.add(thumb);
                             gc.gridheight = 2;
                             gc.fill = GridBagConstraints.VERTICAL;
                             gc.gridx = j;
@@ -230,6 +255,7 @@ public class Plateau extends JApplet {
                     } else {//si Parcelle
                         thumb.setPreferredSize(new Dimension(50, 50));
                         thumb.setIcon(iconparcelle);
+
                         //ajout au panel
                         gc.gridx = j;
                         gc.gridy = i;
@@ -261,7 +287,8 @@ public class Plateau extends JApplet {
                                         }
 
                                         //Desssiner un Rectangle et modifier sa couleur de fond
-                                        colorierOuvrier(thumb);
+                                        //     colorierOuvrier(thumb);
+
                                     }
                                 }
 
@@ -316,20 +343,22 @@ public class Plateau extends JApplet {
         int xfin = canal.getXfin();
         int yfin = canal.getYfin();
         boolean ok = false;
-        for (Intersection elem : ListIntersect) {
-            //si l'intersection est irrigue
-
-            if (elem.isirrigue()) {
-                //si les coordonnées correspondent au debut du canal
-                if ((xdeb == elem.getI()) && (ydeb == elem.getJ())) {
-                    //alors on renvoie vrai
-                    ok = true;
-                    //on passe l'autre intersection (fin) a irrigue
-                    irrigueIntersection(xfin, yfin);
-                } else if ((xfin == elem.getI()) && (yfin == elem.getJ())) {  //si les coordonnées correspondent a la fin du canal
-                    ok = true;
-                    //on passe l'autre intersection (debut) a irrigue
-                    irrigueIntersection(xdeb, ydeb);
+        //si le canal n est pas irrigue a la base
+        if (!canal.isIrrigue()) {
+            for (Intersection elem : ListIntersect) {
+                //si l'intersection est irrigue
+                if (elem.isirrigue()) {
+                    //si les coordonnées correspondent au debut du canal
+                    if ((xdeb == elem.getI()) && (ydeb == elem.getJ())) {
+                        //alors on renvoie vrai
+                        ok = true;
+                        //on passe l'autre intersection (fin) a irrigue
+                        irrigueIntersection(xfin, yfin);
+                    } else if ((xfin == elem.getI()) && (yfin == elem.getJ())) {  //si les coordonnées correspondent a la fin du canal
+                        ok = true;
+                        //on passe l'autre intersection (debut) a irrigue
+                        irrigueIntersection(xdeb, ydeb);
+                    }
                 }
             }
         }
@@ -341,10 +370,10 @@ public class Plateau extends JApplet {
     /////FONCTION//////
     ///////////////////
 
-    public void colorierOuvrier(JLabel thumb) {
+    public void colorierOuvrier(final JLabel thumb) {
         Parcelle parcelle = guiToModeleParcelle(thumb);
         //recup le nb ouvrier de la parcelle correspondant au thumb
-        int nbouv = parcelle.getNbouvrier();
+        final int nbouv = parcelle.getNbouvrier();
 
         //recuperer la position de la parcelle
         int posx = thumb.getX();
@@ -360,16 +389,23 @@ public class Plateau extends JApplet {
         JPanel aDessiner = new JPanel() {
             public void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                g.setColor(Color.black);
-                g.fillRect(10, 10, 10, 10);
+                g.setColor(Color.MAGENTA);
+                g.fillOval(posxcarre, posycarre, 10, 10);
+                //thumb.paintComponents(g);
+                //g.fillOval(posxcarre, posycarre, 10, 10);
+                //thumb.paint(g);
                 System.out.println(posxcarre + " " + posycarre);
             }
         };
-       // panel.add(aDessiner);
-        panel.getParent().add(aDessiner,0);
-      //  panel.getParent().add(aDessiner,1);
-       // panel.getParent().add(aDessiner,2);
-       // panel.add(aDessiner);
+
+        //   panel.add(aDessiner);
+        //this.panel.add(aDessiner);
+        //  this.panel.revalidate();
+
+        panel.getParent().add(aDessiner, 2);
+        this.panel.revalidate();
+        // panel.getParent().add(aDessiner,2);
+        // panel.add(aDessiner);
 
         //coloriage du second ouvrier si il y en a un
     /*    if (nbouv > 1) {
@@ -441,6 +477,32 @@ public class Plateau extends JApplet {
         ListIntersectGUI.get(index).setIcon(iconsource);
     }
 
+    //permet de choisir sur le plateau le canal que l'on veut encherir
+    public Canal choixCanal(Joueur joueur) {
+
+        propositionCanalEncours = true;
+        canalChoisi = null;
+        Thread t = new Thread();
+        threadAttenteChoixCanalProposition = t;
+        threadAttenteChoixCanalProposition.start();
+        synchronized (threadAttenteChoixCanalProposition) {
+            while (canalChoisi == null) {
+                try {
+                    threadAttenteChoixCanalProposition.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            propositionCanalEncours = false;
+
+            //on recupere le canal correspondant au JLabel et on le return
+            int index = ListCanauxGUI.indexOf(canalChoisi);
+            System.out.println("index "+index);
+            Canal canal = ListCanauxModele.get(index);
+            return canal;
+        }
+
+    }
 
     //permet de deposer sur le plateau la parcelle que l'on a en main
     public void depotParcelle(Joueur joueur) {
@@ -471,8 +533,6 @@ public class Plateau extends JApplet {
         Parcelle parcelleMain = joueur.getParcelleMain();
         //on rempli les ouvriers
         parcelleMain.setNbouvrieractif(parcelleMain.getNbouvrier());
-        //on affiche le nombre d ouvrier actif sur la parcelle
-
         //on met a jour la liste des parcelles du plateau
         ListParcelleModele.set(indexParcelle, parcelleMain);
         //on modifie l'Affichage de la parcelle sur le plateau

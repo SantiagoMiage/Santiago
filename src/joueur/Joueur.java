@@ -6,35 +6,21 @@ import plateau.Parcelle;
  * Created by Crema on 06/03/2015.
  */
 public class Joueur {
-    @Override
-    public String toString() {
-        return "Joueur{" +
-                "pseudo='" + pseudo + '\'' +
-                ", argent=" + argent +
-                ", score=" + score +
-                ", parcelleMain=" + parcelleMain +
-                '}';
-    }
+
 
     private String pseudo;
     private int argent;
     private int score;
-
-    public Parcelle getParcelleMain() {
-        return parcelleMain;
-    }
-
-    public void setParcelleMain(Parcelle parcelleMain) {
-        this.parcelleMain = parcelleMain;
-    }
-
     private Parcelle parcelleMain;
+
+
 
 
     public Joueur(String pseudo, int argent){
         this.pseudo=pseudo;
         this.argent=argent;
         this.score = 0;
+
     }
 
     public String getPseudo() {
@@ -56,4 +42,25 @@ public class Joueur {
     public void setScore(int score) {
         this.score = score;
     }
+
+    public Parcelle getParcelleMain() {
+        return parcelleMain;
+    }
+
+    public void setParcelleMain(Parcelle parcelleMain) {
+        this.parcelleMain = parcelleMain;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Joueur{" +
+                "pseudo='" + pseudo + '\'' +
+                ", argent=" + argent +
+                ", score=" + score +
+                ", parcelleMain=" + parcelleMain +
+                '}';
+    }
+
+
 }

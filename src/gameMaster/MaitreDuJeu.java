@@ -3,6 +3,7 @@ package gameMaster;
 import gui.FenetreGUI;
 import gui.PileParcelleGUI;
 import joueur.Joueur;
+import joueur.Proposition;
 import plateau.Parcelle;
 import plateau.PileParcelle;
 import plateau.Plateau;
@@ -23,17 +24,8 @@ public class MaitreDuJeu {
     private PileParcelleGUI ppgui;
     private FenetreGUI fenetre;
     private Joueur j_actif;
-
-    public FenetreGUI getFenetre() {
-        return fenetre;
-    }
-
     private Joueur constructeurCanal;
 
-
-    public ArrayList<PileParcelle> getPileParcelles() {
-        return pileParcelles;
-    }
 
     public MaitreDuJeu(ArrayList<Joueur> joueurs) {
         this.nbTours = 0;
@@ -137,15 +129,6 @@ public class MaitreDuJeu {
         setConstructeurCanal(joueurs.get(pos));
     }
 
-    public void setConstructeurCanal(Joueur j){
-        constructeurCanal = j;
-    }
-
-    public Joueur getConstructeurCanal() {
-        return constructeurCanal;
-    }
-
-
     //Retourne une liste de joueurs trié pour la phase de tour 1
     private ArrayList<Joueur> triJoueurTour(int[] montantEnchere) {
         ArrayList<Joueur> res = new ArrayList<Joueur>(joueurs.size());
@@ -183,6 +166,27 @@ public class MaitreDuJeu {
             j_actif = joueurs.get(i);
             fenetre.depotParcelle(j_actif);
         }
+    }
+
+    private void soudoiementConstructeur(){
+    ArrayList<Proposition> listProposition = new ArrayList<Proposition>();
+
+        //On consttruit la liste des differentes proposition
+        for (int i = 0; i < joueurs.size(); i++) {
+            j_actif = joueurs.get(i);
+            fenetre.propositionCanalJoueur(j_actif, listProposition);
+            System.out.println("yolo i"+ i);
+        }
+
+        //on affiche la liste au constructeur (qui contient aussi sa proposition) il choisit une proposition
+    }
+
+    public FenetreGUI getFenetre() {
+        return fenetre;
+    }
+
+    public ArrayList<PileParcelle> getPileParcelles() {
+        return pileParcelles;
     }
 
     public void setJ_actif(Joueur joueur) {
@@ -254,7 +258,7 @@ public class MaitreDuJeu {
         parcelles.add(new Parcelle(2,false,false, Parcelle.typeChamps.haricot));
         parcelles.add(new Parcelle(2,false,false, Parcelle.typeChamps.haricot));
     }
-
+/*
     public void jouerPartie(){
         afficherJeu();
         //mj.afficherPileParcelle();
@@ -263,6 +267,28 @@ public class MaitreDuJeu {
         depotParcelle();
         enchereParcelle();
         depotParcelle();
+    }
+*/
+
+
+    private void setJoueur(ArrayList<Joueur> listeJoueurs) {
+        joueurs = listeJoueurs;
+        this.pileParcelles = new ArrayList<PileParcelle>(joueurs.size());
+        initialisationPileParcelles();
+    }
+
+    public void setConstructeurCanal(Joueur j){
+        constructeurCanal = j;
+    }
+
+    public Joueur getConstructeurCanal() {
+        return constructeurCanal;
+    }
+
+
+    private void afficherLauncher() {
+        fenetre.creationLauncher();
+
     }
 
     public static void main(String[] args){
@@ -284,26 +310,14 @@ public class MaitreDuJeu {
         listeJoueurs.add(new Joueur(mj.fenetre.getLauncher().pseudo3String,10));
         listeJoueurs.add(new Joueur(mj.fenetre.getLauncher().pseudo4String,10));
         mj.setJoueur(listeJoueurs);
-        System.out.println("set Joueur");
         mj.afficherJeu();
         //mj.afficherPileParcelle();
         mj.setJ_actif(listeJoueurs.get(0));
         mj.enchereParcelle();
         mj.depotParcelle();
-        //mj.enchereParcelle();
-       // mj.depotParcelle();
-    }
+        mj.soudoiementConstructeur();
+        System.out.println("tour fini");
 
-    private void setJoueur(ArrayList<Joueur> listeJoueurs) {
-        joueurs = listeJoueurs;
-        this.pileParcelles = new ArrayList<PileParcelle>(joueurs.size());
-        initialisationPileParcelles();
-    }
-
-    private void afficherLauncher() {
-        fenetre.creationLauncher();
 
     }
-
-
 }
