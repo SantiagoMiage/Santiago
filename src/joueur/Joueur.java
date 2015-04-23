@@ -63,4 +63,11 @@ public class Joueur {
     }
 
 
+
+
+    public String affichePseudo() {
+        return "Joueur :" + pseudo;
+    }
+
+
 }
