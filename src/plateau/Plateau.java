@@ -8,6 +8,7 @@ package plateau;
 
 
 import joueur.Joueur;
+import joueur.Proposition;
 
 import javax.swing.*;
 import java.awt.*;
@@ -54,6 +55,22 @@ public class Plateau extends JApplet {
 
     public JPanel getPanel() {
         return panel;
+    }
+
+    public ArrayList<Canal> getListCanauxModele() {
+        return ListCanauxModele;
+    }
+
+    public ArrayList<JLabel> getListCanauxGUI() {
+        return ListCanauxGUI;
+    }
+
+    public ArrayList<Parcelle> getListParcelleModele() {
+        return ListParcelleModele;
+    }
+
+    public void setListCanauxGUI(ArrayList<JLabel> listCanauxGUI) {
+        ListCanauxGUI = listCanauxGUI;
     }
 
     public void initialisation() {
@@ -168,26 +185,16 @@ public class Plateau extends JApplet {
                             thumb.addMouseListener(new MouseAdapter() {
                                 @Override
                                 public void mouseClicked(MouseEvent e) {
-
                                     if (propositionCanalEncours) {
-
                                         if (estIrriguable(canal)) {
                                             canalChoisi = thumb;
                                             synchronized (threadAttenteChoixCanalProposition) {
                                                 threadAttenteChoixCanalProposition.notify();
-
                                             }
                                         }
-                                            /*Irrigation(canal);
-                                            tester le changement d'icone pour canal irrigue
-                                            if (thumb.getIcon() == iconcanalhori) {
-                                                thumb.setIcon(iconcanalhorirrigue);
-                                                canal.setIrrigue(true);
-                                            }
-                                            */
-
                                     }
-
+                                    //test
+                                    canal.toString();
                                 }
                             });
                             thumb.setIcon(iconcanalhori);
@@ -220,27 +227,16 @@ public class Plateau extends JApplet {
                             thumb.addMouseListener(new MouseAdapter() {
                                 @Override
                                 public void mouseClicked(MouseEvent e) {
-
                                     if (propositionCanalEncours) {
                                         if (estIrriguable(canal)) {
                                             canalChoisi = thumb;
                                             synchronized (threadAttenteChoixCanalProposition) {
                                                 threadAttenteChoixCanalProposition.notify();
-
                                             }
                                         }
-                                        /*
-                                        Irrigation(canal);
-                                        tester le changement d'icone pour canal irrigue
-                                        if (thumb.getIcon() == iconcanalverti) {
-                                            thumb.setIcon(iconcanalvertirrigue);
-                                            canal.setIrrigue(true);
-                                        }
-                                        }*/
-
-
                                     }
-
+                                    //test
+                                    canal.toString();
                                 }
 
                             });
@@ -255,12 +251,11 @@ public class Plateau extends JApplet {
                     } else {//si Parcelle
                         thumb.setPreferredSize(new Dimension(50, 50));
                         thumb.setIcon(iconparcelle);
-
                         //ajout au panel
                         gc.gridx = j;
                         gc.gridy = i;
                         //creation de l'objet  Parcelle
-                        Parcelle parcelle = new Parcelle(0, 0, false, false, Parcelle.typeChamps.vide, compteurIparcelle, compteurJparcelle);
+                        final Parcelle parcelle = new Parcelle(0, 0, false, false, Parcelle.typeChamps.vide, compteurIparcelle, compteurJparcelle);
                         //ajout aux tableaux
                         ListParcelleGUI.add(thumb);
                         ListParcelleModele.add(parcelle);
@@ -275,15 +270,13 @@ public class Plateau extends JApplet {
                         thumb.addMouseListener(new MouseAdapter() {
                             @Override
                             public void mouseClicked(MouseEvent e) {
-
+                                //test
+                                parcelle.toString();
                                 if (depotencours) {
                                     if (thumb.getIcon() == iconparcelle) {
                                         parcelleChoisie = thumb;
-                                        //message avertissant le thread
-
                                         synchronized (threadAttenteDepotParcelle) {
                                             threadAttenteDepotParcelle.notify();
-                                            //stocker la parcelle dans la main du joueur
                                         }
 
                                         //Desssiner un Rectangle et modifier sa couleur de fond
@@ -456,14 +449,111 @@ public class Plateau extends JApplet {
     }
 
     //irrigue les Parcelles Adjacentes au canal
-    public void Irrigation(Canal canal) {
+    public void irrigation(Canal canal) {
+
+        //on irrigue
+        canal.setIrrigue(true);
+        //on recupere son JLabel
+        int index = this.getListCanauxModele().indexOf(canal);
+        JLabel canalGUI = this.getListCanauxGUI().get(index);
+        //on modifie son apparence (JLabel)
+        String chemincanalhorirrigue = "/ressource/images/canalhorirrigue.png";
+        URL url_canalhorirrigue = this.getClass().getResource(chemincanalhorirrigue);
+        String chemincanalvertirrigue = "/ressource/images/canalvertirrigue.png";
+        URL url_canalvertirrigue = this.getClass().getResource(chemincanalvertirrigue);
+        ImageIcon iconcanalhorirrigue = new ImageIcon(url_canalhorirrigue),
+                iconcanalvertirrigue = new ImageIcon(url_canalvertirrigue);
+        if (canal.estHorizontale()) {
+            canalGUI.setIcon(iconcanalhorirrigue);
+        } else {
+            canalGUI.setIcon(iconcanalvertirrigue);
+        }
+
+
         ArrayList<Parcelle> listeP;
         listeP = listeParcellesAdjacentes(canal);
         for (Parcelle parcelle : listeP) {
             parcelle.setIrrigue(true);
         }
+
+
+        this.getListParcelleModele().toString();
     }
 
+    public void decolorationProposition(ArrayList<Proposition> listProposition) {
+        System.out.println("decoloration");
+        for (Proposition proposition : listProposition) {
+            System.out.println("boucle");
+            Canal canal = proposition.getCanal();
+
+
+            //on recupere son JLabel
+            int index = this.getListCanauxModele().indexOf(canal);
+            JLabel canalGUI = this.getListCanauxGUI().get(index);
+
+
+            //on modifie son apparence (JLabel)
+            //les propositions
+            String chemincanalhoriprop = "/ressource/images/canalpropositionhori.png";
+            URL url_canalhoriprop = this.getClass().getResource(chemincanalhoriprop);
+            String chemincanalvertiprop = "/ressource/images/canalpropositionverti.png";
+            URL url_canalvertiprop = this.getClass().getResource(chemincanalvertiprop);
+            //les normaux
+            String chemincanalverti = "/ressource/images/canalverti.png";
+            URL url_canalverti = this.getClass().getResource(chemincanalverti);
+            String chemincanalhori = "/ressource/images/canalhori.png";
+            URL url_canalhori = this.getClass().getResource(chemincanalhori);
+
+
+            ImageIcon iconcanalhoriprop = new ImageIcon(url_canalhoriprop),
+                    iconcanalvertiprop = new ImageIcon(url_canalvertiprop),
+                    iconcanalhori = new ImageIcon(url_canalhori),
+                    iconcanalverti = new ImageIcon(url_canalverti);
+
+
+            //si canal vert, alors c est une proposition non retenue => on decolore
+            if (canal.estHorizontale()) {
+                System.out.println("test 1");
+                if(canalGUI.getIcon().toString().equals(iconcanalhoriprop.toString()) ) {
+                    System.out.println("test 2");
+                    canalGUI.setIcon(iconcanalhori);
+                }
+            } else if (canal.estVerticale() ) {
+                System.out.println("test 3");
+                if(canalGUI.getIcon().toString().equals(iconcanalvertiprop.toString()) ) {
+                    System.out.println("test 4");
+                    canalGUI.setIcon(iconcanalverti);
+                }
+            }
+        }
+
+
+    }
+
+
+    //colorie le canal ayant eu une proposition en vert , seulement pour les test
+    public void colorieCanalPropVert(Canal canal) {
+
+
+        //on recupere son JLabel
+        int index = this.getListCanauxModele().indexOf(canal);
+        JLabel canalGUI = this.getListCanauxGUI().get(index);
+        //on modifie son apparence (JLabel)
+        String chemincanalhori = "/ressource/images/canalpropositionhori.png";
+        URL url_canalhori = this.getClass().getResource(chemincanalhori);
+        String chemincanalverti = "/ressource/images/canalpropositionverti.png";
+        URL url_canalverti = this.getClass().getResource(chemincanalverti);
+
+
+        ImageIcon iconcanalhori = new ImageIcon(url_canalhori),
+                iconcanalverti = new ImageIcon(url_canalverti);
+
+        if (canal.estHorizontale()) {
+            canalGUI.setIcon(iconcanalhori);
+        } else {
+            canalGUI.setIcon(iconcanalverti);
+        }
+    }
 
     public void initialisationSource() {
         String cheminsource = "/ressource/images/source.png";
@@ -495,10 +585,12 @@ public class Plateau extends JApplet {
             }
             propositionCanalEncours = false;
 
+
             //on recupere le canal correspondant au JLabel et on le return
             int index = ListCanauxGUI.indexOf(canalChoisi);
-            System.out.println("index "+index);
             Canal canal = ListCanauxModele.get(index);
+
+
             return canal;
         }
 
@@ -531,7 +623,7 @@ public class Plateau extends JApplet {
         int indexParcelle = ListParcelleGUI.indexOf(parcelleChoisie);
         //on recupere la parcelle que le joueur posse (a obtenu dans la phase d'enchere)
         Parcelle parcelleMain = joueur.getParcelleMain();
-        //on rempli les ouvriers
+        //on remplie les ouvriers
         parcelleMain.setNbouvrieractif(parcelleMain.getNbouvrier());
         //on met a jour la liste des parcelles du plateau
         ListParcelleModele.set(indexParcelle, parcelleMain);
@@ -602,30 +694,6 @@ public class Plateau extends JApplet {
         url = this.getClass().getResource(chemin);
         ImageIcon icon = new ImageIcon(url);
         thumb.setIcon(icon);
-
-    }
-
-
-    private static class Jeton extends JPanel {
-        public void paintComponent(Graphics g) {
-            super.paintComponent(g);
-
-            // Tracer une ligne rouge entre les points (x=5, y=30) et (x=50, y=70)
-            g.setColor(Color.red);
-            g.drawLine(5, 30, 50, 70);
-            //carre
-            g.setColor(Color.blue);
-            g.fillRect(100, 100, 50, 50);
-
-            g.drawRect(10, 10, 50, 60);
-            g.fillRect(65, 65, 30, 40);
-
-
-        }
-
-        public Dimension getPreferredSize() {
-            return new Dimension(10, 10); // appropriate constants
-        }
 
     }
 

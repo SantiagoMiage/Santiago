@@ -10,6 +10,7 @@ import plateau.Plateau;
 import reseau.Client;
 import reseau.Server;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -193,15 +194,26 @@ public class MaitreDuJeu {
     private void soudoiementConstructeur(){
     ArrayList<Proposition> listProposition = new ArrayList<Proposition>();
 
-        //On consttruit la liste des differentes proposition
+        //On construit la liste des differentes proposition
         for (int i = 0; i < joueurs.size(); i++) {
-            j_actif = joueurs.get(i);
-            fenetre.propositionCanalJoueur(j_actif, listProposition);
-            System.out.println("yolo i"+ i);
-            System.out.println(listProposition.toString());
+
+                j_actif = joueurs.get(i);
+            //seul les non constructeurs emettent des propositions
+            if(j_actif!=constructeurCanal) {
+                fenetre.propositionCanalJoueur(j_actif, listProposition);
+                System.out.println("yolo i" + i);
+                System.out.println(listProposition.toString());
+            }
         }
 
         //on affiche la liste au constructeur (qui contient aussi sa proposition) il choisit une proposition
+
+        constructionCanal(listProposition);
+    }
+
+    private void constructionCanal( ArrayList<Proposition> listProposition){
+        System.out.println("Construction canal");
+        fenetre.choixCanalConstructeur(constructeurCanal, listProposition);
     }
 
     public FenetreGUI getFenetre() {
@@ -330,8 +342,10 @@ public class MaitreDuJeu {
         enchereParcelle();
         System.out.println("DEPOT PARCELLE");
         depotParcelle();
-        System.out.println("SOUDOIEMENT CONSTRUCTEUR");
+        System.out.println("SOUDOIEMENT CONSTRUCTEUR+construction");
         soudoiementConstructeur();
+
+
         System.out.println("tour fini");
     }
 

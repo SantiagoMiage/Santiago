@@ -61,7 +61,7 @@ public class PlateauTest {
     public void testIrrigation(){
         Plateau p = new Plateau();
         Canal canal = new Canal(false,2,4,4,4);
-        p.Irrigation(canal);
+        p.irrigation(canal);
         ArrayList<Parcelle> listeP;
         listeP = p.listeParcellesAdjacentes(canal);
         for (Parcelle parcelle : listeP) {

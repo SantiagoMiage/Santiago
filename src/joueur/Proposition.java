@@ -28,14 +28,21 @@ public class Proposition {
         return total;
     }
 
-    //ajoute le montant du joueur qui soutient la proposition
+    //ajoute le montant du joueur qui soutient la proposition nouvelle ou non
     public void soutenirProposition(Joueur joueur,int montant){
         listJoueur.add(joueur);
         listMontant.add(montant);
     }
 
 
-
+    public void paiementProposition(){
+        int nbj=0;
+        //pour chaque joueur pn retire le paiement qu'il s'est engagé à payer
+        for (Joueur joueur : listJoueur) {
+            joueur.setArgent(joueur.getArgent()-listMontant.get(nbj));
+            nbj++;
+        }
+    }
 
 
 
@@ -70,7 +77,7 @@ public class Proposition {
     @Override
     public String toString() {
         return "Proposition{"  +
-                ", listJoueur=" + listJoueur.toString() +
+                "listJoueur=" + listJoueur.toString() +
                 ", listmontant=" + listMontant +
                 ", total=" + total() +
                 '}';
