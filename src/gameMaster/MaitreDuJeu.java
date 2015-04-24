@@ -20,7 +20,7 @@ import java.util.Random;
  */
 public class MaitreDuJeu {
 
-    private int nbTours; //nombre de tours écoulé dans la partie
+    private int nbTours=0; //nombre de tours écoulé dans la partie
     private Plateau plateau; //le plateau de jeu
     private ArrayList<Joueur> joueurs; //la liste des joueurs dans la partie
     private ArrayList<PileParcelle> pileParcelles;
@@ -31,24 +31,7 @@ public class MaitreDuJeu {
     private Server serv =null;
     private Client cli =null;
     private Boolean local = false;
-
-
-    public void setLocal(Boolean local) {
-        this.local = local;
-    }
-
-    public Boolean getLocal() {
-
-        return local;
-    }
-
-    public void setServ(Server serv) {
-        this.serv = serv;
-    }
-
-    public void setCli(Client cli) {
-        this.cli = cli;
-    }
+    private static int montantRevenu = 5; //non imposable
 
     public MaitreDuJeu(ArrayList<Joueur> joueurs) {
         this.nbTours = 0;
@@ -72,12 +55,134 @@ public class MaitreDuJeu {
         this.fenetre = new FenetreGUI();
     }
 
+
+    //////////////////////////////
+    //////Les accesseurs//////////
+    //////////////////////////////
+    public void setLocal(Boolean local) {
+        this.local = local;
+    }
+
+    public Boolean getLocal() {
+
+        return local;
+    }
+
+    public void setServ(Server serv) {
+        this.serv = serv;
+    }
+
+    public void setCli(Client cli) {
+        this.cli = cli;
+    }
+
+    public Server getServ() {
+        return serv;
+    }
+
+    public Client getCli() {
+        return cli;
+    }
+
     public Plateau getPlateau() {
         return plateau;
     }
 
+    public FenetreGUI getFenetre() {
+        return fenetre;
+    }
+
+    public ArrayList<PileParcelle> getPileParcelles() {
+        return pileParcelles;
+    }
+
+    public void setJ_actif(Joueur joueur) {
+        this.j_actif = joueur;
+    }
+
+
+    /////////////////
+    //Les 7 Phases///
+    /////////////////
+
+    //gère la première phase du jeu les enchères pour les parcelles
+    public void enchereParcelle() {
+        int[] montantEnchere = new int[joueurs.size()];
+        for (int i = 0; i < joueurs.size(); i++) {
+            montantEnchere[i] = -1;
+        }
+        this.retournerPlantation();
+        for (int i = 0; i < joueurs.size(); i++) {
+            j_actif = joueurs.get(i);
+            montantEnchere[i] = fenetre.offreJoueur(j_actif, montantEnchere);
+
+        }
+        majConstructeurCanal(montantEnchere);
+        ArrayList<Joueur> toursJoueurs = triJoueurTour(montantEnchere);
+        joueurs = toursJoueurs;
+        for(int i = 0; i<joueurs.size(); i++){
+            j_actif = toursJoueurs.get(i);
+            Parcelle pChoisie = fenetre.choixParcelle(j_actif, pileParcelles);
+            j_actif.setParcelleMain(pChoisie);
+        }
+    }
+    //gère la deuxieme phase du jeu le changement du constructeur
+    public void majConstructeurCanal(int[] montantEnchere){
+        int min = 10000;
+        int pos = -1;
+        for (int i = 0; i < joueurs.size(); i++) {
+            if(montantEnchere[i]<min){
+                min = montantEnchere[i];
+                pos = i;
+            }
+        }
+        setConstructeurCanal(joueurs.get(pos));
+    }
+    //gère la troisieme phase du jeu le depot de la parcelle en main des joueurs
+    public void depotParcelle() {
+        for (int i = 0; i < joueurs.size(); i++) {
+            j_actif = joueurs.get(i);
+            fenetre.depotParcelle(j_actif);
+        }
+    }
+    //gère la  quatrieme phase du jeu soudoiement aupres du constructeur et construction du canal par ce dernier
+    private void soudoiementConstructeur(){
+    ArrayList<Proposition> listProposition = new ArrayList<Proposition>();
+
+        //On construit la liste des differentes proposition
+        for (int i = 0; i < joueurs.size(); i++) {
+
+                j_actif = joueurs.get(i);
+            //seul les non constructeurs emettent des propositions
+            if(j_actif!=constructeurCanal) {
+                fenetre.propositionCanalJoueur(j_actif, listProposition);
+
+            }
+        }
+
+        //on affiche la liste au constructeur (qui contient aussi sa proposition) il choisit une proposition pour construire
+        constructionCanal(listProposition);
+    }
+    //gère la  cinquieme phase du jeu
+
+    //gère la  sixieme phase du jeu
+
+    //gère la  septieme phase du jeu le paiement de tous les joueurs en fin de tours
+    private void paiementJoueur(){
+        for (int i = 0; i < joueurs.size(); i++) {
+            Joueur joueur = joueurs.get(i);
+            joueur.setArgent(joueur.getArgent()+montantRevenu);
+
+            System.out.println("argent du joueur "+joueur.getPseudo()+" : "+joueur.getArgent());
+        }
+    }
+
+
+    //////////////////////////////
+    //Les fonctions secondaires///
+    //////////////////////////////
     public void afficherJeu(){
-        System.out.println(pileParcelles);
+
         this.fenetre.creationPlateau(pileParcelles);
     }
 
@@ -114,44 +219,6 @@ public class MaitreDuJeu {
         fenetre.creationParcelle(pileParcelles);
     }
 
-    //gère la première phase du jeu les enchères pour les parcelles
-    public void enchereParcelle() {
-        int[] montantEnchere = new int[joueurs.size()];
-        for (int i = 0; i < joueurs.size(); i++) {
-            montantEnchere[i] = -1;
-        }
-        this.retournerPlantation();
-        for (int i = 0; i < joueurs.size(); i++) {
-            j_actif = joueurs.get(i);
-            montantEnchere[i] = fenetre.offreJoueur(j_actif, montantEnchere);
-
-        }
-        majConstructeurCanal(montantEnchere);
-        ArrayList<Joueur> toursJoueurs = triJoueurTour(montantEnchere);
-        joueurs = toursJoueurs;
-        for(int i = 0; i<joueurs.size(); i++){
-            j_actif = toursJoueurs.get(i);
-            Parcelle pChoisie = fenetre.choixParcelle(j_actif, pileParcelles);
-            j_actif.setParcelleMain(pChoisie);
-            System.out.println("Voici le choix");
-            System.out.println(pChoisie.toString());
-        }
-    }
-
-    //Met a jour le constructeur de canal
-    //C'est le joueur qui a fait à le plus petite enchère ou le premier à avoir mis 0
-    public void majConstructeurCanal(int[] montantEnchere){
-        int min = 10000;
-        int pos = -1;
-        for (int i = 0; i < joueurs.size(); i++) {
-            if(montantEnchere[i]<min){
-                min = montantEnchere[i];
-                pos = i;
-            }
-        }
-        setConstructeurCanal(joueurs.get(pos));
-    }
-
     //Retourne une liste de joueurs trié pour la phase de tour 1
     private ArrayList<Joueur> triJoueurTour(int[] montantEnchere) {
         ArrayList<Joueur> res = new ArrayList<Joueur>(joueurs.size());
@@ -167,7 +234,6 @@ public class MaitreDuJeu {
                 }
             }
             maxExclu = max;
-            System.out.println(pos);
             if (pos != -1 && montantEnchere[pos] != 0) {
                 res.add(joueurs.get(pos));
             }
@@ -183,49 +249,9 @@ public class MaitreDuJeu {
         return res;
     }
 
-    //gère la deuxieme phase du jeu le depot de la parcelle en main des joueurs
-    public void depotParcelle() {
-        for (int i = 0; i < joueurs.size(); i++) {
-            j_actif = joueurs.get(i);
-            fenetre.depotParcelle(j_actif);
-        }
-    }
-
-    private void soudoiementConstructeur(){
-    ArrayList<Proposition> listProposition = new ArrayList<Proposition>();
-
-        //On construit la liste des differentes proposition
-        for (int i = 0; i < joueurs.size(); i++) {
-
-                j_actif = joueurs.get(i);
-            //seul les non constructeurs emettent des propositions
-            if(j_actif!=constructeurCanal) {
-                fenetre.propositionCanalJoueur(j_actif, listProposition);
-                System.out.println("yolo i" + i);
-                System.out.println(listProposition.toString());
-            }
-        }
-
-        //on affiche la liste au constructeur (qui contient aussi sa proposition) il choisit une proposition
-
-        constructionCanal(listProposition);
-    }
-
     private void constructionCanal( ArrayList<Proposition> listProposition){
         System.out.println("Construction canal");
         fenetre.choixCanalConstructeur(constructeurCanal, listProposition);
-    }
-
-    public FenetreGUI getFenetre() {
-        return fenetre;
-    }
-
-    public ArrayList<PileParcelle> getPileParcelles() {
-        return pileParcelles;
-    }
-
-    public void setJ_actif(Joueur joueur) {
-        this.j_actif = joueur;
     }
 
     private void retournerPlantation() {
@@ -293,18 +319,6 @@ public class MaitreDuJeu {
         parcelles.add(new Parcelle(2,false,false, Parcelle.typeChamps.haricot));
         parcelles.add(new Parcelle(2,false,false, Parcelle.typeChamps.haricot));
     }
-/*
-    public void jouerPartie(){
-        afficherJeu();
-        //mj.afficherPileParcelle();
-        setJ_actif(joueurs.get(0));
-        enchereParcelle();
-        depotParcelle();
-        enchereParcelle();
-        depotParcelle();
-    }
-*/
-
 
     private void setJoueur(ArrayList<Joueur> listeJoueurs) {
         joueurs = listeJoueurs;
@@ -319,7 +333,6 @@ public class MaitreDuJeu {
     public Joueur getConstructeurCanal() {
         return constructeurCanal;
     }
-
 
     private void afficherLauncher() {
         fenetre.creationLauncher();
@@ -353,25 +366,30 @@ public class MaitreDuJeu {
         afficherJeu();
         //mj.afficherPileParcelle();
         setJ_actif(listeJoueurs.get(0));
-        System.out.println("ENCHERE PARCELLE");
-        enchereParcelle();
-        System.out.println("DEPOT PARCELLE");
-        depotParcelle();
-        System.out.println("SOUDOIEMENT CONSTRUCTEUR+construction");
-        soudoiementConstructeur();
+        do{
+            nbTours++;
+            System.out.println("Tour "+nbTours+" commence");
+            System.out.println("Phase Enchere Parcelle");
+            enchereParcelle();
+            System.out.println("Phase Depot Parcelle");
+            depotParcelle();
+            System.out.println("Phase Soudoiement Constructeur + construction canal");
+            soudoiementConstructeur();
+            System.out.println("Phase de paiement");
+            paiementJoueur();
+            System.out.println("Tour "+nbTours+" fini");
+        }while(nbTours !=11);
 
 
-        System.out.println("tour fini");
+
+
     }
 
-    public Server getServ() {
-        return serv;
-    }
 
-    public Client getCli() {
-        return cli;
-    }
 
+    /////////////////
+    //////MAIN///////
+    /////////////////
     public static void main(String[] args){
 
         //A la place une interface graphique devras permettre de choisir les joueurs
@@ -422,7 +440,7 @@ public class MaitreDuJeu {
                         mj.fenetre.getLauncher().setInfo("Tout les joueurs sont connecté début de la partie");
                     }
                     listeJoueurs.add(new Joueur(pseudo = mj.getServ().getPseudo(i), 10));
-                    System.out.println(pseudo);
+
                 }
 
                 mj.jouerPartieServeur(listeJoueurs);
