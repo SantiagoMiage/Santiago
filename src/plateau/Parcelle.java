@@ -6,10 +6,15 @@
 
 package plateau;
 
+import java.io.Serializable;
+
 /**
  * Created by Yannis Cipriani on 06/03/2015.
  */
-public class Parcelle {
+public class Parcelle implements Serializable{
+
+    private  static  final  long serialVersionUID =  1350092745346723535L;
+
     private int nbouvrier;
     private int nbouvrieractif = 0;
     private boolean irrigue = false;
