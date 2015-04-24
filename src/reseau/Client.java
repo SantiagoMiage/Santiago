@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class Client {
 
     private int codemess;
-    private String mess;
+    private String mess = "unknow";
     private Boolean stopclient = false;
 
     Socket clientSocket = null;
@@ -60,12 +60,29 @@ public class Client {
 
                 try {
                     while ( true ) {
-                        if(codemess == 1) {
-                            os.writeBytes(Integer.toString(codemess) + "\n");
+
+                        String responseLine = is.readLine();
+                        System.out.println("recu : " + responseLine);
+                        if(Integer.parseInt(responseLine) == 2){
+                            System.out.println("récupération de la liste des joueurs");
+                            ArrayList<Joueur> listeJoueur = (ArrayList<Joueur>) ois.readObject();
+                            System.out.println(listeJoueur.getClass());
+                            System.out.println(listeJoueur.get(0).getClass());
+                            System.out.println(listeJoueur);
+                            os.writeBytes(2+ "\n");
+                        }
+
+                        if(Integer.parseInt(responseLine) == 1) {
+                            while(mess.equals("unknow")){
+
+                            }
+                            os.writeBytes(Integer.toString(1) + "\n");
                             os.writeBytes(mess+ "\n");
-                            codemess =0;
                             System.out.println("pseudo send");
                         }
+
+
+
                         if ( stopclient ) {
                             break;
                         }
@@ -85,56 +102,8 @@ public class Client {
                     System.err.println("Trying to connect to unknown host: " + e);
                 } catch (IOException e) {
                     System.err.println("IOException:  " + e);
-                }
-            }
-        };
-
-        Runnable clientReceive = new Runnable(){
-            @Override
-            public void run() {
-
-                // If everything has been initialized then we want to write some data
-                // to the socket we have opened a connection to on the given port
-
-                if (clientSocket == null || is == null) {
-                    System.out.println("receive");
-                    System.out.println(is);
-                    System.out.println(clientSocket);
-                    System.err.println( "Something is wrong. One variable is null." );
-                    return;
-                }
-
-                try {
-                    while ( true ) {
-                        if ( stopclient ) {
-                            break;
-                        }
-                        String responseLine = is.readLine();
-                        System.out.println("recu : " + responseLine);
-                        if(Integer.parseInt(responseLine) == 2){
-                            System.out.println("récupération de la liste des joueurs");
-                            ArrayList<Joueur> listeJoueur = (ArrayList<Joueur>) ois.readObject();
-                            System.out.println(listeJoueur.getClass());
-                            System.out.println(listeJoueur.get(0).getClass());
-                            System.out.println(listeJoueur);
-                            os.writeBytes(2+ "\n");
-                        }
-
-
-                    }
-                    is.close();
-                    ois.close();
-                    clientSocket.close();
-                } catch (UnknownHostException e) {
-                    System.err.println("Trying to connect to unknown host: " + e);
-                } catch (IOException e) {
-                    System.err.println("IOException:  " + e);
                 } catch (ClassNotFoundException e) {
-                    System.out.println("class not found");
                     e.printStackTrace();
-                }catch (Exception e){
-                    e.printStackTrace();
-                    System.out.println("Autre fail");
                 }
             }
         };
@@ -142,13 +111,9 @@ public class Client {
         Thread serverThreadSend = new Thread(clientSend);
         serverThreadSend.start();
 
-        Thread serverThreadReceive = new Thread(clientReceive);
-        serverThreadReceive.start();
-
     }
 
     public void sendPseudo(String pseudo){
-        codemess = 1;
         mess = pseudo;
     }
 }
