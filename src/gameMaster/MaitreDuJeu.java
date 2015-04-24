@@ -77,7 +77,7 @@ public class MaitreDuJeu {
     }
 
     public void afficherJeu(){
-        System.out.println(pileParcelles);
+
         this.fenetre.creationPlateau(pileParcelles);
     }
 
@@ -133,8 +133,6 @@ public class MaitreDuJeu {
             j_actif = toursJoueurs.get(i);
             Parcelle pChoisie = fenetre.choixParcelle(j_actif, pileParcelles);
             j_actif.setParcelleMain(pChoisie);
-            System.out.println("Voici le choix");
-            System.out.println(pChoisie.toString());
         }
     }
 
@@ -167,7 +165,6 @@ public class MaitreDuJeu {
                 }
             }
             maxExclu = max;
-            System.out.println(pos);
             if (pos != -1 && montantEnchere[pos] != 0) {
                 res.add(joueurs.get(pos));
             }
@@ -201,8 +198,7 @@ public class MaitreDuJeu {
             //seul les non constructeurs emettent des propositions
             if(j_actif!=constructeurCanal) {
                 fenetre.propositionCanalJoueur(j_actif, listProposition);
-                System.out.println("yolo i" + i);
-                System.out.println(listProposition.toString());
+
             }
         }
 
@@ -344,7 +340,13 @@ public class MaitreDuJeu {
         depotParcelle();
         System.out.println("SOUDOIEMENT CONSTRUCTEUR+construction");
         soudoiementConstructeur();
-
+        System.out.println("TOUR 2 ");
+        System.out.println("ENCHERE PARCELLE");
+        enchereParcelle();
+        System.out.println("DEPOT PARCELLE");
+        depotParcelle();
+        System.out.println("SOUDOIEMENT CONSTRUCTEUR+construction");
+        soudoiementConstructeur();
 
         System.out.println("tour fini");
     }
@@ -407,7 +409,7 @@ public class MaitreDuJeu {
                         mj.fenetre.getLauncher().setInfo("Tout les joueurs sont connecté début de la partie");
                     }
                     listeJoueurs.add(new Joueur(pseudo = mj.getServ().getPseudo(i), 10));
-                    System.out.println(pseudo);
+
                 }
 
                 mj.jouerPartieServeur(listeJoueurs);

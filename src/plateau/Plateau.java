@@ -65,12 +65,12 @@ public class Plateau extends JApplet {
         return ListCanauxGUI;
     }
 
-    public ArrayList<Parcelle> getListParcelleModele() {
-        return ListParcelleModele;
-    }
-
     public void setListCanauxGUI(ArrayList<JLabel> listCanauxGUI) {
         ListCanauxGUI = listCanauxGUI;
+    }
+
+    public ArrayList<Parcelle> getListParcelleModele() {
+        return ListParcelleModele;
     }
 
     public void initialisation() {
@@ -346,11 +346,11 @@ public class Plateau extends JApplet {
                         //alors on renvoie vrai
                         ok = true;
                         //on passe l'autre intersection (fin) a irrigue
-                        irrigueIntersection(xfin, yfin);
+                        //   irrigueIntersection(xfin, yfin);
                     } else if ((xfin == elem.getI()) && (yfin == elem.getJ())) {  //si les coordonnées correspondent a la fin du canal
                         ok = true;
                         //on passe l'autre intersection (debut) a irrigue
-                        irrigueIntersection(xdeb, ydeb);
+                        //  irrigueIntersection(xdeb, ydeb);
                     }
                 }
             }
@@ -371,7 +371,7 @@ public class Plateau extends JApplet {
         //recuperer la position de la parcelle
         int posx = thumb.getX();
         int posy = thumb.getY();
-        System.out.println("posx " + posx + "posy " + posy);
+        //System.out.println("posx " + posx + "posy " + posy);
 
         //calcul de la position du premier carré de couleur
         final int posxcarre = posx + 5;
@@ -423,6 +423,7 @@ public class Plateau extends JApplet {
 
 
     public void irrigueIntersection(int i, int j) {
+        System.out.println("irrigue intersection i " + i + "  j " + j);
         for (Intersection elem : ListIntersect) {
             if (elem.getI() == i && elem.getJ() == j) {
                 elem.setirrigue(true);
@@ -450,9 +451,10 @@ public class Plateau extends JApplet {
 
     //irrigue les Parcelles Adjacentes au canal
     public void irrigation(Canal canal) {
-
+        System.out.println("irrigue canal " + canal.toString());
         //on irrigue
         canal.setIrrigue(true);
+
         //on recupere son JLabel
         int index = this.getListCanauxModele().indexOf(canal);
         JLabel canalGUI = this.getListCanauxGUI().get(index);
@@ -478,15 +480,33 @@ public class Plateau extends JApplet {
 
 
         this.getListParcelleModele().toString();
+
+        //on irrigue mtn l<intersection au bout du canal
+        int xdeb = canal.getXdeb();
+        int ydeb = canal.getYdeb();
+        int xfin = canal.getXfin();
+        int yfin = canal.getYfin();
+
+        for (Intersection elem : ListIntersect) {
+            //si l'intersection est irrigue
+            if (elem.isirrigue()) {
+                //si les coordonnées correspondent au debut du canal ou sa la fin
+                if ((xdeb == elem.getI()) && (ydeb == elem.getJ())) {
+                    //on passe l'autre intersection (fin) a irrigue
+                    irrigueIntersection(xfin, yfin);
+                } else if ((xfin == elem.getI()) && (yfin == elem.getJ())) {
+                    //on passe l'autre intersection (debut) a irrigue
+                    irrigueIntersection(xdeb, ydeb);
+                }
+            }
+        }
     }
 
     public void decolorationProposition(ArrayList<Proposition> listProposition) {
-        System.out.println("decoloration");
+
         for (Proposition proposition : listProposition) {
-            System.out.println("boucle");
+
             Canal canal = proposition.getCanal();
-
-
             //on recupere son JLabel
             int index = this.getListCanauxModele().indexOf(canal);
             JLabel canalGUI = this.getListCanauxGUI().get(index);
@@ -513,15 +533,15 @@ public class Plateau extends JApplet {
 
             //si canal vert, alors c est une proposition non retenue => on decolore
             if (canal.estHorizontale()) {
-                System.out.println("test 1");
-                if(canalGUI.getIcon().toString().equals(iconcanalhoriprop.toString()) ) {
-                    System.out.println("test 2");
+
+                if (canalGUI.getIcon().toString().equals(iconcanalhoriprop.toString())) {
+
                     canalGUI.setIcon(iconcanalhori);
                 }
-            } else if (canal.estVerticale() ) {
-                System.out.println("test 3");
-                if(canalGUI.getIcon().toString().equals(iconcanalvertiprop.toString()) ) {
-                    System.out.println("test 4");
+            } else if (canal.estVerticale()) {
+
+                if (canalGUI.getIcon().toString().equals(iconcanalvertiprop.toString())) {
+
                     canalGUI.setIcon(iconcanalverti);
                 }
             }
@@ -621,10 +641,12 @@ public class Plateau extends JApplet {
 
         //on recupere la position de la parcelle sur laquel le joueur a cliquer
         int indexParcelle = ListParcelleGUI.indexOf(parcelleChoisie);
-        //on recupere la parcelle que le joueur posse (a obtenu dans la phase d'enchere)
+        //on recupere la parcelle que le joueur pose (a obtenu dans la phase d'enchere)
         Parcelle parcelleMain = joueur.getParcelleMain();
         //on remplie les ouvriers
         parcelleMain.setNbouvrieractif(parcelleMain.getNbouvrier());
+        //on attribue le proprio
+        parcelleMain.setProprio(joueur);
         //on met a jour la liste des parcelles du plateau
         ListParcelleModele.set(indexParcelle, parcelleMain);
         //on modifie l'Affichage de la parcelle sur le plateau

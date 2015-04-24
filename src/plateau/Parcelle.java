@@ -6,6 +6,8 @@
 
 package plateau;
 
+import joueur.Joueur;
+
 /**
  * Created by Yannis Cipriani on 06/03/2015.
  */
@@ -17,27 +19,8 @@ public class Parcelle {
     private typeChamps champs = typeChamps.vide;
     private int numligne;
     private int numcolonne;
+    private Joueur Proprio;
 
-
-    public typeChamps getChamps() {
-        return champs;
-    }
-
-    public void setChamps(typeChamps champs) {
-        this.champs = champs;
-    }
-
-    public boolean isIrrigue() {
-        return irrigue;
-    }
-
-    public void setIrrigue(boolean irrigue) {
-        this.irrigue = irrigue;
-    }
-
-    public void setNbouvrieractif(int nbouvrieractif) {
-        this.nbouvrieractif = nbouvrieractif;
-    }
 
     public Parcelle(int nbouvrier, boolean irrigue, boolean secheresse, typeChamps champs) {
         this.nbouvrier = nbouvrier;
@@ -67,6 +50,34 @@ public class Parcelle {
 
     public int getNumcolonne() {
         return numcolonne;
+    }
+
+    public typeChamps getChamps() {
+        return champs;
+    }
+
+    public void setChamps(typeChamps champs) {
+        this.champs = champs;
+    }
+
+    public Joueur getProprio() {
+        return Proprio;
+    }
+
+    public void setProprio(Joueur proprio) {
+        Proprio = proprio;
+    }
+
+    public boolean isIrrigue() {
+        return irrigue;
+    }
+
+    public void setIrrigue(boolean irrigue) {
+        this.irrigue = irrigue;
+    }
+
+    public void setNbouvrieractif(int nbouvrieractif) {
+        this.nbouvrieractif = nbouvrieractif;
     }
 
     @Override

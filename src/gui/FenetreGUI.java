@@ -69,13 +69,13 @@ public class FenetreGUI {
     //A finir doit gérer le choix de la parcelle d'un joueur
     //Pour l'instant ajoute le panel de PileParcelleGUI
     public Parcelle choixParcelle(Joueur j_actif, ArrayList<PileParcelle> pileParcelles) {
-        System.out.println(j_actif);
+
         Parcelle pChoisie = pileParcelleGUI.choixParcelle(j_actif);
         return pChoisie;
     }
 
     public void depotParcelle(Joueur j_actif) {
-        System.out.println(j_actif);
+
         plateau.depotParcelle(j_actif);
     }
 
