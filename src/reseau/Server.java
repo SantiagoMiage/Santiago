@@ -1,6 +1,7 @@
 package reseau;
 
 import gui.LauncherGUI;
+import joueur.Joueur;
 
 import java.io.*;
 import java.net.*;
@@ -15,14 +16,14 @@ public class Server {
     Socket clientSocket = null;
     int numConnections = 0;
     int port;
-    ArrayList<Server2Connection> clientCo= new ArrayList<Server2Connection>();
+    ArrayList<Server2Connection> clientCo = new ArrayList<Server2Connection>();
 
-    public Server( int port ) {
+    public Server(int port) {
         this.port = port;
     }
 
     public void stopServer() {
-        System.out.println( "Server cleaning up." );
+        System.out.println("Server cleaning up.");
         System.exit(0);
     }
 
@@ -35,29 +36,27 @@ public class Server {
             public void run() {
                 try {
                     echoServer = new ServerSocket(port);
-                    while ( true ) {
+                    while (true) {
                         try {
                             clientSocket = echoServer.accept();
-                            numConnections ++;
+                            numConnections++;
                             Server2Connection oneconnection = new Server2Connection(clientSocket, numConnections, Server.this);
                             clientCo.add(oneconnection);
                             new Thread(oneconnection).start();
-                        }
-                        catch (IOException e) {
+                        } catch (IOException e) {
                             System.out.println(e);
                         }
                     }
-                }
-                catch (IOException e) {
+                } catch (IOException e) {
                     System.out.println(e);
                 }
             }
         };
 
 
-        System.out.println( "Server is started and is waiting for connections." );
-        System.out.println( "With multi-threading, multiple connections are allowed." );
-        System.out.println( "Any client can send -1 to stop the server." );
+        System.out.println("Server is started and is waiting for connections.");
+        System.out.println("With multi-threading, multiple connections are allowed.");
+        System.out.println("Any client can send -1 to stop the server.");
 
         Thread serverThread = new Thread(serverTask);
         serverThread.start();
@@ -68,21 +67,43 @@ public class Server {
 
     }
 
-    public String getPseudo(int id){
+    public String getPseudo(int id) {
         return clientCo.get(id).pseudoJoueur;
     }
 
-    public int getNbCo(){
+    public int getNbCo() {
         return numConnections;
     }
+
+    public void sendJoueur(ArrayList<Joueur> listeJoueurs, int i) {
+        System.out.println("sendJoueur");
+        try {
+            clientCo.get(i).os.println(2);
+            System.out.println("sendJoueur to " + i);
+            clientCo.get(i).oos.writeObject(listeJoueurs);
+            clientCo.get(i).oos.flush();
+            //clientCo.get(i).oos.reset();
+            //Thread.sleep(800);
+        } catch (IOException e) {
+            System.out.println("fail envoie");
+            e.printStackTrace();
+        }
+    }
+
+    public Boolean reponseClient(int i){
+        return clientCo.get(i).recu;
+    }
+
 }
 
 class Server2Connection implements Runnable {
     BufferedReader is;
     PrintStream os;
+    ObjectOutputStream oos = null;
     Socket clientSocket;
     int id;
     Server server;
+    Boolean recu = false;
     String pseudoJoueur = "unknow";
 
     public Server2Connection(Socket clientSocket, int id, Server server) {
@@ -93,6 +114,7 @@ class Server2Connection implements Runnable {
         try {
             is = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             os = new PrintStream(clientSocket.getOutputStream());
+            oos = new ObjectOutputStream(clientSocket.getOutputStream());
         } catch (IOException e) {
             System.out.println(e);
         }
@@ -114,15 +136,19 @@ class Server2Connection implements Runnable {
                     pseudoJoueur = is.readLine();
                     System.out.println(pseudoJoueur);
                 }
+                if(n == 2){
+                    recu = true;
+                }
                 if(serverStop){
                     break;
                 }
-                os.println("" + n*n );
+
             }
 
             System.out.println( "Connection " + id + " closed." );
             is.close();
             os.close();
+            oos.close();
             clientSocket.close();
 
             if ( serverStop ) server.stopServer();
