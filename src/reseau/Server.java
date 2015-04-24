@@ -79,7 +79,9 @@ public class Server {
         System.out.println("sendJoueur");
         try {
             clientCo.get(i).os.println(2);
+            clientCo.get(i).os.flush();
             System.out.println("sendJoueur to " + i);
+            System.out.println(listeJoueurs);
             clientCo.get(i).oos.writeObject(listeJoueurs);
             clientCo.get(i).oos.flush();
             //clientCo.get(i).oos.reset();
@@ -118,6 +120,9 @@ class Server2Connection implements Runnable {
         } catch (IOException e) {
             System.out.println(e);
         }
+
+        os.println(1);
+        os.flush();
     }
 
     public void run() {
