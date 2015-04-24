@@ -328,9 +328,24 @@ public class MaitreDuJeu {
 
     private void jouerPartieServeur(ArrayList<Joueur> listeJoueurs) {
         setJoueur(listeJoueurs);
+        for (int i = 0; i<3; i++) {
+            serv.sendJoueur(listeJoueurs, i);
+            while(!serv.reponseClient(i)){
+                System.out.println("wait");
+            }
+        }
+
         afficherJeu();
         //mj.afficherPileParcelle();
         setJ_actif(listeJoueurs.get(0));
+    }
+
+    private void jouerPartieClient(ArrayList<Joueur> listeJoueurs) {
+        setJoueur(listeJoueurs);
+
+        //afficherJeu();
+        //mj.afficherPileParcelle();
+        //setJ_actif(listeJoueurs.get(0));
     }
 
     private void jouerPartieLocal(ArrayList<Joueur> listeJoueurs) {
@@ -414,6 +429,8 @@ public class MaitreDuJeu {
             }
             if(mj.getCli() != null){
 
+
+                //mj.jouerPartieClient(listeJoueurs);
             }
         }
     }
