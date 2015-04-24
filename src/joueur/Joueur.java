@@ -2,11 +2,14 @@ package joueur;
 
 import plateau.Parcelle;
 
+import java.io.Serializable;
+
 /**
  * Created by Crema on 06/03/2015.
  */
-public class Joueur {
+public class Joueur implements Serializable {
 
+    private  static  final  long serialVersionUID =  1350092881346723535L;
 
     private String pseudo;
     private int argent;
