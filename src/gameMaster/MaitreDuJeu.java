@@ -344,8 +344,9 @@ public class MaitreDuJeu {
         for (int i = 0; i<3; i++) {
             serv.sendJoueur(listeJoueurs, i);
             while(!serv.reponseClient(i)){
-                System.out.println("wait");
+                fenetre.getLauncher().setInfo("En attente de rep de "+ i);
             }
+
         }
 
         afficherJeu();
