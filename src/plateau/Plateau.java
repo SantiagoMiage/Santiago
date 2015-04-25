@@ -270,10 +270,8 @@ public class Plateau extends JApplet {
                         thumb.addMouseListener(new MouseAdapter() {
                             @Override
                             public void mouseClicked(MouseEvent e) {
-                                //test
-                                parcelle.toString();
                                 if (depotencours) {
-                                    if (thumb.getIcon() == iconparcelle) {
+                                    if (thumb.getIcon() == iconparcelle && (!parcelle.isSecheresse())) {
                                         parcelleChoisie = thumb;
                                         synchronized (threadAttenteDepotParcelle) {
                                             threadAttenteDepotParcelle.notify();
@@ -449,7 +447,7 @@ public class Plateau extends JApplet {
         return listeP;
     }
 
-    //irrigue les Parcelles Adjacentes au canal
+    //irrigue le canal et les parcelles adjacentes au canal
     public void irrigation(Canal canal) {
         System.out.println("irrigue canal " + canal.toString());
         //on irrigue
@@ -475,11 +473,14 @@ public class Plateau extends JApplet {
         ArrayList<Parcelle> listeP;
         listeP = listeParcellesAdjacentes(canal);
         for (Parcelle parcelle : listeP) {
-            parcelle.setIrrigue(true);
+            //on irrigue la parcelle seulement si elle n<est pas en secheresse
+            if (!parcelle.isSecheresse()) {
+                parcelle.setIrrigue(true);
+            }
         }
 
 
-        this.getListParcelleModele().toString();
+      //  this.getListParcelleModele().toString();
 
         //on irrigue mtn l<intersection au bout du canal
         int xdeb = canal.getXdeb();
@@ -587,6 +588,19 @@ public class Plateau extends JApplet {
         ListIntersectGUI.get(index).setIcon(iconsource);
     }
 
+    public void secheresse(Parcelle parcelle) {
+        System.out.println("plateau.secheresse");
+        parcelle.setSecheresse(true);
+        //et on modifie l image
+        String cheminvide = "/ressource/images/vide.png";
+        URL url_vide = this.getClass().getResource(cheminvide);
+        final ImageIcon iconvide = new ImageIcon(url_vide);
+
+        int index = ListParcelleModele.indexOf(parcelle);
+        JLabel parcelleGUI = ListParcelleGUI.get(index);
+        parcelleGUI.setIcon(iconvide);
+    }
+
     //permet de choisir sur le plateau le canal que l'on veut encherir
     public Canal choixCanal(Joueur joueur) {
 
@@ -641,10 +655,21 @@ public class Plateau extends JApplet {
 
         //on recupere la position de la parcelle sur laquel le joueur a cliquer
         int indexParcelle = ListParcelleGUI.indexOf(parcelleChoisie);
+        //on recupere la position i et j du label ainsi que le boolean irrigue
+        int ligne = ListParcelleModele.get(indexParcelle).getNumligne();
+        int col = ListParcelleModele.get(indexParcelle).getNumcolonne();
+        boolean estIrrigue = ListParcelleModele.get(indexParcelle).isIrrigue();
         //on recupere la parcelle que le joueur pose (a obtenu dans la phase d'enchere)
         Parcelle parcelleMain = joueur.getParcelleMain();
+        //on set la position a la parcelle
+        parcelleMain.setNumligne(ligne);
+        parcelleMain.setNumcolonne(col);
+        //on set l'irrigation ou non de la parcelle
+        parcelleMain.setIrrigue(estIrrigue);
         //on remplie les ouvriers
         parcelleMain.setNbouvrieractif(parcelleMain.getNbouvrier());
+        System.out.println("nbouvrieractif depot "+parcelleMain.getNbouvrieractif());
+        System.out.println("nbouvrier depot "+parcelleMain.getNbouvrier());
         //on attribue le proprio
         parcelleMain.setProprio(joueur);
         //on met a jour la liste des parcelles du plateau
@@ -654,6 +679,7 @@ public class Plateau extends JApplet {
         ListParcelleGUI.set(indexParcelle, parcelleChoisie);
         //on vide la main du joueur
         joueur.setParcelleMain(null);
+
     }
 
 

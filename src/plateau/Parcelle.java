@@ -24,7 +24,7 @@ public class Parcelle implements Serializable{
     private typeChamps champs = typeChamps.vide;
     private int numligne;
     private int numcolonne;
-    private Joueur Proprio;
+    private Joueur proprio=null;
 
 
     public Parcelle(int nbouvrier, boolean irrigue, boolean secheresse, typeChamps champs) {
@@ -57,6 +57,14 @@ public class Parcelle implements Serializable{
         return numcolonne;
     }
 
+    public void setNumligne(int numligne) {
+        this.numligne = numligne;
+    }
+
+    public void setNumcolonne(int numcolonne) {
+        this.numcolonne = numcolonne;
+    }
+
     public typeChamps getChamps() {
         return champs;
     }
@@ -66,11 +74,11 @@ public class Parcelle implements Serializable{
     }
 
     public Joueur getProprio() {
-        return Proprio;
+        return proprio;
     }
 
     public void setProprio(Joueur proprio) {
-        Proprio = proprio;
+        this.proprio = proprio;
     }
 
     public boolean isIrrigue() {
@@ -85,8 +93,26 @@ public class Parcelle implements Serializable{
         this.nbouvrieractif = nbouvrieractif;
     }
 
+    public int getNbouvrieractif() {
+        return nbouvrieractif;
+    }
+
+    public boolean isSecheresse() {
+        return secheresse;
+    }
+
+    public void setSecheresse(boolean secheresse) {
+        this.secheresse = secheresse;
+    }
+
     @Override
     public String toString() {
+        String pseudoProprio="";
+        if (proprio==null){
+            pseudoProprio="aucun";
+        }else{
+            pseudoProprio=proprio.getPseudo();
+        }
         return "Parcelle{" +
                 "nbouvrier=" + nbouvrier +
                 ", nbouvrieractif=" + nbouvrieractif +
@@ -95,6 +121,7 @@ public class Parcelle implements Serializable{
                 ", champs=" + champs +
                 ", numligne=" + numligne +
                 ", numcolonne=" + numcolonne +
+                ", joueurproprio=" + pseudoProprio +
                 '}';
     }
 

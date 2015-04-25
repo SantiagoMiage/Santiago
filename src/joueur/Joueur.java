@@ -69,6 +69,7 @@ public class Joueur implements Serializable {
 
 
     public String affichePseudo() {
+
         return "Joueur :" + pseudo;
     }
 
