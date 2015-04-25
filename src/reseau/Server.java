@@ -2,6 +2,7 @@ package reseau;
 
 import gui.LauncherGUI;
 import joueur.Joueur;
+import plateau.Parcelle;
 import plateau.PileParcelle;
 
 import java.io.*;
@@ -80,11 +81,10 @@ public class Server {
     public void sendJoueur(ArrayList<Joueur> listeJoueurs, int i) {
         System.out.println("sendJoueur");
         try {
-            clientCo.get(i).os.println(2);
-            clientCo.get(i).os.flush();
-            System.out.println("sendJoueur to " + i);
+            clientCo.get(i).oos.reset();
+            clientCo.get(i).oos.writeInt(2);
+            clientCo.get(i).oos.flush();
             for(int j =0; j<4; j++){
-                System.out.println("Send " + j + " Part of the Joueur");
                 clientCo.get(i).oos.writeObject(listeJoueurs.get(j));
                 clientCo.get(i).oos.flush();
 
@@ -100,7 +100,7 @@ public class Server {
     public void sendPileParcelle(ArrayList<PileParcelle> pileParcelles, int i){
         System.out.println("sendPile");
         try {
-            clientCo.get(i).oos.write(3);
+            clientCo.get(i).oos.writeInt(3);
             clientCo.get(i).oos.flush();
             System.out.println("sendJoueur to " + i);
             for(int j =0; j<pileParcelles.size(); j++){
@@ -124,13 +124,13 @@ public class Server {
 
     public int getOffreJoueur(int[] montantEnchere, Joueur j_actif) {
         Server2Connection j = getJoueur(j_actif.getPseudo());
-        j.os.println(4);
-        j.os.flush();
+        j.att = new Thread();
+        j.att.start();
         synchronized (j.att) {
             try {
+                j.oos.writeInt(4);
+                j.oos.flush();
                 j.oos.writeObject(montantEnchere);
-                j.att = new Thread();
-                j.att.start();
                 while (j.montantEnchereInt == -1) {
                     System.out.println("att");
                     j.att.wait();
@@ -144,6 +144,28 @@ public class Server {
         }
     }
 
+    public Parcelle parcelleChoisi(Joueur j_actif) {
+        Server2Connection j = getJoueur(j_actif.getPseudo());
+        j.att = new Thread();
+        j.att.start();
+        j.parcelleMain =null;
+        synchronized (j.att) {
+            try {
+                j.oos.writeInt(5);
+                j.oos.flush();
+                while (j.parcelleMain == null) {
+                    System.out.println("att parcelle du client");
+                    j.att.wait();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return j.parcelleMain;
+        }
+    }
+
     private Server2Connection getJoueur(String pseudo) {
         for(int i = 0; i<3; i++){
             if(clientCo.get(i).pseudoJoueur == pseudo){
@@ -152,11 +174,30 @@ public class Server {
         }
         return null;
     }
+
+    public void sendParcelleChoisi(Joueur j_actif, Parcelle pChoisie) {
+        System.out.println("sendParcelleChoisi");
+        try {
+            for (int i = 0; i < 3; i++) {
+                if(!clientCo.get(i).pseudoJoueur.equals(j_actif.getPseudo())){
+                    clientCo.get(i).oos.writeInt(6);
+                    clientCo.get(i).oos.flush();
+                    clientCo.get(i).oos.writeObject(j_actif);
+                    clientCo.get(i).oos.flush();
+                    clientCo.get(i).oos.writeObject(pChoisie);
+                    clientCo.get(i).oos.flush();
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("fail envoie");
+            e.printStackTrace();
+        }
+    }
 }
 
 class Server2Connection implements Runnable {
-    BufferedReader is;
-    PrintStream os;
+    ObjectInputStream is;
+    //PrintStream os;
     ObjectOutputStream oos = null;
     Socket clientSocket;
     int id;
@@ -165,6 +206,7 @@ class Server2Connection implements Runnable {
     String pseudoJoueur = "unknow";
     int montantEnchereInt = -1;
     Thread att;
+    public Parcelle parcelleMain;
 
     public Server2Connection(Socket clientSocket, int id, Server server) {
         this.clientSocket = clientSocket;
@@ -172,40 +214,59 @@ class Server2Connection implements Runnable {
         this.server = server;
         System.out.println( "Connection " + id + " established with: " + clientSocket );
         try {
-            is = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            os = new PrintStream(clientSocket.getOutputStream());
+            is = new ObjectInputStream(clientSocket.getInputStream());
+            //os = new PrintStream(clientSocket.getOutputStream());
             oos = new ObjectOutputStream(clientSocket.getOutputStream());
         } catch (IOException e) {
             System.out.println(e);
         }
 
-        os.println(1);
-        os.flush();
+        try {
+            System.out.println("demande pseudo");
+            oos.writeInt(1);
+            oos.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void run() {
-        String line;
+        int n;
         System.out.println("client thread crée");
         try {
             boolean serverStop = false;
 
             while (true) {
-                line = is.readLine();
-                System.out.println( "Received " + line + " from Connection " + id + "." );
-                int n = Integer.parseInt(line);
+                n = is.readInt();
+                System.out.println( "Received " + n + " from Connection " + id + "." );
+
 
                 //1 = pseudo
                 if(n == 1){
-                    pseudoJoueur = is.readLine();
+                    try {
+                        pseudoJoueur = (String) is.readObject();
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
                     System.out.println(pseudoJoueur);
                 }
                 if(n == 2){
                     recu = true;
                 }
                 if(n == 3){
-                    montantEnchereInt = Integer.parseInt(is.readLine());
+                    montantEnchereInt = is.readInt();
                     synchronized (att){
                         att.notify();
+                    }
+                }
+                if(n == 4){
+                    try {
+                        parcelleMain = (Parcelle) is.readObject();
+                        synchronized (att){
+                            att.notify();
+                        }
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
                     }
                 }
                 if(serverStop){
@@ -216,7 +277,7 @@ class Server2Connection implements Runnable {
 
             System.out.println( "Connection " + id + " closed." );
             is.close();
-            os.close();
+            //os.close();
             oos.close();
             clientSocket.close();
 
