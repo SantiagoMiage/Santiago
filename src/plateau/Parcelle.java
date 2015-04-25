@@ -25,14 +25,41 @@ public class Parcelle implements Serializable{
     private int numligne;
     private int numcolonne;
     private Joueur proprio=null;
-
+    private int numero;
+    public static int nbParcelle =0;
 
     public Parcelle(int nbouvrier, boolean irrigue, boolean secheresse, typeChamps champs) {
         this.nbouvrier = nbouvrier;
         this.irrigue = irrigue;
         this.secheresse = secheresse;
         this.champs = champs;
+        this.numero = nbParcelle;
+        nbParcelle++;
+    }
 
+    public Parcelle(Parcelle pChoisie) {
+        this.nbouvrier = pChoisie.nbouvrier;
+        this.irrigue = pChoisie.irrigue;
+        this.secheresse = pChoisie.secheresse;
+        this.champs = pChoisie.champs;
+        this.numero = pChoisie.numero;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Parcelle parcelle = (Parcelle) o;
+
+        if (numero != parcelle.numero) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return numero;
     }
 
     public Parcelle(int nbouvrier, int nbouvrieractif, boolean irrigue, boolean secheresse, typeChamps champs, int numligne, int numcolonne) {
@@ -132,6 +159,10 @@ public class Parcelle implements Serializable{
                 ", numligne=" + numligne +
                 ", numcolonne=" + numcolonne +
                 '}';
+    }
+
+    public int getNumero() {
+        return numero;
     }
 
     public enum typeChamps {
