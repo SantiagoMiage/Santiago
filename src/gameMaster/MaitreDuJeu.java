@@ -271,9 +271,13 @@ public class MaitreDuJeu {
         }
     }
 
-    //////////////////////////////
-    //Les fonctions secondaires///
-    //////////////////////////////
+    ///////////////////
+    //Les fonctions ///
+    ///////////////////
+    public  void resultatFinal(){
+        String resultat= plateau.calculResultatFinal();
+        //on affiche le resultat
+    }
     public void afficherJeu() {
 
         this.fenetre.creationPlateau(pileParcelles);
@@ -469,10 +473,10 @@ public class MaitreDuJeu {
                 paiementJoueur();
                 System.out.println("Tour " + nbTours + " fini");
             }
-        } while (nbTours != 11);
+        } while (nbTours != 2);
 
-        //  calculResultatFinal();
-        // affichageResultatFinal();
+        resultatFinal();
+
 
 
     }

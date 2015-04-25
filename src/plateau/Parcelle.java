@@ -25,7 +25,7 @@ public class Parcelle implements Serializable{
     private int numligne;
     private int numcolonne;
     private Joueur proprio=null;
-
+private boolean marquer=false;
 
     public Parcelle(int nbouvrier, boolean irrigue, boolean secheresse, typeChamps champs) {
         this.nbouvrier = nbouvrier;
@@ -104,6 +104,15 @@ public class Parcelle implements Serializable{
     public void setSecheresse(boolean secheresse) {
         this.secheresse = secheresse;
     }
+
+    public boolean isMarquer() {
+        return marquer;
+    }
+
+    public void setMarquer(boolean marquer) {
+        this.marquer = marquer;
+    }
+
 
     @Override
     public String toString() {
