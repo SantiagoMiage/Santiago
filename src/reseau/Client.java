@@ -1,6 +1,8 @@
 package reseau;
 
 import joueur.Joueur;
+import plateau.Parcelle;
+import plateau.PileParcelle;
 
 import java.io.*;
 import java.net.*;
@@ -16,6 +18,11 @@ public class Client {
     DataOutputStream os = null;
     BufferedReader is = null;
     ObjectInputStream ois = null;
+
+    Thread att;
+
+    ArrayList<Joueur> listeJoueur = null;
+    private ArrayList<PileParcelle> pileParcelles = null;
 
     public void lancer() {
 
@@ -63,14 +70,6 @@ public class Client {
 
                         String responseLine = is.readLine();
                         System.out.println("recu : " + responseLine);
-                        if(Integer.parseInt(responseLine) == 2){
-                            System.out.println("récupération de la liste des joueurs");
-                            ArrayList<Joueur> listeJoueur = (ArrayList<Joueur>) ois.readObject();
-                            System.out.println(listeJoueur.getClass());
-                            System.out.println(listeJoueur.get(0).getClass());
-                            System.out.println(listeJoueur);
-                            os.writeBytes(2+ "\n");
-                        }
 
                         if(Integer.parseInt(responseLine) == 1) {
                             while(mess.equals("unknow")){
@@ -79,6 +78,28 @@ public class Client {
                             os.writeBytes(Integer.toString(1) + "\n");
                             os.writeBytes(mess+ "\n");
                             System.out.println("pseudo send");
+                        }
+
+                        if(Integer.parseInt(responseLine) == 2){
+                            System.out.println("récupération de la liste des joueurs");
+                            listeJoueur = (ArrayList<Joueur>) ois.readObject();
+                            System.out.println(listeJoueur);
+                            os.writeBytes(2 + "\n");
+                            synchronized (att) {
+                                att.notify();
+                            }
+
+                        }
+
+                        if(Integer.parseInt(responseLine) == 3){
+                            System.out.println("récupération des piles parcelles");
+
+                            pileParcelles = (ArrayList<PileParcelle>) ois.readObject();
+                            System.out.println(pileParcelles);
+                            os.writeBytes(2 + "\n");
+                            synchronized (att) {
+                                att.notify();
+                            }
                         }
 
 
@@ -115,5 +136,38 @@ public class Client {
 
     public void sendPseudo(String pseudo){
         mess = pseudo;
+    }
+
+    public ArrayList<Joueur> getJoueurs() {
+        att = new Thread();
+        att.start();
+        synchronized (att) {
+            while (listeJoueur == null) {
+                System.out.println("att");
+                try {
+                    att.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            return listeJoueur;
+        }
+    }
+
+    public ArrayList<PileParcelle> getPileParcelles () {
+        att = new Thread();
+        att.start();
+        synchronized (att) {
+            while (pileParcelles == null) {
+                System.out.println("att");
+                try {
+                    att.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            return pileParcelles;
+        }
+
     }
 }

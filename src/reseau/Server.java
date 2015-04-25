@@ -2,6 +2,7 @@ package reseau;
 
 import gui.LauncherGUI;
 import joueur.Joueur;
+import plateau.PileParcelle;
 
 import java.io.*;
 import java.net.*;
@@ -92,8 +93,27 @@ public class Server {
         }
     }
 
+    public void sendPileParcelle(ArrayList<PileParcelle> pileParcelles, int i){
+        System.out.println("sendPile");
+        try {
+            clientCo.get(i).os.println(3);
+            clientCo.get(i).os.flush();
+            System.out.println("sendJoueur to " + i);
+            System.out.println(pileParcelles);
+            clientCo.get(i).oos.writeObject(pileParcelles);
+            clientCo.get(i).oos.flush();
+        } catch (IOException e) {
+            System.out.println("fail envoie");
+            e.printStackTrace();
+        }
+    }
+
     public Boolean reponseClient(int i){
-        return clientCo.get(i).recu;
+        if(clientCo.get(i).recu){
+            clientCo.get(i).recu = false;
+            return true;
+        }
+        return false;
     }
 
 }

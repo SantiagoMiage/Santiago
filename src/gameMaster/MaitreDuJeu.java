@@ -344,24 +344,29 @@ public class MaitreDuJeu {
 
     private void jouerPartieServeur(ArrayList<Joueur> listeJoueurs) {
         setJoueur(listeJoueurs);
+        //Envoie les pseudos des autres joueurs
         for (int i = 0; i<3; i++) {
             serv.sendJoueur(listeJoueurs, i);
             while(!serv.reponseClient(i)){
                 fenetre.getLauncher().setInfo("En attente de rep de "+ i);
             }
-
         }
-
+        //Envoie la liste de pile parcelles aux autres joueurs
+        for (int i = 0; i<3; i++) {
+            serv.sendPileParcelle(pileParcelles, i);
+            while(!serv.reponseClient(i)){
+                fenetre.getLauncher().setInfo("En attente de rep de "+ i);
+            }
+        }
         afficherJeu();
-        //mj.afficherPileParcelle();
         setJ_actif(listeJoueurs.get(0));
     }
 
     private void jouerPartieClient(ArrayList<Joueur> listeJoueurs) {
-        setJoueur(listeJoueurs);
-
-        //afficherJeu();
-        //mj.afficherPileParcelle();
+        this.joueurs = listeJoueurs;
+        pileParcelles = cli.getPileParcelles();
+        System.out.println("Creation Partie");
+        afficherJeu();
         //setJ_actif(listeJoueurs.get(0));
     }
 
@@ -445,16 +450,15 @@ public class MaitreDuJeu {
                     while(mj.getServ().getPseudo(i) == "unknow"){
                         mj.fenetre.getLauncher().setInfo("Tout les joueurs sont connecté début de la partie");
                     }
-                    listeJoueurs.add(new Joueur(pseudo = mj.getServ().getPseudo(i), 10));
+                    listeJoueurs.add(new Joueur(mj.getServ().getPseudo(i), 10));
 
                 }
 
                 mj.jouerPartieServeur(listeJoueurs);
             }
             if(mj.getCli() != null){
-
-
-                //mj.jouerPartieClient(listeJoueurs);
+                listeJoueurs = mj.getCli().getJoueurs();
+                mj.jouerPartieClient(listeJoueurs);
             }
         }
     }
