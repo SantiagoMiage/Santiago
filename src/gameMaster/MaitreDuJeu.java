@@ -10,7 +10,6 @@ import plateau.Plateau;
 import reseau.Client;
 import reseau.Server;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -19,9 +18,10 @@ import java.util.Random;
  * Created by Créma on 18/03/2015.
  */
 public class MaitreDuJeu {
-
+    
     private Joueur joueursCli;
-    private int nbTours=0; //nombre de tours écoulé dans la partie
+    private static int montantRevenu = 5; //non imposable
+    private int nbTours = 0; //nombre de tours écoulé dans la partie
     private Plateau plateau; //le plateau de jeu
     private ArrayList<Joueur> joueurs; //la liste des joueurs dans la partie
     private ArrayList<PileParcelle> pileParcelles;
@@ -29,10 +29,9 @@ public class MaitreDuJeu {
     private FenetreGUI fenetre;
     private Joueur j_actif;
     private Joueur constructeurCanal;
-    private Server serv =null;
-    private Client cli =null;
+    private Server serv = null;
+    private Client cli = null;
     private Boolean local = false;
-    private static int montantRevenu = 5; //non imposable
     private String pseudoJoueur;
 
     public MaitreDuJeu(ArrayList<Joueur> joueurs) {
@@ -56,9 +55,7 @@ public class MaitreDuJeu {
         //créer autant de pile de parcelle qu'il y a de joueurs
         this.fenetre = new FenetreGUI();
     }
-
-
-    //////////////////////////////
+     //////////////////////////////
     //////Les accesseurs//////////
     //////////////////////////////
     public void setLocal(Boolean local) {
@@ -70,20 +67,27 @@ public class MaitreDuJeu {
         return local;
     }
 
-    public void setServ(Server serv) {
-        this.serv = serv;
-    }
-
-    public void setCli(Client cli) {
-        this.cli = cli;
+    //////////////////////////////
+    //////Les accesseurs//////////
+    //////////////////////////////
+    public void setLocal(Boolean local) {
+        this.local = local;
     }
 
     public Server getServ() {
         return serv;
     }
 
+    public void setServ(Server serv) {
+        this.serv = serv;
+    }
+
     public Client getCli() {
         return cli;
+    }
+
+    public void setCli(Client cli) {
+        this.cli = cli;
     }
 
     public Plateau getPlateau() {
@@ -108,10 +112,6 @@ public class MaitreDuJeu {
         initialisationPileParcelles();
     }
 
-    public void setConstructeurCanal(Joueur j){
-        constructeurCanal = j;
-    }
-
     public Joueur getConstructeurCanal() {
         return constructeurCanal;
     }
@@ -119,6 +119,10 @@ public class MaitreDuJeu {
     /////////////////
     //Les 7 Phases///
     /////////////////
+
+    public void setConstructeurCanal(Joueur j) {
+        constructeurCanal = j;
+    }
 
     //gère la première phase du jeu les enchères pour les parcelles
     public void enchereParcelle() {
@@ -136,11 +140,12 @@ public class MaitreDuJeu {
         ArrayList<Joueur> toursJoueurs = triJoueurTour(montantEnchere);
         joueurs = toursJoueurs;
         for(int i = 0; i<joueurs.size(); i++){
-            j_actif = joueurs.get(i);
-            Parcelle pChoisie = fenetre.choixParcelle(j_actif);
+            j_actif = toursJoueurs.get(i);
+            Parcelle pChoisie = fenetre.choixParcelle(j_actif, pileParcelles);
             j_actif.setParcelleMain(pChoisie);
         }
     }
+
 
     public void enchereParcelleServeur() {
         int[] montantEnchere = new int[joueurs.size()];
@@ -220,17 +225,18 @@ public class MaitreDuJeu {
     }
 
     //gère la deuxieme phase du jeu le changement du constructeur
-    public void majConstructeurCanal(int[] montantEnchere){
+    public void majConstructeurCanal(int[] montantEnchere) {
         int min = 10000;
         int pos = -1;
         for (int i = 0; i < joueurs.size(); i++) {
-            if(montantEnchere[i]<min){
+            if (montantEnchere[i] < min) {
                 min = montantEnchere[i];
                 pos = i;
             }
         }
         setConstructeurCanal(joueurs.get(pos));
     }
+
     //gère la troisieme phase du jeu le depot de la parcelle en main des joueurs
     public void depotParcelle() {
         for (int i = 0; i < joueurs.size(); i++) {
@@ -238,16 +244,17 @@ public class MaitreDuJeu {
             fenetre.depotParcelle(j_actif);
         }
     }
+
     //gère la  quatrieme phase du jeu soudoiement aupres du constructeur et construction du canal par ce dernier
-    private void soudoiementConstructeur(){
-    ArrayList<Proposition> listProposition = new ArrayList<Proposition>();
+    private void soudoiementConstructeur() {
+        ArrayList<Proposition> listProposition = new ArrayList<Proposition>();
 
         //On construit la liste des differentes proposition
         for (int i = 0; i < joueurs.size(); i++) {
 
-                j_actif = joueurs.get(i);
+            j_actif = joueurs.get(i);
             //seul les non constructeurs emettent des propositions
-            if(j_actif!=constructeurCanal) {
+            if (j_actif != constructeurCanal) {
                 fenetre.propositionCanalJoueur(j_actif, listProposition);
 
             }
@@ -256,52 +263,39 @@ public class MaitreDuJeu {
         //on affiche la liste au constructeur (qui contient aussi sa proposition) il choisit une proposition pour construire
         constructionCanal(listProposition);
     }
+
     //gère la  cinquieme phase du jeu
-
-    //gère la  sixieme phase du jeu
-    private void secheresse(){
-        System.out.println("MJ.secheresse");
-        fenetre.secheresse();
-      /*
-        for (Parcelle parcelle : plateau.getListParcelleModele()) {
-            System.out.println("yolo");
-            System.out.println(parcelle.toString());
-            //optimisation,une parcelle seche ne sechera psa plus
-            if(!parcelle.isSecheresse()) {
-                //seules les parcelles n<etant pas irrigue ni seche  ni ayant un nbouvrier=0(veut dire que rien n'a été deposé)
-                if ((!parcelle.isIrrigue()) && (parcelle.getNbouvrier() > 0)) {
-                    System.out.println("test 1");
-                    System.out.println("nbouvrier mj.seche" + parcelle.getNbouvrieractif());
-                    //si il reste plus d'un ouvrier : on le retire
-                    if (parcelle.getNbouvrieractif() > 0) {
-                        System.out.println("test 2");
-                        parcelle.setNbouvrieractif(parcelle.getNbouvrieractif() - 1);
-
-                    } else {//sinon la parcelle devient desertique
-                        System.out.println("test 3");
-                        plateau.secheresse(parcelle);
-                        plateau.revalidate();
-                    }
+    private void irriguationComplementaire() {
+        boolean adeposer = false;
+        for (int i = 0; i < joueurs.size(); i++) {
+            j_actif = joueurs.get(i);
+            if (j_actif.isCanalComplementaire()) { //si la personne actif a un canal complémentaire
+                if (!adeposer) { //si personne n'a déja posé son canal durant ce tour de jeu
+                    adeposer = fenetre.depotCanalComplementaire(j_actif);
                 }
             }
         }
-*/
     }
+
+    //gère la  sixieme phase du jeu
+    private void secheresse() {
+        System.out.println("MJ.secheresse");
+        fenetre.secheresse();
+
+    }
+
     //gère la  septieme phase du jeu le paiement de tous les joueurs en fin de tours
-    private void paiementJoueur(){
+    private void paiementJoueur() {
         for (int i = 0; i < joueurs.size(); i++) {
             Joueur joueur = joueurs.get(i);
-            joueur.setArgent(joueur.getArgent()+montantRevenu);
-
-            System.out.println("argent du joueur "+joueur.getPseudo()+" : "+joueur.getArgent());
+            joueur.setArgent(joueur.getArgent() + montantRevenu);
         }
     }
-
 
     //////////////////////////////
     //Les fonctions secondaires///
     //////////////////////////////
-    public void afficherJeu(){
+    public void afficherJeu() {
 
         this.fenetre.creationPlateau(pileParcelles);
     }
@@ -346,9 +340,9 @@ public class MaitreDuJeu {
         int maxExclu = 10000;
         int pos = -1;
         //tries les joueurs qui ont misé
-        for(int j = 0; j<joueurs.size(); j++) {
+        for (int j = 0; j < joueurs.size(); j++) {
             for (int i = 0; i < joueurs.size(); i++) {
-                if (montantEnchere[i] !=0 && max < montantEnchere[i] && montantEnchere[i] < maxExclu) {
+                if (montantEnchere[i] != 0 && max < montantEnchere[i] && montantEnchere[i] < maxExclu) {
                     max = montantEnchere[i];
                     pos = i;
                 }
@@ -361,15 +355,15 @@ public class MaitreDuJeu {
             pos = -1;
         }
         //tri les joueurs qui ont passé
-        for(int i = joueurs.size()-1; i>-1; i--){
-            if(montantEnchere[i] == 0){
+        for (int i = joueurs.size() - 1; i > -1; i--) {
+            if (montantEnchere[i] == 0) {
                 res.add(joueurs.get(i));
             }
         }
         return res;
     }
 
-    private void constructionCanal( ArrayList<Proposition> listProposition){
+    private void constructionCanal(ArrayList<Proposition> listProposition) {
         System.out.println("Construction canal");
         fenetre.choixCanalConstructeur(constructeurCanal, listProposition);
     }
@@ -435,15 +429,22 @@ public class MaitreDuJeu {
         parcelles.add(new Parcelle(1, false, false, Parcelle.typeChamps.haricot));
         parcelles.add(new Parcelle(1, false, false, Parcelle.typeChamps.haricot));
         //les 3 haricots avec 2 travailleurs
-        parcelles.add(new Parcelle(2,false,false, Parcelle.typeChamps.haricot));
-        parcelles.add(new Parcelle(2,false,false, Parcelle.typeChamps.haricot));
-        parcelles.add(new Parcelle(2,false,false, Parcelle.typeChamps.haricot));
+        parcelles.add(new Parcelle(2, false, false, Parcelle.typeChamps.haricot));
+        parcelles.add(new Parcelle(2, false, false, Parcelle.typeChamps.haricot));
+        parcelles.add(new Parcelle(2, false, false, Parcelle.typeChamps.haricot));
     }
 
     private void afficherLauncher() {
         fenetre.creationLauncher();
     }
 
+    private void jouerPartieServeur(ArrayList<Joueur> listeJoueurs) {
+        setJoueur(listeJoueurs);
+        //Envoie les pseudos des autres joueurs
+        for (int i = 0; i < 3; i++) {
+            serv.sendJoueur(listeJoueurs, i);
+            while (!serv.reponseClient(i)) {
+                fenetre.getLauncher().setInfo("En attente de rep de " + i);
     private void EnvoieJoueur(){
         for (int i = 0; i<3; i++) {
             serv.sendJoueur(joueurs, i);
@@ -458,10 +459,10 @@ public class MaitreDuJeu {
         //Envoie les pseudos des autres joueurs
         EnvoieJoueur();
         //Envoie la liste de pile parcelles aux autres joueurs
-        for (int i = 0; i<3; i++) {
+        for (int i = 0; i < 3; i++) {
             serv.sendPileParcelle(pileParcelles, i);
-            while(!serv.reponseClient(i)){
-                fenetre.getLauncher().setInfo("En attente de rep de "+ i);
+            while (!serv.reponseClient(i)) {
+                fenetre.getLauncher().setInfo("En attente de rep de " + i);
             }
         }
         afficherJeu();
@@ -501,45 +502,25 @@ public class MaitreDuJeu {
         afficherJeu();
         //mj.afficherPileParcelle();
         setJ_actif(listeJoueurs.get(0));
-        do{
+        do {
             nbTours++;
-            System.out.println("Tour "+nbTours+" commence");
+            System.out.println("Tour " + nbTours + " commence");
             System.out.println("Phase Enchere Parcelle");
             enchereParcelle();
             System.out.println("Phase Depot Parcelle");
             depotParcelle();
             System.out.println("Phase Soudoiement Constructeur + construction canal");
             soudoiementConstructeur();
-            System.out.println("Phase de secheresse");
-            secheresse();
-            System.out.println("Phase de paiement");
-            paiementJoueur();
-            System.out.println("Tour "+nbTours+" fini");
-        }while(nbTours !=11);
-
-
-
-
-    }
-
-
-
-    /////////////////
-    //////MAIN///////
-    /////////////////
-    public static void main(String[] args){
-
-        //A la place une interface graphique devras permettre de choisir les joueurs
-        ArrayList<Joueur> listeJoueurs = new ArrayList<Joueur>(4);
-
-        MaitreDuJeu mj = new MaitreDuJeu();
-        mj.afficherLauncher();
-        while(mj.getCli() == null && mj.getServ() == null && !mj.getLocal()){
-            try {
-                Thread.sleep(200);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            System.out.println("Phase Irrigation complémentaire");
+            irriguationComplementaire();
+            if (nbTours != 11) {//ces 2 phases n<ont pas lieu au dernier tour
+                System.out.println("Phase de secheresse");
+                secheresse();
+                System.out.println("Phase de paiement");
+                paiementJoueur();
+                System.out.println("Tour " + nbTours + " fini");
             }
+        } while (nbTours != 11);
             if(mj.fenetre.getLauncher().getServer()){
                 mj.setServ(new Server(6789));
                 mj.getServ().startServer();
@@ -578,7 +559,9 @@ public class MaitreDuJeu {
                     }
                     listeJoueurs.add(new Joueur(mj.getServ().getPseudo(i), 10));
 
-                }
+        //  calculResultatFinal();
+        // affichageResultatFinal();
+
 
                 mj.jouerPartieServeur(listeJoueurs);
             }
