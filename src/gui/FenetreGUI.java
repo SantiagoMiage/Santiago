@@ -465,4 +465,8 @@ public class FenetreGUI {
         }
         return dejaPris;
     }
+
+    public void retirerParcelle(Parcelle pChoisie) {
+        pileParcelleGUI.retirerParcelle(pChoisie);
+    }
 }
