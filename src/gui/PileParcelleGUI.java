@@ -21,7 +21,6 @@ public class PileParcelleGUI {
     Thread threadAttenteChoixPile;
     ArrayList<JLabel> pileParcellesGUI = new ArrayList<JLabel>();
     private ArrayList<PileParcelle> pileParcelles;
-    ;
     private JPanel panel = new JPanel(new GridLayout(4, 1, 5, 5));
     private boolean encherencours;
     private Parcelle parcelleChoisie = null;
@@ -51,7 +50,6 @@ public class PileParcelleGUI {
             thumb.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
-                    System.out.println(encherencours);
                     //on remplit la liste des Jlabel des 4 piles pour travailelr dessus plus tard
                     if (encherencours) {
                         if (thumb.getIcon() != iconvide) {
@@ -85,7 +83,6 @@ public class PileParcelleGUI {
     }
 
     public void retournerParcelles(JLabel thumb, int compt) {
-        System.out.println("retournerParcelles");
         String chemin = null;
         URL url = null;
         switch (pileParcelles.get(compt).recupTypeDessus()) {
@@ -147,8 +144,6 @@ public class PileParcelleGUI {
 
     //retourneretourner la parcelle au sommet de chacunes des 4 piles
     public void retournerLesPilesParcelles() {
-        System.out.println("retournerLesPilesParcelles");
-        System.out.println(pileParcellesGUI.toString());
         int compteur = 0;
         //pour chacune des 4 piles , retourner la parcelle au sommet de la pile
         for (JLabel jLabel : pileParcellesGUI) {
@@ -171,15 +166,12 @@ public class PileParcelleGUI {
         threadAttenteChoixPile.start();
         synchronized (threadAttenteChoixPile) {
             while (parcelleChoisie == null) {
-                System.out.println("att");
-                System.out.println(encherencours);
                 try {
                     threadAttenteChoixPile.wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
-            System.out.println("clik");
             //quand le thread est fini, on return parcelleChoisie
             setEnchereEnCours(false);
             return parcelleChoisie;

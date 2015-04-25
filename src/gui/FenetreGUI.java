@@ -103,11 +103,28 @@ public class FenetreGUI {
         fenetre.setVisible(true);
     }
 
+
+    public void secheresse(){
+        for (Parcelle parcelle : plateau.getListParcelleModele()) {
+            //optimisation,une parcelle seche ne sechera psa plus
+            if(!parcelle.isSecheresse()) {
+                //seules les parcelles n<etant pas irrigue ni seche  ni ayant un nbouvrier=0(veut dire que rien n'a été deposé)
+                if ((!parcelle.isIrrigue()) && (parcelle.getNbouvrier() > 0)) {
+                    //si il reste plus d'un ouvrier : on le retire
+                    if (parcelle.getNbouvrieractif() > 0) {
+                        parcelle.setNbouvrieractif(parcelle.getNbouvrieractif() - 1);
+                    } else {//sinon la parcelle devient desertique
+                        plateau.secheresse(parcelle);
+                        plateau.repaint();
+                    }
+                }
+            }
+        }
+    }
     //pour les encheres Parcelles
     public boolean enchereOk(Joueur j_actif, int montantInt, int[] montantEnchere) {
         return montantInt < 0 || montantdejaPris(montantInt, montantEnchere) || montantInt > j_actif.getArgent();
     }
-
 
     //popup qui demande le montant que le joueur fait pour l'enchère
     public int offreJoueur(Joueur j_actif, int[] montantEnchere) {
