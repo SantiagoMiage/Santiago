@@ -24,6 +24,9 @@ public class PileParcelleGUI {
     private JPanel panel = new JPanel(new GridLayout(4, 1, 5, 5));
     private boolean encherencours;
     private Parcelle parcelleChoisie = null;
+    String cheminvide = "/ressource/images/vide.png";
+    URL url_vide = this.getClass().getResource(cheminvide);
+    final ImageIcon iconvide = new ImageIcon(url_vide);
 
     public PileParcelleGUI(ArrayList<PileParcelle> pileParcelles) {
         this.pileParcelles = pileParcelles;
@@ -34,9 +37,7 @@ public class PileParcelleGUI {
         String cheminparcelle = "/ressource/images/parcelle.png";
         URL url_parcelle = this.getClass().getResource(cheminparcelle);
         final ImageIcon iconparcelle = new ImageIcon(url_parcelle);
-        String cheminvide = "/ressource/images/vide.png";
-        URL url_vide = this.getClass().getResource(cheminvide);
-        final ImageIcon iconvide = new ImageIcon(url_vide);
+
 
         panel.setBorder(BorderFactory.createLineBorder(Color.black));
 
@@ -182,4 +183,15 @@ public class PileParcelleGUI {
         encherencours = b;
     }
 
+    public void retirerParcelle(Parcelle pChoisie) {
+        for(int i =0; i<4; i++){
+            if(pileParcelles.get(i).getParcelle().equals(pChoisie)){
+                System.out.println("good");
+                pileParcelles.get(i).popParcelle();
+                pileParcellesGUI.get(i).setIcon(iconvide);
+            }else{
+                System.out.println("pas good" + pileParcelles.get(i).getParcelle().getNumero()+ " différent de : " + pChoisie.getNumero());
+            }
+        }
+    }
 }
