@@ -1,13 +1,14 @@
 package plateau;
 
 import javax.swing.*;
+import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
 
 /**
  * Created by Crema on 06/03/2015.
  */
-public class PileParcelle {
+public class PileParcelle implements Serializable {
 
     private ArrayList<Parcelle> pileParcelle = new ArrayList<Parcelle>(11);
 
