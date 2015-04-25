@@ -19,6 +19,7 @@ public class Server {
     int port;
     ArrayList<Server2Connection> clientCo = new ArrayList<Server2Connection>();
 
+
     public Server(int port) {
         this.port = port;
     }
@@ -82,9 +83,12 @@ public class Server {
             clientCo.get(i).os.println(2);
             clientCo.get(i).os.flush();
             System.out.println("sendJoueur to " + i);
-            System.out.println(listeJoueurs);
-            clientCo.get(i).oos.writeObject(listeJoueurs);
-            clientCo.get(i).oos.flush();
+            for(int j =0; j<4; j++){
+                System.out.println("Send " + j + " Part of the Joueur");
+                clientCo.get(i).oos.writeObject(listeJoueurs.get(j));
+                clientCo.get(i).oos.flush();
+
+            }
             //clientCo.get(i).oos.reset();
             //Thread.sleep(800);
         } catch (IOException e) {
@@ -96,12 +100,14 @@ public class Server {
     public void sendPileParcelle(ArrayList<PileParcelle> pileParcelles, int i){
         System.out.println("sendPile");
         try {
-            clientCo.get(i).os.println(3);
-            clientCo.get(i).os.flush();
-            System.out.println("sendJoueur to " + i);
-            System.out.println(pileParcelles);
-            clientCo.get(i).oos.writeObject(pileParcelles);
+            clientCo.get(i).oos.write(3);
             clientCo.get(i).oos.flush();
+            System.out.println("sendJoueur to " + i);
+            for(int j =0; j<pileParcelles.size(); j++){
+                System.out.println("Send " + j + " Part of the pile");
+                clientCo.get(i).oos.writeObject(pileParcelles.get(j));
+                clientCo.get(i).oos.flush();
+            }
         } catch (IOException e) {
             System.out.println("fail envoie");
             e.printStackTrace();
@@ -116,6 +122,36 @@ public class Server {
         return false;
     }
 
+    public int getOffreJoueur(int[] montantEnchere, Joueur j_actif) {
+        Server2Connection j = getJoueur(j_actif.getPseudo());
+        j.os.println(4);
+        j.os.flush();
+        synchronized (j.att) {
+            try {
+                j.oos.writeObject(montantEnchere);
+                j.att = new Thread();
+                j.att.start();
+                while (j.montantEnchereInt == -1) {
+                    System.out.println("att");
+                    j.att.wait();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return j.montantEnchereInt;
+        }
+    }
+
+    private Server2Connection getJoueur(String pseudo) {
+        for(int i = 0; i<3; i++){
+            if(clientCo.get(i).pseudoJoueur == pseudo){
+                return clientCo.get(i);
+            }
+        }
+        return null;
+    }
 }
 
 class Server2Connection implements Runnable {
@@ -127,6 +163,8 @@ class Server2Connection implements Runnable {
     Server server;
     Boolean recu = false;
     String pseudoJoueur = "unknow";
+    int montantEnchereInt = -1;
+    Thread att;
 
     public Server2Connection(Socket clientSocket, int id, Server server) {
         this.clientSocket = clientSocket;
@@ -163,6 +201,12 @@ class Server2Connection implements Runnable {
                 }
                 if(n == 2){
                     recu = true;
+                }
+                if(n == 3){
+                    montantEnchereInt = Integer.parseInt(is.readLine());
+                    synchronized (att){
+                        att.notify();
+                    }
                 }
                 if(serverStop){
                     break;
