@@ -301,7 +301,8 @@ public class Client {
                 }
             }
             Joueur res = new Joueur(j_actif);
-            return j_actif;
+            j_actif =null;
+            return res;
         }
     }
 
