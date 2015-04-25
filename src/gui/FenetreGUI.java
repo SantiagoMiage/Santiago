@@ -104,10 +104,10 @@ public class FenetreGUI {
     }
 
 
-    public void secheresse(){
+    public void secheresse() {
         for (Parcelle parcelle : plateau.getListParcelleModele()) {
             //optimisation,une parcelle seche ne sechera psa plus
-            if(!parcelle.isSecheresse()) {
+            if (!parcelle.isSecheresse()) {
                 //seules les parcelles n<etant pas irrigue ni seche  ni ayant un nbouvrier=0(veut dire que rien n'a été deposé)
                 if ((!parcelle.isIrrigue()) && (parcelle.getNbouvrier() > 0)) {
                     //si il reste plus d'un ouvrier : on le retire
@@ -121,6 +121,7 @@ public class FenetreGUI {
             }
         }
     }
+
     //pour les encheres Parcelles
     public boolean enchereOk(Joueur j_actif, int montantInt, int[] montantEnchere) {
         return montantInt < 0 || montantdejaPris(montantInt, montantEnchere) || montantInt > j_actif.getArgent();
@@ -215,16 +216,20 @@ public class FenetreGUI {
             } else {
                 //sinon il accepte ou non
                 //si accepte , on empoche le pognon , on decompte le pognon des joueurs qui gagnent
-                total = recupProposition(canal, listProposition).total(); //total de la proposition la plus haute
+                // total = recupProposition(canal, listProposition).total(); //total de la proposition la plus haute
+
+                Proposition proposition = recupProposition(canal, listProposition);
+                total = proposition.total();
+                String infoProposition = proposition.affichageProposition();
                 String[] choix = {"OK ", "Annuler"};
                 JOptionPane jop = new JOptionPane(), jop2 = new JOptionPane();
-                int rang = jop.showOptionDialog(null, "Voulez vous recevoir : " + total + " ,pour la construction de ce canal",
+                int rang = jop.showOptionDialog(null, infoProposition + '\n' + "Voulez vous recevoir : " + total + " escudos pour la construction de ce canal",
                         "Canal renvendiqué", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, choix, choix[0]);
 
                 //Si ok
                 if (rang == 0) {
                     String mess = "";
-                    mess = "Paiement effectué ,retrait d'argent des autres joueurs";
+                    mess = "Paiement effectué ,retrait d'argent des autres joueurs ayant participé au paiement du canal";
                     construit = true;
 
                     jop2.showMessageDialog(null, mess, "Construction de la parcelle", JOptionPane.INFORMATION_MESSAGE);
@@ -243,63 +248,118 @@ public class FenetreGUI {
     }
 
     public void propositionCanalJoueur(Joueur j_actif, ArrayList<Proposition> listProposition) {
+        boolean propose;
+        boolean possedeArgent;
+        boolean estUneProposition;
+        boolean annuleChoix;
         int montantInt = -1;
-        String montant = "";
+        String montant;
         String mess = "";
-        mess += montantPrisCanalString(listProposition);
+        // mess += montantPrisCanalString(listProposition);
+        Canal canal;
+        do {
 
-        //le joueur selectionne un canal sur le plateau
-        Canal canal = recupCanal(j_actif);
+            possedeArgent = false;
+            propose = false;
+            annuleChoix = false;
+            //le joueur selectionne un canal sur le plateau
+            canal = recupCanal(j_actif);
 
-        //si le canal ne fait pas l'objet d une proposition,il la créée
-        if (!estUneProposition(canal, listProposition)) {
-            mess = "Emettre une nouvelle proposition pour ce canal : ";
+            Proposition proposition = null;
+
+            if (!estUneProposition(canal, listProposition)) {
+                estUneProposition = false;
+            } else {
+                estUneProposition = true;
+                proposition = listProposition.get(listProposition.indexOf(recupProposition(canal, listProposition)));
+
+            }
+            //si le canal ne fait pas l'objet d une proposition
+            if (!estUneProposition) {
+                mess = "Emettre une nouvelle proposition pour ce canal : ";
+            } else {
+                mess = "Soutenir la proposition existante pour ce canal : ";
+            }
             boolean gogol = false;
-            do try {
+
+            //On recupere le montant que le joueur souhaite investir
+            try {
+
+
                 JOptionPane jop = new JOptionPane();
+                //affichage du message dans la fenetre en fonction de divers parametres
                 if (!gogol) {
-                    montant = jop.showInputDialog(null, mess, " Montant " + j_actif.getPseudo(), JOptionPane.QUESTION_MESSAGE);
+                    if (!estUneProposition) {
+                        montant = jop.showInputDialog(null, mess, " Montant " + j_actif.getPseudo(), JOptionPane.QUESTION_MESSAGE);
+                    } else {
+                        montant = jop.showInputDialog(null, proposition.affichageProposition(), "\n Montant à ajouter " + j_actif.getPseudo(), JOptionPane.QUESTION_MESSAGE);
+                    }
                 } else {
                     montant = jop.showInputDialog(null, mess + " Nombre Positif svp !", j_actif.getPseudo(), JOptionPane.QUESTION_MESSAGE);
                 }
-                montantInt = Integer.parseInt(montant);
-                if (montantInt < 0) gogol = true;
-            } catch (Exception e) {
-                gogol = true;
-            } while (enchereCanalOk(j_actif, montantInt, listProposition));
-
-
-            //Creation de la proposition
-            Proposition proposition = new Proposition(canal);
-            proposition.setCanal(canal);
-            proposition.soutenirProposition(j_actif, montantInt);
-            //Ajout de la proposition a la liste
-            listProposition.add(proposition);
-        } else {
-            //sinon on recupere la proposition et on ajoute
-            Proposition proposition = listProposition.get(listProposition.indexOf(recupProposition(canal, listProposition)));
-
-            boolean gogol = false;
-            do try {
-                JOptionPane jop = new JOptionPane();
-                if (!gogol) {
-                    montant = jop.showInputDialog(null, proposition.toString(), "\n Montant à ajouter " + j_actif.getPseudo(), JOptionPane.QUESTION_MESSAGE);
+                if (montant != null) {
+                    if (montant == "") {
+                        montantInt = 0;
+                    } else {
+                        montantInt = Integer.parseInt(montant);
+                        if (montantInt >= 0) {
+                            propose = true;
+                        }
+                    }
                 } else {
-                    montant = jop.showInputDialog(null, mess + " Nombre Positif svp !", "Enchère canal" + j_actif.getPseudo(), JOptionPane.QUESTION_MESSAGE);
+                    annuleChoix = true;
                 }
-                montantInt = Integer.parseInt(montant);
-                if (montantInt < 0) gogol = true;
-            } catch (Exception e) {
-                gogol = true;
-            } while (enchereCanalOk(j_actif, montantInt, listProposition));
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
 
+            if (!annuleChoix) {
+                //on verifie si le joueur a assez d'argent
+                if (j_actif.getArgent() >= montantInt) {
+                    possedeArgent = true;
+                } else {
+                    possedeArgent = false;
+                }
 
-            //et on surencherit la proposition
-            proposition.soutenirProposition(j_actif, montantInt);
-        }
-        //colorier le canal de la couleur du joueur, vert pour tous en attendant .....
-        plateau.colorieCanalPropVert(canal);
+                //si
+                if (propose) {
+                    //si le canal ne fait pas l'objet d une proposition,il la créée
+                    if (!estUneProposition) {
+                        if (possedeArgent) {
+                            mess = "Enregistrement effectué";
+                            propose = true;
+                            //Creation de la proposition
+                            proposition = new Proposition(canal);
+                            proposition.setCanal(canal);
+                            proposition.soutenirProposition(j_actif, montantInt);
+                            //Ajout de la proposition a la liste
+                            listProposition.add(proposition);
+                            //on colorie
+                            plateau.colorieCanalPropVert(canal);
+                        } else {
+                            mess = "Erreur argent insuffisant";
+                        }
+                    } else {
+                        if (possedeArgent) {
+                            mess = "Enregistrement effectué";
+                            propose = true;
+                            //et on surencherit la proposition
+                            proposition.soutenirProposition(j_actif, montantInt);
+                            //colorier le canal de la couleur du joueur, vert pour tous en attendant .....
+                            plateau.colorieCanalPropVert(canal);
+                        } else {
+                            mess = "Erreur argent insuffisant";
+                        }
+                    }
 
+                    JOptionPane jop2 = new JOptionPane();
+                    jop2.showMessageDialog(null, mess, "", JOptionPane.INFORMATION_MESSAGE);
+                }
+                {
+                    propose = true;
+                }
+            }
+        } while (!propose);
     }
 
     //si le canal selectioné fais déja l'objet d'une proposition
@@ -308,7 +368,6 @@ public class FenetreGUI {
         for (Proposition proposition : listProposition) {
             if (proposition.getCanal() == canal) {
                 res = true;
-
             }
         }
         return res;

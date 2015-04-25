@@ -182,30 +182,7 @@ public class MaitreDuJeu {
     private void secheresse(){
         System.out.println("MJ.secheresse");
         fenetre.secheresse();
-      /*
-        for (Parcelle parcelle : plateau.getListParcelleModele()) {
-            System.out.println("yolo");
-            System.out.println(parcelle.toString());
-            //optimisation,une parcelle seche ne sechera psa plus
-            if(!parcelle.isSecheresse()) {
-                //seules les parcelles n<etant pas irrigue ni seche  ni ayant un nbouvrier=0(veut dire que rien n'a été deposé)
-                if ((!parcelle.isIrrigue()) && (parcelle.getNbouvrier() > 0)) {
-                    System.out.println("test 1");
-                    System.out.println("nbouvrier mj.seche" + parcelle.getNbouvrieractif());
-                    //si il reste plus d'un ouvrier : on le retire
-                    if (parcelle.getNbouvrieractif() > 0) {
-                        System.out.println("test 2");
-                        parcelle.setNbouvrieractif(parcelle.getNbouvrieractif() - 1);
 
-                    } else {//sinon la parcelle devient desertique
-                        System.out.println("test 3");
-                        plateau.secheresse(parcelle);
-                        plateau.revalidate();
-                    }
-                }
-            }
-        }
-*/
     }
     //gère la  septieme phase du jeu le paiement de tous les joueurs en fin de tours
     private void paiementJoueur(){
