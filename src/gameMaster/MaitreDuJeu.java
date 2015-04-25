@@ -58,10 +58,6 @@ public class MaitreDuJeu {
      //////////////////////////////
     //////Les accesseurs//////////
     //////////////////////////////
-    public void setLocal(Boolean local) {
-        this.local = local;
-    }
-
     public Boolean getLocal() {
 
         return local;
@@ -141,7 +137,7 @@ public class MaitreDuJeu {
         joueurs = toursJoueurs;
         for(int i = 0; i<joueurs.size(); i++){
             j_actif = toursJoueurs.get(i);
-            Parcelle pChoisie = fenetre.choixParcelle(j_actif, pileParcelles);
+            Parcelle pChoisie = fenetre.choixParcelle(j_actif);
             j_actif.setParcelleMain(pChoisie);
         }
     }
@@ -239,8 +235,8 @@ public class MaitreDuJeu {
 
     //gère la troisieme phase du jeu le depot de la parcelle en main des joueurs
     public void depotParcelle() {
-        for (int i = 0; i < joueurs.size(); i++) {
-            j_actif = joueurs.get(i);
+        for (Joueur joueur : joueurs) {
+            j_actif = joueur;
             fenetre.depotParcelle(j_actif);
         }
     }
@@ -286,8 +282,7 @@ public class MaitreDuJeu {
 
     //gère la  septieme phase du jeu le paiement de tous les joueurs en fin de tours
     private void paiementJoueur() {
-        for (int i = 0; i < joueurs.size(); i++) {
-            Joueur joueur = joueurs.get(i);
+        for (Joueur joueur : joueurs) {
             joueur.setArgent(joueur.getArgent() + montantRevenu);
         }
     }
@@ -438,23 +433,17 @@ public class MaitreDuJeu {
         fenetre.creationLauncher();
     }
 
-    private void jouerPartieServeur(ArrayList<Joueur> listeJoueurs) {
-        setJoueur(listeJoueurs);
-        //Envoie les pseudos des autres joueurs
+
+    private void EnvoieJoueur () {
         for (int i = 0; i < 3; i++) {
-            serv.sendJoueur(listeJoueurs, i);
+            serv.sendJoueur(joueurs, i);
             while (!serv.reponseClient(i)) {
                 fenetre.getLauncher().setInfo("En attente de rep de " + i);
-    private void EnvoieJoueur(){
-        for (int i = 0; i<3; i++) {
-            serv.sendJoueur(joueurs, i);
-            while(!serv.reponseClient(i)){
-                fenetre.getLauncher().setInfo("En attente de rep de "+ i);
             }
         }
     }
 
-    private void jouerPartieServeur(ArrayList<Joueur> listeJoueurs) {
+    private void jouerPartieServeur (ArrayList < Joueur > listeJoueurs) {
         setJoueur(listeJoueurs);
         //Envoie les pseudos des autres joueurs
         EnvoieJoueur();
@@ -468,9 +457,9 @@ public class MaitreDuJeu {
         afficherJeu();
         setJ_actif(listeJoueurs.get(0));
 
-        do{
+        do {
             nbTours++;
-            System.out.println("Tour "+nbTours+" commence");
+            System.out.println("Tour " + nbTours + " commence");
             System.out.println("Phase Enchere Parcelle");
             enchereParcelleServeur();
             /*
@@ -484,20 +473,19 @@ public class MaitreDuJeu {
             paiementJoueur();
             System.out.println("Tour "+nbTours+" fini");
             */
-        }while(nbTours !=11);
-
+        } while (nbTours != 11);
     }
 
-    private void jouerPartieClient(ArrayList<Joueur> listeJoueurs) {
-        this.joueurs = listeJoueurs;
-        pileParcelles = cli.getPileParcelles();
-        System.out.println("Creation Partie");
-        afficherJeu();
-        setJ_actif(listeJoueurs.get(0));
-        enchereParcelleClient();
+    private void jouerPartieClient (ArrayList < Joueur > listeJoueurs) {
+                this.joueurs = listeJoueurs;
+                pileParcelles = cli.getPileParcelles();
+                System.out.println("Creation Partie");
+                afficherJeu();
+                setJ_actif(listeJoueurs.get(0));
+                enchereParcelleClient();
     }
 
-    private void jouerPartieLocal(ArrayList<Joueur> listeJoueurs) {
+    private void jouerPartieLocal (ArrayList < Joueur > listeJoueurs) {
         setJoueur(listeJoueurs);
         afficherJeu();
         //mj.afficherPileParcelle();
@@ -521,6 +509,30 @@ public class MaitreDuJeu {
                 System.out.println("Tour " + nbTours + " fini");
             }
         } while (nbTours != 11);
+
+
+
+
+    }
+
+
+
+    /////////////////
+    //////MAIN///////
+    /////////////////
+    public static void main(String[] args){
+
+        //A la place une interface graphique devras permettre de choisir les joueurs
+        ArrayList<Joueur> listeJoueurs = new ArrayList<Joueur>(4);
+
+        MaitreDuJeu mj = new MaitreDuJeu();
+        mj.afficherLauncher();
+        while(mj.getCli() == null && mj.getServ() == null && !mj.getLocal()){
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             if(mj.fenetre.getLauncher().getServer()){
                 mj.setServ(new Server(6789));
                 mj.getServ().startServer();
@@ -559,9 +571,7 @@ public class MaitreDuJeu {
                     }
                     listeJoueurs.add(new Joueur(mj.getServ().getPseudo(i), 10));
 
-        //  calculResultatFinal();
-        // affichageResultatFinal();
-
+                }
 
                 mj.jouerPartieServeur(listeJoueurs);
             }
