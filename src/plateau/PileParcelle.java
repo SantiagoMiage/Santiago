@@ -10,6 +10,8 @@ import java.util.ArrayList;
  */
 public class PileParcelle implements Serializable {
 
+    private  static  final  long serialVersionUID =  1356662881346723535L;
+
     private ArrayList<Parcelle> pileParcelle = new ArrayList<Parcelle>(11);
 
     public PileParcelle() {
