@@ -126,6 +126,7 @@ public class Server {
         Server2Connection j = getJoueur(j_actif.getPseudo());
         j.att = new Thread();
         j.att.start();
+        j.montantEnchereInt = -1;
         synchronized (j.att) {
             try {
                 j.oos.writeInt(4);
