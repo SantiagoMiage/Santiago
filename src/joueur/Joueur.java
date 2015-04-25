@@ -26,6 +26,13 @@ public class Joueur implements Serializable {
 
     }
 
+    public Joueur(Joueur j_actif) {
+        this.pseudo=j_actif.pseudo;
+        this.argent=j_actif.argent;
+        this.score =j_actif.score;
+        this.parcelleMain = j_actif.parcelleMain;
+    }
+
     public String getPseudo() {
         return pseudo;
     }
