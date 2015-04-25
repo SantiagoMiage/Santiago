@@ -15,6 +15,7 @@ public class Joueur implements Serializable {
     private int argent;
     private int score;
     private Parcelle parcelleMain;
+    private boolean canalComplementaire = true;
 
 
 
@@ -54,6 +55,13 @@ public class Joueur implements Serializable {
         this.parcelleMain = parcelleMain;
     }
 
+    public void setCanalComplementaire(boolean canalComplementaire) {
+        this.canalComplementaire = canalComplementaire;
+    }
+
+    public boolean isCanalComplementaire() {
+        return canalComplementaire;
+    }
 
     @Override
     public String toString() {

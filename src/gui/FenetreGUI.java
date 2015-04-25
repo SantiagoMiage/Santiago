@@ -66,8 +66,6 @@ public class FenetreGUI {
 
     }
 
-    //A finir doit gérer le choix de la parcelle d'un joueur
-    //Pour l'instant ajoute le panel de PileParcelleGUI
     public Parcelle choixParcelle(Joueur j_actif, ArrayList<PileParcelle> pileParcelles) {
 
         Parcelle pChoisie = pileParcelleGUI.choixParcelle(j_actif);
@@ -102,7 +100,6 @@ public class FenetreGUI {
         fenetre.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         fenetre.setVisible(true);
     }
-
 
     public void secheresse() {
         for (Parcelle parcelle : plateau.getListParcelleModele()) {
@@ -178,6 +175,46 @@ public class FenetreGUI {
             canal = plateau.choixCanal(j_actif);
         } while (!plateau.estIrriguable(canal));
         return canal;
+    }
+
+    public boolean depotCanalComplementaire(Joueur j_actif){
+        boolean adepose;
+
+        String[] choix = {"Oui ", "Non"};
+        JOptionPane jop = new JOptionPane();
+        int rang = jop.showOptionDialog(null, "Voulez vous utiliser votre canal bonus ?",
+                "Depot canal bonus", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, choix, choix[0]);
+
+        //Si le jouer veut le deposer
+        if (rang == 0) {
+            adepose=true;
+            choixDuCanalComplementaire(j_actif);
+            //le canal comp etant poser on le rtire de la main du joueur
+            j_actif.setCanalComplementaire(false);
+        }else{
+            adepose=false;
+        }
+        System.out.println("depotCanalComplementaire adepose "+adepose);
+        return  adepose;
+    }
+
+    public void choixDuCanalComplementaire(Joueur joueur){
+        boolean deposer=false;
+        do {
+            Canal canal = recupCanal(joueur);
+            JOptionPane jop = new JOptionPane();
+            String[] choix = {"Oui ", "Non"};
+            int rang = jop.showOptionDialog(null, "Voulez vous irriguer ce canal ?",
+                    "Depot canal bonus", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, choix, choix[0]);
+
+            //Si le jouer a fait son choix pour le canal
+            if (rang == 0) {
+                deposer=true;
+                plateau.irrigation(canal);
+
+            }
+            System.out.println("choixDuCanalComplementaire adepose "+deposer);
+        }while(!deposer);
     }
 
     public void choixCanalConstructeur(Joueur constructeurCanal, ArrayList<Proposition> listProposition) {

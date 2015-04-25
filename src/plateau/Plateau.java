@@ -601,6 +601,7 @@ public class Plateau extends JApplet {
         parcelleGUI.setIcon(iconvide);
     }
 
+
     //permet de choisir sur le plateau le canal que l'on veut encherir
     public Canal choixCanal(Joueur joueur) {
 
