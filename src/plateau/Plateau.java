@@ -746,6 +746,107 @@ public class Plateau extends JApplet {
 
     }
 
+    //renvoie la parcelle etant au coordonnées demandées
+    public Parcelle recupParcelleCoordonnee(int i,int j){
+        Parcelle labonne = null ;
+        for (Parcelle parcelle : ListParcelleModele) {
+            if ((parcelle.getNumligne()==j) && (parcelle.getNumcolonne()==i)){
+                labonne= parcelle;
+            }
+        }
+        return labonne;
+    }
+
+
+
+    //fonctions de calcul du resultat final
+    public String calculResultatFinal(){
+        String res="";
+        //on creer les champs
+        ArrayList<ArrayList<Parcelle>> listChamps = creationListeChamps();
+
+        System.out.println("taille liste champs "+listChamps.size());
+        int i=0;
+        for (ArrayList<Parcelle> champ : listChamps) {
+            System.out.println("taille liste du champs "+i+"est de "+champ.size());
+            System.out.println("affichage du champs");
+            System.out.println(champ.toString());
+            i++;
+        }
+        //on calcul les points
+
+        return res;
+    }
+    public  ArrayList<ArrayList<Parcelle>> creationListeChamps(){
+        ArrayList<ArrayList<Parcelle>> listChamps = new ArrayList<ArrayList<Parcelle>>();
+
+        //parcours de toutes les parcelles
+        for (Parcelle parcelle : ListParcelleModele) {
+            if ( (!parcelle.isMarquer()) && (!parcelle.isSecheresse()) &&(parcelle.getChamps()!= Parcelle.typeChamps.vide)) {
+                //creation du champs
+                ArrayList<Parcelle> champs = new ArrayList<Parcelle>();
+                //incoporation du champs dans la liste
+                listChamps.add(champs);
+                //incorporation de la premiere parcelle dans le nouveau champs
+                champs.add(parcelle);
+                //on ajoute les parcelles voisines de meme type dans les 4 directions :
+                //lancement de la recursivite
+                chercheProximite(champs,parcelle.getNumligne()+1,parcelle.getNumcolonne()+1);
+                chercheProximite(champs,parcelle.getNumligne()-1,parcelle.getNumcolonne()-1);
+                chercheProximite(champs,parcelle.getNumligne()+1,parcelle.getNumcolonne()-1);
+                chercheProximite(champs,parcelle.getNumligne()-1,parcelle.getNumcolonne()+1);
+            }
+        }
+
+        return listChamps;
+    }
+
+    //test si outofbounds
+    public boolean outofbounds(int i,int j){
+        return(i<0 || i>7 || j<0 || j>5 );
+    }
+    //permet de chercher les parcelles de memes types voisines au parcelle du champs
+    public void chercheProximite(ArrayList<Parcelle> champs,int i,int j){
+        System.out.println("Wie geht s");
+        //type champs de la parcelle recherché sur le board
+        Parcelle.typeChamps parcelleTypeChamps;
+        //type de la premiere parcelle du champs en question (donc de toutes les parcelles de ce champ)
+        Parcelle.typeChamps parcelleChampsTypeChamps= champs.get(0).getChamps();
+
+
+
+
+            //on gere el outofbounds
+            if (!outofbounds(i,j)) {
+                System.out.println("allo");
+                // on retrouve la parcelle au coordonne recherché
+                Parcelle parcelle = recupParcelleCoordonnee(i, j);
+//&& (parcelle != null)
+
+                if (!parcelle.isMarquer() && (!parcelle.isSecheresse()) ) {
+                    parcelleTypeChamps = parcelle.getChamps();
+
+                    if (parcelleTypeChamps == parcelleChampsTypeChamps) {
+
+                        champs.add(parcelle);
+                        parcelle.setMarquer(true);
+                        //on recherche dans les 4 directions par recursivite
+                        chercheProximite(champs, parcelle.getNumligne() + 1, parcelle.getNumcolonne() + 1);
+                        chercheProximite(champs, parcelle.getNumligne() - 1, parcelle.getNumcolonne() - 1);
+                        chercheProximite(champs, parcelle.getNumligne() + 1, parcelle.getNumcolonne() - 1);
+                        chercheProximite(champs, parcelle.getNumligne() - 1, parcelle.getNumcolonne() + 1);
+                    }
+
+
+                }
+            }
+
+
+
+    }
+
+
+
 
 }
 
