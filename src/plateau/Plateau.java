@@ -480,7 +480,7 @@ public class Plateau extends JApplet {
         }
 
 
-      //  this.getListParcelleModele().toString();
+        //  this.getListParcelleModele().toString();
 
         //on irrigue mtn l<intersection au bout du canal
         int xdeb = canal.getXdeb();
@@ -662,6 +662,9 @@ public class Plateau extends JApplet {
         boolean estIrrigue = ListParcelleModele.get(indexParcelle).isIrrigue();
         //on recupere la parcelle que le joueur pose (a obtenu dans la phase d'enchere)
         Parcelle parcelleMain = joueur.getParcelleMain();
+        System.out.println("phase depot typechamps");
+        System.out.println(parcelleMain.getChamps());
+        parcelleMain.setChamps(parcelleMain.getChamps());
         //on set la position a la parcelle
         parcelleMain.setNumligne(ligne);
         parcelleMain.setNumcolonne(col);
@@ -669,8 +672,8 @@ public class Plateau extends JApplet {
         parcelleMain.setIrrigue(estIrrigue);
         //on remplie les ouvriers
         parcelleMain.setNbouvrieractif(parcelleMain.getNbouvrier());
-        System.out.println("nbouvrieractif depot "+parcelleMain.getNbouvrieractif());
-        System.out.println("nbouvrier depot "+parcelleMain.getNbouvrier());
+        System.out.println("nbouvrieractif depot " + parcelleMain.getNbouvrieractif());
+        System.out.println("nbouvrier depot " + parcelleMain.getNbouvrier());
         //on attribue le proprio
         parcelleMain.setProprio(joueur);
         //on met a jour la liste des parcelles du plateau
@@ -747,54 +750,60 @@ public class Plateau extends JApplet {
     }
 
     //renvoie la parcelle etant au coordonnées demandées
-    public Parcelle recupParcelleCoordonnee(int i,int j){
-        Parcelle labonne = null ;
+    public Parcelle recupParcelleCoordonnee(int i, int j) {
+        Parcelle labonne = null;
         for (Parcelle parcelle : ListParcelleModele) {
-            if ((parcelle.getNumligne()==j) && (parcelle.getNumcolonne()==i)){
-                labonne= parcelle;
+            if ((parcelle.getNumligne() == j) && (parcelle.getNumcolonne() == i)) {
+                labonne = parcelle;
             }
         }
         return labonne;
     }
 
 
-
     //fonctions de calcul du resultat final
-    public String calculResultatFinal(){
-        String res="";
-        //on creer les champs
-        ArrayList<ArrayList<Parcelle>> listChamps = creationListeChamps();
+    public int[] calculResultatFinal(ArrayList<Joueur> listeJoueurs) {
+   //     String res = "";
 
-        System.out.println("taille liste champs "+listChamps.size());
-        int i=0;
+        ArrayList<Parcelle> liste = getListParcelleModele();
+        System.out.println(liste.toString());
+
+
+        //on cree les champs
+        ArrayList<ArrayList<Parcelle>> listChamps = creationListeChamps();
+        System.out.println("taille liste champs " + listChamps.size());
+        int i = 0;
         for (ArrayList<Parcelle> champ : listChamps) {
-            System.out.println("taille liste du champs "+i+"est de "+champ.size());
+            System.out.println("taille liste du champs " + i + "est de " + champ.size());
             System.out.println("affichage du champs");
             System.out.println(champ.toString());
             i++;
         }
         //on calcul les points
-
+        int[] res = calculPoint(listeJoueurs, listChamps);
         return res;
     }
-    public  ArrayList<ArrayList<Parcelle>> creationListeChamps(){
-        ArrayList<ArrayList<Parcelle>> listChamps = new ArrayList<ArrayList<Parcelle>>();
 
+    public ArrayList<ArrayList<Parcelle>> creationListeChamps() {
+        System.out.println("creationListeChamps");
+        ArrayList<ArrayList<Parcelle>> listChamps = new ArrayList<ArrayList<Parcelle>>();
+        int k = 0;
         //parcours de toutes les parcelles
-        for (Parcelle parcelle : ListParcelleModele) {
-            if ( (!parcelle.isMarquer()) && (!parcelle.isSecheresse()) &&(parcelle.getChamps()!= Parcelle.typeChamps.vide)) {
+        for (Parcelle parcelle : this.getListParcelleModele()) {
+            k++;
+            System.out.println(parcelle.getChamps().toString() + " " + k);
+            if ((!parcelle.isMarquer()) && (!parcelle.isSecheresse()) && (parcelle.getChamps() != Parcelle.typeChamps.vide)) {
+                System.out.println("creationListeChamps if k" + k);
                 //creation du champs
                 ArrayList<Parcelle> champs = new ArrayList<Parcelle>();
                 //incoporation du champs dans la liste
                 listChamps.add(champs);
                 //incorporation de la premiere parcelle dans le nouveau champs
+                System.out.println("test lol");
                 champs.add(parcelle);
                 //on ajoute les parcelles voisines de meme type dans les 4 directions :
-                //lancement de la recursivite
-                chercheProximite(champs,parcelle.getNumligne()+1,parcelle.getNumcolonne()+1);
-                chercheProximite(champs,parcelle.getNumligne()-1,parcelle.getNumcolonne()-1);
-                chercheProximite(champs,parcelle.getNumligne()+1,parcelle.getNumcolonne()-1);
-                chercheProximite(champs,parcelle.getNumligne()-1,parcelle.getNumcolonne()+1);
+                //lancement de la racherche par recursivite
+                chercheProximite(champs, parcelle.getNumcolonne(), parcelle.getNumligne());
             }
         }
 
@@ -802,52 +811,93 @@ public class Plateau extends JApplet {
     }
 
     //test si outofbounds
-    public boolean outofbounds(int i,int j){
-        return(i<0 || i>7 || j<0 || j>5 );
+    public boolean outofbounds(int i, int j) {
+        return (i < 0 || i > 7 || j < 0 || j > 5);
     }
+
     //permet de chercher les parcelles de memes types voisines au parcelle du champs
-    public void chercheProximite(ArrayList<Parcelle> champs,int i,int j){
-        System.out.println("Wie geht s");
+    public void chercheProximite(ArrayList<Parcelle> champs, int i, int j) {
+
         //type champs de la parcelle recherché sur le board
         Parcelle.typeChamps parcelleTypeChamps;
         //type de la premiere parcelle du champs en question (donc de toutes les parcelles de ce champ)
-        Parcelle.typeChamps parcelleChampsTypeChamps= champs.get(0).getChamps();
+        Parcelle.typeChamps parcelleChampsTypeChamps = champs.get(0).getChamps();
 
+        //on gere el outofbounds
+        if (!outofbounds(i, j)) {
+            // on retrouve la parcelle au coordonne recherché
+            Parcelle parcelle = recupParcelleCoordonnee(i, j);
+            if (!parcelle.isMarquer() && (!parcelle.isSecheresse())) {
+                parcelleTypeChamps = parcelle.getChamps();
 
-
-
-            //on gere el outofbounds
-            if (!outofbounds(i,j)) {
-                System.out.println("allo");
-                // on retrouve la parcelle au coordonne recherché
-                Parcelle parcelle = recupParcelleCoordonnee(i, j);
-//&& (parcelle != null)
-
-                if (!parcelle.isMarquer() && (!parcelle.isSecheresse()) ) {
-                    parcelleTypeChamps = parcelle.getChamps();
-
-                    if (parcelleTypeChamps == parcelleChampsTypeChamps) {
-
+                if (parcelleTypeChamps == parcelleChampsTypeChamps) {
+                    //si la parcelle est differente de la premiere du champs
+                    parcelle.setMarquer(true);
+                    if (parcelle != champs.get(0)) {
                         champs.add(parcelle);
-                        parcelle.setMarquer(true);
-                        //on recherche dans les 4 directions par recursivite
-                        chercheProximite(champs, parcelle.getNumligne() + 1, parcelle.getNumcolonne() + 1);
-                        chercheProximite(champs, parcelle.getNumligne() - 1, parcelle.getNumcolonne() - 1);
-                        chercheProximite(champs, parcelle.getNumligne() + 1, parcelle.getNumcolonne() - 1);
-                        chercheProximite(champs, parcelle.getNumligne() - 1, parcelle.getNumcolonne() + 1);
                     }
-
-
+                    //on recherche dans les 4 directions par recursivite
+                    chercheProximite(champs, parcelle.getNumcolonne() + 1, parcelle.getNumligne());//droit
+                    chercheProximite(champs, parcelle.getNumcolonne() - 1, parcelle.getNumligne());//gauche
+                    chercheProximite(champs, parcelle.getNumcolonne(), parcelle.getNumligne() - 1);//haut
+                    chercheProximite(champs, parcelle.getNumcolonne(), parcelle.getNumligne() + 1);//bas
                 }
             }
-
-
-
+        }
     }
 
+    public int[] calculPoint(ArrayList<Joueur> joueurs, ArrayList<ArrayList<Parcelle>> listeChamps) {
+        String mess = "";
+        int[] totalJoueurChampsTab = new int[joueurs.size()];
+        int i=0;
+        for (Joueur joueur : joueurs) {
+            int totalJoueurListeChamps=0;
+            for (ArrayList<Parcelle> champs : listeChamps) {
+                int taille = champs.size();
+
+                int nbOuvrierActifJoueurChamps = 0;
+                for (Parcelle parcelle : champs) {
+                    //si la parcelle appartient au joueur en cours on augment son total d ouvrier sur le champs
+                    if (parcelle.getProprio() == joueur) {
+                        nbOuvrierActifJoueurChamps += parcelle.getNbouvrieractif();
+                    }
+
+                }
+                //on a fini de parcourir le champs, on calcule les points du joueur sur le champs
+                int totalJoueurChamps = nbOuvrierActifJoueurChamps * taille;
+                totalJoueurListeChamps += totalJoueurChamps;
+
+            }
+
+            totalJoueurChampsTab[i]=totalJoueurListeChamps;
+            i++;
+        }
+
+        //on construit l'affichage
+
+    //    mess += "Pseudo     Argent      Points       Total \n";
+        int j=0;
+   /*     for (Joueur joueur : joueurs) {
+            StringBuffer pseudo = new StringBuffer();
+              pseudo.setLength(10);
+            pseudo.append(joueur.getPseudo());
+            mess += pseudo+"    "+joueur.getArgent()+"      "+totalJoueurChampsTab[j]+"     "+  joueur.getArgent()+totalJoueurChampsTab[j];
+            mess +='\n';
+*/
 
 
 
+
+     //   j++;
+
+return totalJoueurChampsTab;
+
+
+
+
+       // return mess;
+
+    }
 }
 
 

@@ -290,9 +290,12 @@ public class MaitreDuJeu {
     ///////////////////
     //Les fonctions ///
     ///////////////////
-    public  void resultatFinal(){
-        String resultat= plateau.calculResultatFinal();
+    public  void resultatFinal(ArrayList < Joueur > listeJoueurs){
+        fenetre.calculResultatFinal(listeJoueurs);
         //on affiche le resultat
+//Boîte du message d'information
+      //  fenetre.afficherResultat(resultat);
+
     }
     public void afficherJeu() {
 
@@ -512,9 +515,9 @@ public class MaitreDuJeu {
                 paiementJoueur();
                 System.out.println("Tour " + nbTours + " fini");
             }
-        } while (nbTours != 2);
+        } while (nbTours != 1);
 
-        resultatFinal();
+        resultatFinal(listeJoueurs);
 
 
 

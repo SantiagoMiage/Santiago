@@ -56,6 +56,8 @@ public class PileParcelleGUI {
                         if (thumb.getIcon() != iconvide) {
                             //recuperer la parcelle
                             parcelleChoisie = pileParcelles.get(indice).getParcelle();
+                            System.out.println("recup parcelle de pile parcelle");
+                            System.out.println("rtype champs"+parcelleChoisie.getChamps());
                             if (pileParcelles.get(indice).getPileParcelle().size() > 1) {
                                 //retirer limage
                                 pileParcelles.get(indice).popParcelle();

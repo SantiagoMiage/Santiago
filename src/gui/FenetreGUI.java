@@ -469,4 +469,31 @@ public class FenetreGUI {
     public void retirerParcelle(Parcelle pChoisie) {
         pileParcelleGUI.retirerParcelle(pChoisie);
     }
+
+
+    public void calculResultatFinal(ArrayList < Joueur > listeJoueurs) {
+        int[] res= plateau.calculResultatFinal(listeJoueurs);
+        afficherResultat(res,listeJoueurs);
+    }
+
+    public void afficherResultat(int[] tab,ArrayList < Joueur > listeJoueurs){
+        JOptionPane jop1 = new JOptionPane();
+        JTextPane textPane =new JTextPane();
+        StringBuffer info = new StringBuffer();
+        textPane.setContentType("text/html");
+
+        info.append("<html><table>");
+        int i=0;
+        info.append("<tr><td> <b><u>Pseudo</b></u> </td><td>  <b><u>Argent</b></u> </td><td>  <b><u>Point</b></u> </td><td>  <b><u>Score final</b></u> </td></tr>");
+        for (Joueur joueur : listeJoueurs) {
+            int total=joueur.getArgent()+tab[i];
+            info.append("<tr><td>" + joueur.getPseudo() + "</td><td>" + joueur.getArgent() + "</td><td>" + tab[i] + "</td><td>" + total + "</td></tr>");
+            i++;
+        }
+        info.append("</table></html>");
+
+//then
+        textPane.setText(info.toString());
+  jop1.showMessageDialog(null, textPane, "Resultat", JOptionPane.INFORMATION_MESSAGE);
+    }
 }
