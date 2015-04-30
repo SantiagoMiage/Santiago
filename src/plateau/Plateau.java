@@ -17,6 +17,8 @@ import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Yannis Cipriani on 16/03/2015.
@@ -42,8 +44,10 @@ public class Plateau extends JApplet {
     Thread threadAttenteDepotParcelle;
     Thread threadAttenteChoixCanalProposition;
 
-
+    private JPanel panelRenvoi = new JPanel();
+    private JPanel glassOuvrier = new JPanel();
     private JPanel panel = new JPanel(new GridBagLayout());
+    private JLayeredPane panelCalque = new JLayeredPane();
 
     public Plateau() {
 
@@ -55,6 +59,18 @@ public class Plateau extends JApplet {
 
     public JPanel getPanel() {
         return panel;
+    }
+
+    public JLayeredPane getPanelCalque() {
+        return panelCalque;
+    }
+
+    public JPanel getGlassOuvrier() {
+        return glassOuvrier;
+    }
+
+    public JPanel getPanelRenvoi() {
+        return panelRenvoi;
     }
 
     public ArrayList<Canal> getListCanauxModele() {
@@ -75,8 +91,32 @@ public class Plateau extends JApplet {
 
     public void initialisation() {
 
-        panel.setSize(new Dimension(500, 500));
         panel.setBorder(BorderFactory.createLineBorder(Color.blue));
+        glassOuvrier.setBorder(BorderFactory.createLineBorder(Color.magenta));
+        panelCalque.setBorder(BorderFactory.createLineBorder(Color.green));
+
+        //panel plateau
+        this.panel.setBounds(0, 0, 500, 500);
+        //  panel.setSize(new Dimension(500, 500));
+
+        //panel invisible ouvrier
+
+        this.glassOuvrier.setBounds(this.panel.getBounds());
+        //  glassOuvrier.setBackground(Color.BLACK);
+        // this.glassOuvrier.setBackground(new Color(0,0,0,0));
+        this.glassOuvrier.setOpaque(false);
+        //  glassOuvrier.setSize(new Dimension(500, 500));
+
+        //on ajoute au couche de calque
+        this.panelCalque.setPreferredSize(new Dimension(500, 500));
+
+        this.panelCalque.add(this.panel, Integer.valueOf(1));
+        this.panelCalque.add(this.glassOuvrier, Integer.valueOf(2));
+
+        //panel renvoie
+        //   panelRenvoi.setSize(new Dimension(500, 500));
+        this.panelRenvoi.add(panelCalque,BorderLayout.NORTH);
+        //panel.add(panelOuvrier);
         //pour la performance , on instancie seulement  au début , pour ne pas devoir le faire plus tard dans le listener, gain
         String cheminparcelle = "/ressource/images/parcelle.png";
         URL url_parcelle = this.getClass().getResource(cheminparcelle);
@@ -223,7 +263,6 @@ public class Plateau extends JApplet {
                                 yfinV = ydebV + 2;
                             }
                             //on travaille dessus
-
                             thumb.addMouseListener(new MouseAdapter() {
                                 @Override
                                 public void mouseClicked(MouseEvent e) {
@@ -277,12 +316,9 @@ public class Plateau extends JApplet {
                                             threadAttenteDepotParcelle.notify();
                                         }
 
-                                        //Desssiner un Rectangle et modifier sa couleur de fond
-                                        //     colorierOuvrier(thumb);
 
                                     }
                                 }
-
                             }
 
                         });
@@ -293,6 +329,7 @@ public class Plateau extends JApplet {
         }
         initialisationSource();
     }
+
 
     ///////////////////
     ///////TESTS///////
@@ -361,51 +398,52 @@ public class Plateau extends JApplet {
     /////FONCTION//////
     ///////////////////
 
-    public void colorierOuvrier(final JLabel thumb) {
-        Parcelle parcelle = guiToModeleParcelle(thumb);
-        //recup le nb ouvrier de la parcelle correspondant au thumb
-        final int nbouv = parcelle.getNbouvrier();
+    // utiliser lors du depot et lors de secheresse
+    public void colorierOuvrier(Parcelle parcelle) {
+        JLabel thumb=modeleToGuiIParcelle(parcelle);
+        int nbouv = parcelle.getNbouvrier();
 
-        //recuperer la position de la parcelle
+
         int posx = thumb.getX();
         int posy = thumb.getY();
-        //System.out.println("posx " + posx + "posy " + posy);
 
         //calcul de la position du premier carré de couleur
         final int posxcarre = posx + 5;
         final int posycarre = posy + 5;
 
-
+        System.out.println("posxcarre "+posxcarre+" posycarre "+posycarre );
         //coloriage du premier ouvrier
         JPanel aDessiner = new JPanel() {
             public void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                g.setColor(Color.MAGENTA);
+                g.setColor(Color.blue);
                 g.fillOval(posxcarre, posycarre, 10, 10);
-                //thumb.paintComponents(g);
-                //g.fillOval(posxcarre, posycarre, 10, 10);
-                //thumb.paint(g);
-                System.out.println(posxcarre + " " + posycarre);
+                glassOuvrier.paint(g);
             }
         };
 
-        //   panel.add(aDessiner);
-        //this.panel.add(aDessiner);
-        //  this.panel.revalidate();
 
-        panel.getParent().add(aDessiner, 2);
-        this.panel.revalidate();
-        // panel.getParent().add(aDessiner,2);
-        // panel.add(aDessiner);
+        this.glassOuvrier.add(aDessiner);
 
+        this.glassOuvrier.repaint();
         //coloriage du second ouvrier si il y en a un
-    /*    if (nbouv > 1) {
+        if (nbouv > 1) {
             //calcul de la position du second carré de couleur
-            int posxcarredeux = posxcarre + 15;
-            int posycarredeux = posycarre;
+            final int posxcarredeux = posxcarre + 15;
+            final int posycarredeux = posycarre;
+            System.out.println("posxcarredeux "+posxcarredeux+" posycarredeux "+posycarredeux );
             //coloriage du second ouvrier
+            JPanel aDessiner2 = new JPanel() {
+                public void paintComponent(Graphics g) {
+                    super.paintComponent(g);
+                    g.setColor(Color.MAGENTA);
+                    g.fillOval(posxcarredeux, posycarredeux, 10, 10);
+                    glassOuvrier.paint(g);
+                }
+            };
+            this.glassOuvrier.add(aDessiner2);
         }
-*/
+
     }
 
 
@@ -421,7 +459,6 @@ public class Plateau extends JApplet {
 
 
     public void irrigueIntersection(int i, int j) {
-        System.out.println("irrigue intersection i " + i + "  j " + j);
         for (Intersection elem : ListIntersect) {
             if (elem.getI() == i && elem.getJ() == j) {
                 elem.setirrigue(true);
@@ -449,7 +486,6 @@ public class Plateau extends JApplet {
 
     //irrigue le canal et les parcelles adjacentes au canal
     public void irrigation(Canal canal) {
-        System.out.println("irrigue canal " + canal.toString());
         //on irrigue
         canal.setIrrigue(true);
 
@@ -589,7 +625,6 @@ public class Plateau extends JApplet {
     }
 
     public void secheresse(Parcelle parcelle) {
-        System.out.println("plateau.secheresse");
         parcelle.setSecheresse(true);
         //et on modifie l image
         String cheminvide = "/ressource/images/vide.png";
@@ -662,8 +697,6 @@ public class Plateau extends JApplet {
         boolean estIrrigue = ListParcelleModele.get(indexParcelle).isIrrigue();
         //on recupere la parcelle que le joueur pose (a obtenu dans la phase d'enchere)
         Parcelle parcelleMain = joueur.getParcelleMain();
-        System.out.println("phase depot typechamps");
-        System.out.println(parcelleMain.getChamps());
         parcelleMain.setChamps(parcelleMain.getChamps());
         //on set la position a la parcelle
         parcelleMain.setNumligne(ligne);
@@ -672,8 +705,6 @@ public class Plateau extends JApplet {
         parcelleMain.setIrrigue(estIrrigue);
         //on remplie les ouvriers
         parcelleMain.setNbouvrieractif(parcelleMain.getNbouvrier());
-        System.out.println("nbouvrieractif depot " + parcelleMain.getNbouvrieractif());
-        System.out.println("nbouvrier depot " + parcelleMain.getNbouvrier());
         //on attribue le proprio
         parcelleMain.setProprio(joueur);
         //on met a jour la liste des parcelles du plateau
@@ -681,6 +712,10 @@ public class Plateau extends JApplet {
         //on modifie l'Affichage de la parcelle sur le plateau
         retournerParcelle(parcelleChoisie, parcelleMain);
         ListParcelleGUI.set(indexParcelle, parcelleChoisie);
+        //on colorie les ouvriers
+        colorierOuvrier(parcelleMain);
+
+
         //on vide la main du joueur
         joueur.setParcelleMain(null);
 
@@ -763,15 +798,11 @@ public class Plateau extends JApplet {
 
     //fonctions de calcul du resultat final
     public int[] calculResultatFinal(ArrayList<Joueur> listeJoueurs) {
-   //     String res = "";
-
         ArrayList<Parcelle> liste = getListParcelleModele();
-        System.out.println(liste.toString());
 
 
         //on cree les champs
         ArrayList<ArrayList<Parcelle>> listChamps = creationListeChamps();
-        System.out.println("taille liste champs " + listChamps.size());
         int i = 0;
         for (ArrayList<Parcelle> champ : listChamps) {
             System.out.println("taille liste du champs " + i + "est de " + champ.size());
@@ -785,21 +816,17 @@ public class Plateau extends JApplet {
     }
 
     public ArrayList<ArrayList<Parcelle>> creationListeChamps() {
-        System.out.println("creationListeChamps");
         ArrayList<ArrayList<Parcelle>> listChamps = new ArrayList<ArrayList<Parcelle>>();
         int k = 0;
         //parcours de toutes les parcelles
         for (Parcelle parcelle : this.getListParcelleModele()) {
             k++;
-            System.out.println(parcelle.getChamps().toString() + " " + k);
             if ((!parcelle.isMarquer()) && (!parcelle.isSecheresse()) && (parcelle.getChamps() != Parcelle.typeChamps.vide)) {
-                System.out.println("creationListeChamps if k" + k);
                 //creation du champs
                 ArrayList<Parcelle> champs = new ArrayList<Parcelle>();
                 //incoporation du champs dans la liste
                 listChamps.add(champs);
                 //incorporation de la premiere parcelle dans le nouveau champs
-                System.out.println("test lol");
                 champs.add(parcelle);
                 //on ajoute les parcelles voisines de meme type dans les 4 directions :
                 //lancement de la racherche par recursivite
@@ -847,57 +874,34 @@ public class Plateau extends JApplet {
     }
 
     public int[] calculPoint(ArrayList<Joueur> joueurs, ArrayList<ArrayList<Parcelle>> listeChamps) {
-        String mess = "";
+
         int[] totalJoueurChampsTab = new int[joueurs.size()];
-        int i=0;
+        int i = 0;
         for (Joueur joueur : joueurs) {
-            int totalJoueurListeChamps=0;
+            int totalJoueurListeChamps = 0;
             for (ArrayList<Parcelle> champs : listeChamps) {
                 int taille = champs.size();
-
                 int nbOuvrierActifJoueurChamps = 0;
                 for (Parcelle parcelle : champs) {
                     //si la parcelle appartient au joueur en cours on augment son total d ouvrier sur le champs
                     if (parcelle.getProprio() == joueur) {
                         nbOuvrierActifJoueurChamps += parcelle.getNbouvrieractif();
                     }
-
                 }
                 //on a fini de parcourir le champs, on calcule les points du joueur sur le champs
                 int totalJoueurChamps = nbOuvrierActifJoueurChamps * taille;
                 totalJoueurListeChamps += totalJoueurChamps;
 
             }
-
-            totalJoueurChampsTab[i]=totalJoueurListeChamps;
+            totalJoueurChampsTab[i] = totalJoueurListeChamps;
             i++;
         }
+        return totalJoueurChampsTab;
 
-        //on construit l'affichage
-
-    //    mess += "Pseudo     Argent      Points       Total \n";
-        int j=0;
-   /*     for (Joueur joueur : joueurs) {
-            StringBuffer pseudo = new StringBuffer();
-              pseudo.setLength(10);
-            pseudo.append(joueur.getPseudo());
-            mess += pseudo+"    "+joueur.getArgent()+"      "+totalJoueurChampsTab[j]+"     "+  joueur.getArgent()+totalJoueurChampsTab[j];
-            mess +='\n';
-*/
-
-
-
-
-     //   j++;
-
-return totalJoueurChampsTab;
-
-
-
-
-       // return mess;
 
     }
+
+
 }
 
 

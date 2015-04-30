@@ -84,12 +84,15 @@ public class FenetreGUI {
         creationParcelle(pileParcelles);
         GridBagConstraints gc = new GridBagConstraints();
         gc.weightx = 2;
-        panel.add(plateau.getPanel(), gc);
+
+        panel.add(plateau.getPanelRenvoi(), gc);
         gridMainJoueur = new JPanel(new GridLayout(4,1,1,1));
         for(int i =0; i<joueurs.size(); i++){
             gridMainJoueur.add(creationMainJoueur(joueurs.get(i)));
         }
         panel.add(gridMainJoueur);
+
+
         fenetre.revalidate();
     }
 
@@ -473,7 +476,7 @@ public class FenetreGUI {
 
     public void calculResultatFinal(ArrayList < Joueur > listeJoueurs) {
         int[] res= plateau.calculResultatFinal(listeJoueurs);
-        afficherResultat(res,listeJoueurs);
+        afficherResultat(res, listeJoueurs);
     }
 
     public void afficherResultat(int[] tab,ArrayList < Joueur > listeJoueurs){
