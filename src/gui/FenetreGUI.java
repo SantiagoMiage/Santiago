@@ -10,6 +10,7 @@ import plateau.Plateau;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Vector;
 
 /**
  * Created by Crema on 02/04/2015.
@@ -22,7 +23,7 @@ public class FenetreGUI {
     private MainJoueurGUI mainJoueurGUI;
     private JPanel panel = new JPanel(new GridBagLayout());
     private LauncherGUI launcher = new LauncherGUI();
-
+    private JPanel gridMainJoueur;
 
     public FenetreGUI() {
         pileParcelleGUI = null;
@@ -53,16 +54,13 @@ public class FenetreGUI {
     }
 
     //Créer une pile parcelle et la retourne
-    public JPanel initialisationMainJoueur() {
-        mainJoueurGUI = new MainJoueurGUI();
-        return mainJoueurGUI.affichageMain();
+    public JPanel initialisationMainJoueur(Joueur j) {
+        mainJoueurGUI = new MainJoueurGUI(j);
+        return mainJoueurGUI.getPanel();
     }
 
-    //Ajoute le panel de PileParcelleGUI dans la fenêtre
-    public void creationMainJoueur() {
-        GridBagConstraints gc = new GridBagConstraints();
-        gc.weightx = 3;
-        panel.add(initialisationMainJoueur(), gc);
+    public JPanel creationMainJoueur(Joueur j) {
+        return initialisationMainJoueur(j);
 
     }
 
@@ -79,7 +77,7 @@ public class FenetreGUI {
         plateau.depotParcelle(j_actif);
     }
 
-    public void creationPlateau(ArrayList<PileParcelle> pileParcelles) {
+    public void creationPlateau(ArrayList<PileParcelle> pileParcelles, ArrayList<Joueur> joueurs) {
         fenetre.getContentPane().removeAll();
         fenetre.setContentPane(panel);
         //Ajout des 3 sous-panels principaux
@@ -87,9 +85,11 @@ public class FenetreGUI {
         GridBagConstraints gc = new GridBagConstraints();
         gc.weightx = 2;
         panel.add(plateau.getPanel(), gc);
-
-        creationMainJoueur();
-
+        gridMainJoueur = new JPanel(new GridLayout(4,1,1,1));
+        for(int i =0; i<joueurs.size(); i++){
+            gridMainJoueur.add(creationMainJoueur(joueurs.get(i)));
+        }
+        panel.add(gridMainJoueur);
         fenetre.revalidate();
     }
 
@@ -495,5 +495,14 @@ public class FenetreGUI {
 //then
         textPane.setText(info.toString());
   jop1.showMessageDialog(null, textPane, "Resultat", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public void RefreshMainJoueur(ArrayList<Joueur> joueurs) {
+        gridMainJoueur.removeAll();
+        for(int i =0; i<joueurs.size(); i++){
+            gridMainJoueur.add(creationMainJoueur(joueurs.get(i)));
+        }
+        fenetre.revalidate();
+
     }
 }
