@@ -139,6 +139,7 @@ public class MaitreDuJeu {
             j_actif = toursJoueurs.get(i);
             Parcelle pChoisie = fenetre.choixParcelle(j_actif);
             j_actif.setParcelleMain(pChoisie);
+            fenetre.RefreshMainJoueur(joueurs);
         }
     }
 
@@ -238,6 +239,7 @@ public class MaitreDuJeu {
         for (Joueur joueur : joueurs) {
             j_actif = joueur;
             fenetre.depotParcelle(j_actif);
+            fenetre.RefreshMainJoueur(joueurs);
         }
     }
 
@@ -285,6 +287,7 @@ public class MaitreDuJeu {
         for (Joueur joueur : joueurs) {
             joueur.setArgent(joueur.getArgent() + montantRevenu);
         }
+        fenetre.RefreshMainJoueur(joueurs);
     }
 
     ///////////////////
@@ -299,7 +302,7 @@ public class MaitreDuJeu {
     }
     public void afficherJeu() {
 
-        this.fenetre.creationPlateau(pileParcelles);
+        this.fenetre.creationPlateau(pileParcelles, joueurs);
     }
 
     //Créer les différentes pile de parcelles pour la partie
