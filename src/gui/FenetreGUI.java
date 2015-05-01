@@ -45,6 +45,7 @@ public class FenetreGUI {
 
     public void retournerLesPilesParcelles() {
         pileParcelleGUI.retournerLesPilesParcelles();
+        fenetre.revalidate();
     }
 
     //Ajoute le panel de PileParcelleGUI dans la fenêtre
@@ -80,6 +81,8 @@ public class FenetreGUI {
 
     public void creationPlateau(ArrayList<PileParcelle> pileParcelles, ArrayList<Joueur> joueurs) {
         fenetre.getContentPane().removeAll();
+        fenetre.setPreferredSize(new Dimension(1000, 900));
+        fenetre.pack();
         fenetre.setContentPane(panel);
         //Ajout des 3 sous-panels principaux
         GridBagConstraints gc = new GridBagConstraints();
@@ -107,7 +110,7 @@ public class FenetreGUI {
 
     public void creationLauncher() {
         fenetre.setTitle("Santiago");
-        fenetre.setPreferredSize(new Dimension(1000, 900));
+        fenetre.setPreferredSize(new Dimension(350, 200));
         fenetre.setContentPane(launcher.getPanel());
         fenetre.pack();
         fenetre.setLocationRelativeTo(null);
@@ -140,7 +143,7 @@ public class FenetreGUI {
             }
         }
 
-        plateau.repaint();
+        fenetre.revalidate();
     }
 
     //pour les encheres Parcelles
