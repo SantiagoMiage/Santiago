@@ -24,6 +24,7 @@ public class FenetreGUI {
     private JPanel panel = new JPanel(new GridBagLayout());
     private LauncherGUI launcher = new LauncherGUI();
     private JPanel gridMainJoueur;
+    private JPanel infoPanel;
 
     public FenetreGUI() {
         pileParcelleGUI = null;
@@ -47,9 +48,9 @@ public class FenetreGUI {
     }
 
     //Ajoute le panel de PileParcelleGUI dans la fenêtre
-    public void creationParcelle(ArrayList<PileParcelle> pileParcelles) {
+    public void creationParcelle(ArrayList<PileParcelle> pileParcelles, GridBagConstraints gc) {
 
-        panel.add(initialisationPileParcelle(pileParcelles));
+        panel.add(initialisationPileParcelle(pileParcelles), gc);
 
     }
 
@@ -81,16 +82,24 @@ public class FenetreGUI {
         fenetre.getContentPane().removeAll();
         fenetre.setContentPane(panel);
         //Ajout des 3 sous-panels principaux
-        creationParcelle(pileParcelles);
         GridBagConstraints gc = new GridBagConstraints();
+        gc.gridy = 0;
+        gc.gridx = 0;
+        infoPanel = new infoGUI("Debut de la partie").getPanel();
+        panel.add(infoPanel);
         gc.weightx = 2;
-
+        gc.gridy = 1;
         panel.add(plateau.getPanelRenvoi(), gc);
+        gc.gridx = 1;
+        gc.gridy = 1;
+        creationParcelle(pileParcelles, gc);
         gridMainJoueur = new JPanel(new GridLayout(4,1,1,1));
         for(int i =0; i<joueurs.size(); i++){
             gridMainJoueur.add(creationMainJoueur(joueurs.get(i)));
         }
-        panel.add(gridMainJoueur);
+        gc.gridx = 2;
+        gc.gridy = 1;
+        panel.add(gridMainJoueur, gc);
 
 
         fenetre.revalidate();
@@ -505,6 +514,13 @@ public class FenetreGUI {
         for(int i =0; i<joueurs.size(); i++){
             gridMainJoueur.add(creationMainJoueur(joueurs.get(i)));
         }
+        fenetre.revalidate();
+
+    }
+
+    public void refreshInfo(String mess) {
+        infoPanel.removeAll();
+        infoPanel.add(new infoGUI(mess).getPanel());
         fenetre.revalidate();
 
     }
