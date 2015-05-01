@@ -18,16 +18,8 @@ public class Intersection {
         return i;
     }
 
-    public void setI(int i) {
-        this.i = i;
-    }
-
     public int getJ() {
         return j;
-    }
-
-    public void setJ(int j) {
-        this.j = j;
     }
 
     public boolean isirrigue() {

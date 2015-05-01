@@ -55,10 +55,6 @@ public class LauncherGUI {
         URL url_parcelle = this.getClass().getResource(cheminparcelle);
         final ImageIcon fondLauncher = new ImageIcon(url_parcelle);
 
-
-        //this.setUndecorated(true);
-        JLabel fond = new JLabel(fondLauncher);
-
         //L'objet servant à positionner les composants
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.anchor = GridBagConstraints.LAST_LINE_END ;

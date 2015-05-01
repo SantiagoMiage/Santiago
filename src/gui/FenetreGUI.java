@@ -1,5 +1,6 @@
 package gui;
 
+import javafx.geometry.Bounds;
 import joueur.Joueur;
 import joueur.Proposition;
 import plateau.Canal;
@@ -10,7 +11,6 @@ import plateau.Plateau;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Vector;
 
 /**
  * Created by Crema on 02/04/2015.
@@ -31,6 +31,7 @@ public class FenetreGUI {
         this.plateau = new Plateau();
         this.plateau.initialisation();
         fenetre = new JFrame();
+
     }
 
     public LauncherGUI getLauncher() {
@@ -88,7 +89,7 @@ public class FenetreGUI {
         GridBagConstraints gc = new GridBagConstraints();
         gc.gridy = 0;
         gc.gridx = 0;
-        infoPanel = new infoGUI("Debut de la partie").getPanel();
+        infoPanel = new InfoGUI("Debut de la partie").getPanel();
         panel.add(infoPanel);
         gc.weightx = 2;
         gc.gridy = 1;
@@ -519,7 +520,7 @@ public class FenetreGUI {
 
     public void refreshInfo(String mess) {
         infoPanel.removeAll();
-        infoPanel.add(new infoGUI(mess).getPanel());
+        infoPanel.add(new InfoGUI(mess).getPanel());
         fenetre.revalidate();
 
     }

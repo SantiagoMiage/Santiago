@@ -19,9 +19,9 @@ import java.util.Random;
  * Created by Créma on 18/03/2015.
  */
 public class MaitreDuJeu {
-    
-    private Joueur joueursCli;
+
     private static int montantRevenu = 5; //non imposable
+    private Joueur joueursCli;
     private int nbTours = 0; //nombre de tours écoulé dans la partie
     private Plateau plateau; //le plateau de jeu
     private ArrayList<Joueur> joueurs; //la liste des joueurs dans la partie
@@ -39,7 +39,6 @@ public class MaitreDuJeu {
         this.nbTours = 0;
         this.plateau = new Plateau();
         this.plateau.initialisation();
-        //this.plateau.creationFenetre();
         this.joueurs = joueurs;
         //créer autant de pile de parcelle qu'il y a de joueurs
         this.pileParcelles = new ArrayList<PileParcelle>(joueurs.size());
@@ -51,12 +50,82 @@ public class MaitreDuJeu {
         this.nbTours = 0;
         this.plateau = new Plateau();
         this.plateau.initialisation();
-        //this.plateau.creationFenetre();
-        this.joueurs = joueurs;
         //créer autant de pile de parcelle qu'il y a de joueurs
         this.fenetre = new FenetreGUI();
     }
-     //////////////////////////////
+
+    /////////////////
+    //////MAIN///////
+    /////////////////
+    public static void main(String[] args) {
+        //preparaton d<une liste de couleur pour eviter les doublons
+        Color[] tabCouleur = new Color[4];
+        tabCouleur[0] = Color.red;
+        tabCouleur[1] = Color.cyan;
+        tabCouleur[2] = Color.green;
+        tabCouleur[3] = Color.pink;
+        //A la place une interface graphique devras permettre de choisir les joueurs
+        ArrayList<Joueur> listeJoueurs = new ArrayList<Joueur>(4);
+
+        MaitreDuJeu mj = new MaitreDuJeu();
+        mj.afficherLauncher();
+        while (mj.getCli() == null && mj.getServ() == null && !mj.getLocal()) {
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if (mj.fenetre.getLauncher().getServer()) {
+                mj.setServ(new Server(6789));
+                mj.getServ().startServer();
+            }
+            if (mj.fenetre.getLauncher().getClient()) {
+                mj.setCli(new Client());
+                mj.getCli().lancer();
+                mj.getCli().sendPseudo(mj.fenetre.getLauncher().jtf.getText());
+            }
+            if (mj.fenetre.getLauncher().pseudo4String != null) {
+                listeJoueurs.add(new Joueur(mj.fenetre.getLauncher().jtf.getText(), 10, tabCouleur[0]));
+                listeJoueurs.add(new Joueur(mj.fenetre.getLauncher().pseudo2String, 10, tabCouleur[1]));
+                listeJoueurs.add(new Joueur(mj.fenetre.getLauncher().pseudo3String, 10, tabCouleur[2]));
+                listeJoueurs.add(new Joueur(mj.fenetre.getLauncher().pseudo4String, 10, tabCouleur[3]));
+                mj.setLocal(true);
+            }
+            if (mj.getLocal()) {
+                mj.jouerPartieLocal(listeJoueurs);
+            }
+            if (mj.getServ() != null) {
+                mj.pseudoJoueur = mj.fenetre.getLauncher().jtf.getText();
+                listeJoueurs.add(new Joueur(mj.fenetre.getLauncher().jtf.getText(), 10, Color.red));
+                while (mj.getServ().getNbCo() != 3) {
+                    int jrestant = 3 - mj.getServ().getNbCo();
+                    mj.fenetre.getLauncher().setInfo("Attente de " + jrestant + "joueur");
+                }
+                mj.fenetre.getLauncher().setInfo("Tout les joueurs sont connecté début de la partie");
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                for (int i = 0; i < 3; i++) {
+                    while (mj.getServ().getPseudo(i) == "unknow") {
+                        mj.fenetre.getLauncher().setInfo("Tout les joueurs sont connecté début de la partie");
+                    }
+                    listeJoueurs.add(new Joueur(mj.getServ().getPseudo(i), 10, tabCouleur[i]));
+
+                }
+
+                mj.jouerPartieServeur(listeJoueurs);
+            }
+            if (mj.getCli() != null) {
+                mj.joueursCli = new Joueur(mj.fenetre.getLauncher().jtf.getText(), 10, tabCouleur[0]);
+                listeJoueurs = mj.getCli().getJoueurs();
+                mj.jouerPartieClient(listeJoueurs);
+            }
+        }
+    }
+
+    //////////////////////////////
     //////Les accesseurs//////////
     //////////////////////////////
     public Boolean getLocal() {
@@ -108,22 +177,18 @@ public class MaitreDuJeu {
         this.pileParcelles = new ArrayList<PileParcelle>(joueurs.size());
         initialisationPileParcelles();
     }
+
     public void setConstructeurCanal(Joueur j) {
         constructeurCanal = j;
-    }
-
-    public Joueur getConstructeurCanal() {
-        return constructeurCanal;
-    }
-
-    public void refreshInfo(String mess){
-        fenetre.refreshInfo("Tours : "+Integer.toString(nbTours) + "Phase : " + mess +" Joueur : " + j_actif.getPseudo());
     }
 
     /////////////////
     //Les 7 Phases///
     /////////////////
 
+    public void refreshInfo(String mess) {
+        fenetre.refreshInfo("Tours : " + Integer.toString(nbTours) + "Phase : " + mess + " Joueur : " + j_actif.getPseudo());
+    }
 
     //gère la première phase du jeu les enchères pour les parcelles
     public void enchereParcelle() {
@@ -140,7 +205,7 @@ public class MaitreDuJeu {
         majConstructeurCanal(montantEnchere);
         ArrayList<Joueur> toursJoueurs = triJoueurTour(montantEnchere);
         joueurs = toursJoueurs;
-        for(int i = 0; i<joueurs.size(); i++){
+        for (int i = 0; i < joueurs.size(); i++) {
             j_actif = toursJoueurs.get(i);
             refreshInfo("Enchère Parcelle");
             Parcelle pChoisie = fenetre.choixParcelle(j_actif);
@@ -148,7 +213,6 @@ public class MaitreDuJeu {
             fenetre.RefreshMainJoueur(joueurs);
         }
     }
-
 
     public void enchereParcelleServeur() {
         int[] montantEnchere = new int[joueurs.size()];
@@ -160,28 +224,23 @@ public class MaitreDuJeu {
             j_actif = joueurs.get(i);
             if (j_actif.getPseudo().equals(pseudoJoueur)) {
                 j_actif = joueurs.get(i);
-                System.out.println("Local");
                 montantEnchere[i] = fenetre.offreJoueur(j_actif, montantEnchere);
             } else {
-                System.out.println("client " + j_actif.getPseudo());
                 montantEnchere[i] = serv.getOffreJoueur(montantEnchere, j_actif);
             }
         }
-        System.out.println("Enchère terminé");
-        System.out.println(montantEnchere);
         majConstructeurCanal(montantEnchere);
         joueurs = triJoueurTour(montantEnchere);
         EnvoieJoueur();
-        System.out.println("Ordre joueurs envoyé");
-        for(int i = 0; i<joueurs.size(); i++){
+        for (int i = 0; i < joueurs.size(); i++) {
             j_actif = joueurs.get(i);
-            if(j_actif.getPseudo().equals(pseudoJoueur)){
+            if (j_actif.getPseudo().equals(pseudoJoueur)) {
                 System.out.println("A moi l'host");
                 Parcelle pChoisie = fenetre.choixParcelle(j_actif);
                 j_actif.setParcelleMain(pChoisie);
                 serv.sendParcelleChoisi(j_actif, pChoisie);
-            }else{
-                System.out.println("A lui : "+ j_actif.getPseudo());
+            } else {
+                System.out.println("A lui : " + j_actif.getPseudo());
                 Parcelle pChoisie = serv.parcelleChoisi(j_actif);
                 System.out.println("Parcelle reçue");
                 j_actif.setParcelleMain(pChoisie);
@@ -192,8 +251,7 @@ public class MaitreDuJeu {
 
     }
 
-
-    public void enchereParcelleClient(){
+    public void enchereParcelleClient() {
         Parcelle pChoisie = null;
         this.retournerPlantation();
         int[] montantEnchere = cli.getMontantEnchere();
@@ -203,10 +261,10 @@ public class MaitreDuJeu {
         cli.sendEnchere(montant[0]);
         //reucpère le tri des joueurs
         joueurs = cli.getJoueurs();
-        for(int i =0; i<joueurs.size(); i++){
+        for (int i = 0; i < joueurs.size(); i++) {
             j_actif = joueurs.get(i);
             //si c'est à notre tour de jouer
-            if(joueurs.get(i).getPseudo().equals(joueursCli.getPseudo())){
+            if (joueurs.get(i).getPseudo().equals(joueursCli.getPseudo())) {
                 //authorization du serveur
                 System.out.println("A moi !");
                 cli.getParcelleMain();
@@ -216,7 +274,7 @@ public class MaitreDuJeu {
                 cli.sendParcelle(pChoisie);
             }
             //si quelqu'un d'autre à jouer récupère son choix
-            else{
+            else {
                 System.out.println(" A lui !" + j_actif.getPseudo());
                 pChoisie = cli.getParcellePrise();
                 fenetre.retirerParcelle(pChoisie);
@@ -303,15 +361,15 @@ public class MaitreDuJeu {
     ///////////////////
     //Les fonctions ///
     ///////////////////
-    public  void resultatFinal(ArrayList < Joueur > listeJoueurs){
+    public void resultatFinal(ArrayList<Joueur> listeJoueurs) {
         fenetre.calculResultatFinal(listeJoueurs);
         //on affiche le resultat
 //Boîte du message d'information
-      //  fenetre.afficherResultat(resultat);
+        //  fenetre.afficherResultat(resultat);
 
     }
-    public void afficherJeu() {
 
+    public void afficherJeu() {
         this.fenetre.creationPlateau(pileParcelles, joueurs);
     }
 
@@ -449,8 +507,7 @@ public class MaitreDuJeu {
         fenetre.creationLauncher();
     }
 
-
-    private void EnvoieJoueur () {
+    private void EnvoieJoueur() {
         for (int i = 0; i < 3; i++) {
             serv.sendJoueur(joueurs, i);
             while (!serv.reponseClient(i)) {
@@ -459,7 +516,7 @@ public class MaitreDuJeu {
         }
     }
 
-    private void jouerPartieServeur (ArrayList < Joueur > listeJoueurs) {
+    private void jouerPartieServeur(ArrayList<Joueur> listeJoueurs) {
         setJoueur(listeJoueurs);
         //Envoie les pseudos des autres joueurs
         EnvoieJoueur();
@@ -492,16 +549,16 @@ public class MaitreDuJeu {
         } while (nbTours != 11);
     }
 
-    private void jouerPartieClient (ArrayList < Joueur > listeJoueurs) {
-                this.joueurs = listeJoueurs;
-                pileParcelles = cli.getPileParcelles();
-                System.out.println("Creation Partie");
-                afficherJeu();
-                setJ_actif(listeJoueurs.get(0));
-                enchereParcelleClient();
+    private void jouerPartieClient(ArrayList<Joueur> listeJoueurs) {
+        this.joueurs = listeJoueurs;
+        pileParcelles = cli.getPileParcelles();
+        System.out.println("Creation Partie");
+        afficherJeu();
+        setJ_actif(listeJoueurs.get(0));
+        enchereParcelleClient();
     }
 
-    private void jouerPartieLocal (ArrayList < Joueur > listeJoueurs) {
+    private void jouerPartieLocal(ArrayList<Joueur> listeJoueurs) {
         setJoueur(listeJoueurs);
         afficherJeu();
         //mj.afficherPileParcelle();
@@ -526,76 +583,6 @@ public class MaitreDuJeu {
         } while (nbTours != 11);
 
         resultatFinal(listeJoueurs);
-   }
-
-
-
-    /////////////////
-    //////MAIN///////
-    /////////////////
-    public static void main(String[] args){
-        //preparaton d<une liste de couleur pour eviter les doublons
-        Color[] tabCouleur = new Color[4];
-        tabCouleur[0]=Color.red;tabCouleur[1]=Color.cyan;tabCouleur[2]=Color.green;tabCouleur[3]=Color.pink;
-        //A la place une interface graphique devras permettre de choisir les joueurs
-        ArrayList<Joueur> listeJoueurs = new ArrayList<Joueur>(4);
-
-        MaitreDuJeu mj = new MaitreDuJeu();
-        mj.afficherLauncher();
-        while(mj.getCli() == null && mj.getServ() == null && !mj.getLocal()){
-            try {
-                Thread.sleep(200);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            if(mj.fenetre.getLauncher().getServer()){
-                mj.setServ(new Server(6789));
-                mj.getServ().startServer();
-            }
-            if(mj.fenetre.getLauncher().getClient()){
-                mj.setCli(new Client());
-                mj.getCli().lancer();
-                mj.getCli().sendPseudo(mj.fenetre.getLauncher().jtf.getText());
-            }
-            if(mj.fenetre.getLauncher().pseudo4String != null){
-                listeJoueurs.add(new Joueur(mj.fenetre.getLauncher().jtf.getText(),10, tabCouleur[0]));
-                listeJoueurs.add(new Joueur(mj.fenetre.getLauncher().pseudo2String,10, tabCouleur[1]));
-                listeJoueurs.add(new Joueur(mj.fenetre.getLauncher().pseudo3String,10, tabCouleur[2]));
-                listeJoueurs.add(new Joueur(mj.fenetre.getLauncher().pseudo4String,10, tabCouleur[3]));
-                mj.setLocal(true);
-            }
-            if(mj.getLocal()) {
-                mj.jouerPartieLocal(listeJoueurs);
-            }
-            if(mj.getServ() != null){
-                mj.pseudoJoueur = mj.fenetre.getLauncher().jtf.getText();
-                listeJoueurs.add(new Joueur(mj.fenetre.getLauncher().jtf.getText(),10, Color.red));
-                while(mj.getServ().getNbCo() != 3){
-                    int jrestant = 3-mj.getServ().getNbCo();
-                    mj.fenetre.getLauncher().setInfo("Attente de " + jrestant +"joueur");
-                }
-                mj.fenetre.getLauncher().setInfo("Tout les joueurs sont connecté début de la partie");
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                for(int i =0; i<3; i++){
-                    while(mj.getServ().getPseudo(i) == "unknow"){
-                        mj.fenetre.getLauncher().setInfo("Tout les joueurs sont connecté début de la partie");
-                    }
-                    listeJoueurs.add(new Joueur(mj.getServ().getPseudo(i), 10, tabCouleur[i]));
-
-                }
-
-                mj.jouerPartieServeur(listeJoueurs);
-            }
-            if(mj.getCli() != null){
-                mj.joueursCli = new Joueur(mj.fenetre.getLauncher().jtf.getText(),10,tabCouleur[0]);
-                listeJoueurs = mj.getCli().getJoueurs();
-                mj.jouerPartieClient(listeJoueurs);
-            }
-        }
     }
 
 

@@ -10,7 +10,7 @@ import java.io.Serializable;
  */
 public class Joueur implements Serializable {
 
-    private  static  final  long serialVersionUID =  1350092881346723535L;
+    private static final long serialVersionUID = 1350092881346723535L;
 
     private String pseudo;
     private int argent;
@@ -20,19 +20,17 @@ public class Joueur implements Serializable {
     private Color couleur;
 
 
-
-
-    public Joueur(String pseudo, int argent, Color couleur){
-        this.pseudo=pseudo;
-        this.argent=argent;
+    public Joueur(String pseudo, int argent, Color couleur) {
+        this.pseudo = pseudo;
+        this.argent = argent;
         this.score = 0;
         this.couleur = couleur;
     }
 
     public Joueur(Joueur j_actif) {
-        this.pseudo=j_actif.pseudo;
-        this.argent=j_actif.argent;
-        this.score =j_actif.score;
+        this.pseudo = j_actif.pseudo;
+        this.argent = j_actif.argent;
+        this.score = j_actif.score;
         this.parcelleMain = j_actif.parcelleMain;
         this.couleur = j_actif.couleur;
     }
@@ -41,20 +39,12 @@ public class Joueur implements Serializable {
         return pseudo;
     }
 
-     public int getArgent() {
+    public int getArgent() {
         return argent;
     }
 
     public void setArgent(int argent) {
         this.argent = argent;
-    }
-
-    public int getScore() {
-        return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
     }
 
     public Color getCouleur() {
@@ -69,12 +59,12 @@ public class Joueur implements Serializable {
         this.parcelleMain = parcelleMain;
     }
 
-    public void setCanalComplementaire(boolean canalComplementaire) {
-        this.canalComplementaire = canalComplementaire;
-    }
-
     public boolean isCanalComplementaire() {
         return canalComplementaire;
+    }
+
+    public void setCanalComplementaire(boolean canalComplementaire) {
+        this.canalComplementaire = canalComplementaire;
     }
 
     @Override
@@ -86,14 +76,5 @@ public class Joueur implements Serializable {
                 ", parcelleMain=" + parcelleMain +
                 '}';
     }
-
-
-
-
-    public String affichePseudo() {
-
-        return "Joueur :" + pseudo;
-    }
-
 
 }

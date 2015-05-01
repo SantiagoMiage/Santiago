@@ -162,19 +162,6 @@ private boolean marquer=false;
                 '}';
     }
 
-
-    public String toStringlight() {
-        return "Parcelle{" +
-                " irrigue=" + irrigue +
-                ", numligne=" + numligne +
-                ", numcolonne=" + numcolonne +
-                '}';
-    }
-
-    public int getNumero() {
-        return numero;
-    }
-
     public enum typeChamps {
         patate, piment, banane, bambou, haricot, vide, test;
     }
