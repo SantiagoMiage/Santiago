@@ -21,6 +21,7 @@ public class MainJoueurGUI {
         this.joueur = j;
 
         panel = new JPanel(new GridBagLayout());
+        panel.setBackground(j.getCouleur());
         GridBagConstraints gbc = new GridBagConstraints();
         //gbc.anchor = GridBagConstraints.LAST_LINE_END ;
         //On positionne la case de départ du composant

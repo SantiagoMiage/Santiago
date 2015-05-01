@@ -89,7 +89,7 @@ public class FenetreGUI {
         panel.add(infoPanel);
         gc.weightx = 2;
         gc.gridy = 1;
-        panel.add(plateau.getPanelRenvoi(), gc);
+        panel.add(plateau.getPanelCalque(), gc);
         gc.gridx = 1;
         gc.gridy = 1;
         creationParcelle(pileParcelles, gc);
@@ -116,6 +116,8 @@ public class FenetreGUI {
     }
 
     public void secheresse() {
+        //on retire tous les dessins d'ouvriers
+        plateau.getGlassOuvrier().removeAll();
         for (Parcelle parcelle : plateau.getListParcelleModele()) {
             //optimisation,une parcelle seche ne sechera psa plus
             if (!parcelle.isSecheresse()) {
@@ -126,11 +128,21 @@ public class FenetreGUI {
                         parcelle.setNbouvrieractif(parcelle.getNbouvrieractif() - 1);
                     } else {//sinon la parcelle devient desertique
                         plateau.secheresse(parcelle);
-                        plateau.repaint();
+
                     }
+
+
                 }
             }
+            System.out.println("yolo");
+            //on met a jour l<affichage des ouvriers sur les parcelles de joueurs
+            if (parcelle.getProprio()!=null) {
+                System.out.println("y a un proprio");
+                plateau.colorierOuvrier(parcelle, parcelle.getProprio());
+            }
         }
+
+        plateau.repaint();
     }
 
     //pour les encheres Parcelles
@@ -166,8 +178,8 @@ public class FenetreGUI {
     }
 
     //pour les encheres Canaux
-    public boolean enchereCanalOk(Joueur j_actif, int montantInt, ArrayList<Proposition> listProposition) {
-        return montantInt < 0 || montantInt > j_actif.getArgent();
+    public boolean enchereCanalOk(Joueur j_actif, int montantInt) {
+        return montantInt > 0 || montantInt < j_actif.getArgent();
     }
 
     //Montant de la proposition la plus chere
@@ -306,11 +318,11 @@ public class FenetreGUI {
         int montantInt = -1;
         String montant;
         String mess = "";
-        // mess += montantPrisCanalString(listProposition);
+
         Canal canal;
         do {
 
-            possedeArgent = false;
+
             propose = false;
             annuleChoix = false;
             //le joueur selectionne un canal sur le plateau
@@ -366,7 +378,8 @@ public class FenetreGUI {
 
             if (!annuleChoix) {
                 //on verifie si le joueur a assez d'argent
-                if (j_actif.getArgent() >= montantInt) {
+                if ( enchereCanalOk(j_actif,montantInt) ) {
+                    //j_actif.getArgent() >= montantInt
                     possedeArgent = true;
                 } else {
                     possedeArgent = false;
@@ -405,13 +418,13 @@ public class FenetreGUI {
 
                     JOptionPane jop2 = new JOptionPane();
                     jop2.showMessageDialog(null, mess, "", JOptionPane.INFORMATION_MESSAGE);
-                }
+                }else
                 {
                     propose = true;
                 }
             }
         } while (!propose);
-    }
+}
 
     //si le canal selectioné fais déja l'objet d'une proposition
     public boolean estUneProposition(Canal canal, ArrayList<Proposition> listProposition) {
@@ -436,18 +449,6 @@ public class FenetreGUI {
             }
         }
         return propositionrecup;
-    }
-
-    //parcours de la liste d'enchere pour les canaux
-    private String montantPrisCanalString(ArrayList<Proposition> listProposition) {
-        String mess = "";
-        if (listProposition.isEmpty()) {
-            return "Aucune ";
-        }
-        for (Proposition proposition : listProposition) {
-            mess += proposition.toString() + " \n";
-        }
-        return mess;
     }
 
     //parcours du tableau d enchere parcelle

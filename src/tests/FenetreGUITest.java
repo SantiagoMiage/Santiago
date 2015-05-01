@@ -4,6 +4,7 @@ import gameMaster.MaitreDuJeu;
 import joueur.Joueur;
 import org.junit.Test;
 
+import java.awt.*;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 
@@ -16,10 +17,10 @@ public class FenetreGUITest {
     //cas nominal
     public void testOffreJoueur(){
         ArrayList<Joueur> listeJoueurs = new ArrayList<Joueur>(4);
-        listeJoueurs.add(new Joueur("Matthieu", 10));
-        listeJoueurs.add(new Joueur("Yannis", 10));
-        listeJoueurs.add(new Joueur("Soraya", 10));
-        listeJoueurs.add(new Joueur("Thomas", 10));
+        listeJoueurs.add(new Joueur("Matthieu", 10, Color.red));
+        listeJoueurs.add(new Joueur("Yannis", 10, Color.blue));
+        listeJoueurs.add(new Joueur("Soraya", 10, Color.pink));
+        listeJoueurs.add(new Joueur("Thomas", 10, Color.green));
         MaitreDuJeu mj = new MaitreDuJeu(listeJoueurs);
         int[] montantEnchere = new int[listeJoueurs.size()];
 
@@ -30,10 +31,10 @@ public class FenetreGUITest {
     @Test
     public void testOffreJoueursNegative(){
         ArrayList<Joueur> listeJoueurs = new ArrayList<Joueur>(4);
-        listeJoueurs.add(new Joueur("Matthieu", 10));
-        listeJoueurs.add(new Joueur("Yannis", 10));
-        listeJoueurs.add(new Joueur("Soraya", 10));
-        listeJoueurs.add(new Joueur("Thomas", 10));
+        listeJoueurs.add(new Joueur("Matthieu", 10, Color.red));
+        listeJoueurs.add(new Joueur("Yannis", 10, Color.blue));
+        listeJoueurs.add(new Joueur("Soraya", 10, Color.pink));
+        listeJoueurs.add(new Joueur("Thomas", 10, Color.green));
         MaitreDuJeu mj = new MaitreDuJeu(listeJoueurs);
         int[] montantEnchere = new int[listeJoueurs.size()];
 
@@ -44,10 +45,10 @@ public class FenetreGUITest {
     @Test
     public void testOffreJoueursSuperieurMontantJoueur(){
         ArrayList<Joueur> listeJoueurs = new ArrayList<Joueur>(4);
-        listeJoueurs.add(new Joueur("Matthieu", 10));
-        listeJoueurs.add(new Joueur("Yannis", 10));
-        listeJoueurs.add(new Joueur("Soraya", 10));
-        listeJoueurs.add(new Joueur("Thomas", 10));
+        listeJoueurs.add(new Joueur("Matthieu", 10, Color.red));
+        listeJoueurs.add(new Joueur("Yannis", 10, Color.blue));
+        listeJoueurs.add(new Joueur("Soraya", 10, Color.pink));
+        listeJoueurs.add(new Joueur("Thomas", 10, Color.green));
         MaitreDuJeu mj = new MaitreDuJeu(listeJoueurs);
         int[] montantEnchere = new int[listeJoueurs.size()];
 
@@ -58,10 +59,10 @@ public class FenetreGUITest {
     @Test
     public void testOffreJoueursDejaExistante(){
         ArrayList<Joueur> listeJoueurs = new ArrayList<Joueur>(4);
-        listeJoueurs.add(new Joueur("Matthieu", 10));
-        listeJoueurs.add(new Joueur("Yannis", 10));
-        listeJoueurs.add(new Joueur("Soraya", 10));
-        listeJoueurs.add(new Joueur("Thomas", 10));
+        listeJoueurs.add(new Joueur("Matthieu", 10, Color.red));
+        listeJoueurs.add(new Joueur("Yannis", 10, Color.blue));
+        listeJoueurs.add(new Joueur("Soraya", 10, Color.pink));
+        listeJoueurs.add(new Joueur("Thomas", 10, Color.green));
         MaitreDuJeu mj = new MaitreDuJeu(listeJoueurs);
         int[] montantEnchere = new int[listeJoueurs.size()];
         montantEnchere[0] = 4;

@@ -17,8 +17,6 @@ import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by Yannis Cipriani on 16/03/2015.
@@ -90,7 +88,7 @@ public class Plateau extends JApplet {
     }
 
     public void initialisation() {
-
+        //mis en places des JPanels gérant le plateau
         panel.setBorder(BorderFactory.createLineBorder(Color.blue));
         glassOuvrier.setBorder(BorderFactory.createLineBorder(Color.magenta));
         panelCalque.setBorder(BorderFactory.createLineBorder(Color.green));
@@ -102,64 +100,39 @@ public class Plateau extends JApplet {
         //panel invisible ouvrier
 
         this.glassOuvrier.setBounds(this.panel.getBounds());
-        //  glassOuvrier.setBackground(Color.BLACK);
-        // this.glassOuvrier.setBackground(new Color(0,0,0,0));
+        this. glassOuvrier.setLayout(null);
         this.glassOuvrier.setOpaque(false);
-        //  glassOuvrier.setSize(new Dimension(500, 500));
+
 
         //on ajoute au couche de calque
         this.panelCalque.setPreferredSize(new Dimension(500, 500));
 
-        this.panelCalque.add(this.panel, Integer.valueOf(1));
-        this.panelCalque.add(this.glassOuvrier, Integer.valueOf(2));
+        this.panelCalque.add(this.glassOuvrier, Integer.valueOf(30), 0);
+        this.panelCalque.add(this.panel, Integer.valueOf(1), 1);
+
 
         //panel renvoie
         //   panelRenvoi.setSize(new Dimension(500, 500));
-        this.panelRenvoi.add(panelCalque,BorderLayout.NORTH);
-        //panel.add(panelOuvrier);
+        this.panelRenvoi.add(panelCalque, BorderLayout.NORTH);
+
+
+        //Traitement des ressources
         //pour la performance , on instancie seulement  au début , pour ne pas devoir le faire plus tard dans le listener, gain
         String cheminparcelle = "/ressource/images/parcelle.png";
         URL url_parcelle = this.getClass().getResource(cheminparcelle);
-        String cheminpatate1 = "/ressource/images/patate1.png";
-        URL url_patate1 = this.getClass().getResource(cheminpatate1);
-        String cheminpiment1 = "/ressource/images/piment1.png";
-        URL url_piment1 = this.getClass().getResource(cheminpiment1);
-        String cheminbanane1 = "/ressource/images/banane1.png";
-        URL url_banane1 = this.getClass().getResource(cheminbanane1);
-        String cheminbambou1 = "/ressource/images/bambou1.png";
-        URL url_bambou1 = this.getClass().getResource(cheminbambou1);
-        String cheminharicot1 = "/ressource/images/haricot1.png";
-        URL url_haricot1 = this.getClass().getResource(cheminharicot1);
-        String cheminvide = "/ressource/images/vide.png";
-        URL url_vide = this.getClass().getResource(cheminvide);
-        String chemintest = "/ressource/images/test.png";
-        URL url_test = this.getClass().getResource(chemintest);
         //Les canals
         String chemincanalhori = "/ressource/images/canalhori.png";
         URL url_canalhori = this.getClass().getResource(chemincanalhori);
-        String chemincanalhorirrigue = "/ressource/images/canalhorirrigue.png";
-        URL url_canalhorirrigue = this.getClass().getResource(chemincanalhorirrigue);
         String chemincanalverti = "/ressource/images/canalverti.png";
         URL url_canalverti = this.getClass().getResource(chemincanalverti);
-        String chemincanalvertirrigue = "/ressource/images/canalvertirrigue.png";
-        URL url_canalvertirrigue = this.getClass().getResource(chemincanalvertirrigue);
         //intersection
         String cheminintersection = "/ressource/images/intersection.png";
         URL url_intersection = this.getClass().getResource(cheminintersection);
 
 //[A FAIRE]rajouter les plantations 2 ouvriers
         final ImageIcon iconparcelle = new ImageIcon(url_parcelle),
-                iconpatate1 = new ImageIcon(url_patate1),
-                iconpiment1 = new ImageIcon(url_piment1),
-                iconbanane1 = new ImageIcon(url_banane1),
-                iconbambou1 = new ImageIcon(url_bambou1),
-                iconharicot1 = new ImageIcon(url_haricot1),
-                iconvide = new ImageIcon(url_vide),
-                icontest = new ImageIcon(url_test),
                 iconcanalhori = new ImageIcon(url_canalhori),
-                iconcanalhorirrigue = new ImageIcon(url_canalhorirrigue),
                 iconcanalverti = new ImageIcon(url_canalverti),
-                iconcanalvertirrigue = new ImageIcon(url_canalvertirrigue),
                 iconintersection = new ImageIcon(url_intersection);
 
 
@@ -399,11 +372,9 @@ public class Plateau extends JApplet {
     ///////////////////
 
     // utiliser lors du depot et lors de secheresse
-    public void colorierOuvrier(Parcelle parcelle) {
-        JLabel thumb=modeleToGuiIParcelle(parcelle);
-        int nbouv = parcelle.getNbouvrier();
-
-
+    public void colorierOuvrier(Parcelle parcelle,Joueur joueur) {
+        JLabel thumb = modeleToGuiIParcelle(parcelle);
+        int nbouv = parcelle.getNbouvrieractif();
         int posx = thumb.getX();
         int posy = thumb.getY();
 
@@ -411,37 +382,27 @@ public class Plateau extends JApplet {
         final int posxcarre = posx + 5;
         final int posycarre = posy + 5;
 
-        System.out.println("posxcarre "+posxcarre+" posycarre "+posycarre );
+     //   System.out.println("posxcarre " + posxcarre + " posycarre " + posycarre);
         //coloriage du premier ouvrier
-        JPanel aDessiner = new JPanel() {
-            public void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                g.setColor(Color.blue);
-                g.fillOval(posxcarre, posycarre, 10, 10);
-                glassOuvrier.paint(g);
-            }
-        };
+        if (nbouv > 0) {
+            Ouvrier ouvrier = new Ouvrier(joueur.getCouleur());
+            ouvrier.drawGraphic();
+            ouvrier.setBorder(BorderFactory.createLineBorder(Color.black));
+            glassOuvrier.add(ouvrier);
+            ouvrier.setBounds(posxcarre, posycarre, 10, 10);
 
-
-        this.glassOuvrier.add(aDessiner);
-
-        this.glassOuvrier.repaint();
-        //coloriage du second ouvrier si il y en a un
-        if (nbouv > 1) {
-            //calcul de la position du second carré de couleur
-            final int posxcarredeux = posxcarre + 15;
-            final int posycarredeux = posycarre;
-            System.out.println("posxcarredeux "+posxcarredeux+" posycarredeux "+posycarredeux );
             //coloriage du second ouvrier
-            JPanel aDessiner2 = new JPanel() {
-                public void paintComponent(Graphics g) {
-                    super.paintComponent(g);
-                    g.setColor(Color.MAGENTA);
-                    g.fillOval(posxcarredeux, posycarredeux, 10, 10);
-                    glassOuvrier.paint(g);
-                }
-            };
-            this.glassOuvrier.add(aDessiner2);
+            if (nbouv > 1) {
+                //calcul de la position du premier carré de couleur
+                final int posxcarre2 = posxcarre + 20;
+                final int posycarre2 = posycarre;
+
+                Ouvrier ouvrier2 = new Ouvrier(joueur.getCouleur());
+                ouvrier2.drawGraphic();
+                ouvrier2.setBorder(BorderFactory.createLineBorder(Color.black));
+                glassOuvrier.add(ouvrier2);
+                ouvrier2.setBounds(posxcarre2, posycarre2, 10, 10);
+            }
         }
 
     }
@@ -515,9 +476,7 @@ public class Plateau extends JApplet {
             }
         }
 
-
         //  this.getListParcelleModele().toString();
-
         //on irrigue mtn l<intersection au bout du canal
         int xdeb = canal.getXdeb();
         int ydeb = canal.getYdeb();
@@ -623,9 +582,10 @@ public class Plateau extends JApplet {
         ListIntersect.get(index).setirrigue(true);
         ListIntersectGUI.get(index).setIcon(iconsource);
     }
-
+    //quand une parcelle devient vide
     public void secheresse(Parcelle parcelle) {
         parcelle.setSecheresse(true);
+        parcelle.setProprio(null);
         //et on modifie l image
         String cheminvide = "/ressource/images/vide.png";
         URL url_vide = this.getClass().getResource(cheminvide);
@@ -634,6 +594,8 @@ public class Plateau extends JApplet {
         int index = ListParcelleModele.indexOf(parcelle);
         JLabel parcelleGUI = ListParcelleGUI.get(index);
         parcelleGUI.setIcon(iconvide);
+
+
     }
 
 
@@ -713,7 +675,7 @@ public class Plateau extends JApplet {
         retournerParcelle(parcelleChoisie, parcelleMain);
         ListParcelleGUI.set(indexParcelle, parcelleChoisie);
         //on colorie les ouvriers
-        colorierOuvrier(parcelleMain);
+        colorierOuvrier(parcelleMain,joueur);
 
 
         //on vide la main du joueur
@@ -899,6 +861,24 @@ public class Plateau extends JApplet {
         return totalJoueurChampsTab;
 
 
+    }
+
+
+    class Ouvrier extends JPanel {
+        Color couleur;
+        public Ouvrier(Color couleur){
+            this.couleur=couleur;
+        }
+        public void drawGraphic() {
+            repaint();
+        }
+
+        public void paintComponent(Graphics g) {
+            super.paintComponent(g);
+
+            g.setColor(couleur);
+            g.fillRect(0, 0, 10, 10);
+        }
     }
 
 

@@ -2,6 +2,7 @@ package joueur;
 
 import plateau.Parcelle;
 
+import java.awt.*;
 import java.io.Serializable;
 
 /**
@@ -16,15 +17,16 @@ public class Joueur implements Serializable {
     private int score;
     private Parcelle parcelleMain;
     private boolean canalComplementaire = true;
+    private Color couleur;
 
 
 
 
-    public Joueur(String pseudo, int argent){
+    public Joueur(String pseudo, int argent, Color couleur){
         this.pseudo=pseudo;
         this.argent=argent;
         this.score = 0;
-
+        this.couleur = couleur;
     }
 
     public Joueur(Joueur j_actif) {
@@ -32,6 +34,7 @@ public class Joueur implements Serializable {
         this.argent=j_actif.argent;
         this.score =j_actif.score;
         this.parcelleMain = j_actif.parcelleMain;
+        this.couleur = j_actif.couleur;
     }
 
     public String getPseudo() {
@@ -52,6 +55,10 @@ public class Joueur implements Serializable {
 
     public void setScore(int score) {
         this.score = score;
+    }
+
+    public Color getCouleur() {
+        return couleur;
     }
 
     public Parcelle getParcelleMain() {

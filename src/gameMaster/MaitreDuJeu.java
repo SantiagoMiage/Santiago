@@ -10,6 +10,7 @@ import plateau.Plateau;
 import reseau.Client;
 import reseau.Server;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -107,6 +108,9 @@ public class MaitreDuJeu {
         this.pileParcelles = new ArrayList<PileParcelle>(joueurs.size());
         initialisationPileParcelles();
     }
+    public void setConstructeurCanal(Joueur j) {
+        constructeurCanal = j;
+    }
 
     public Joueur getConstructeurCanal() {
         return constructeurCanal;
@@ -120,9 +124,6 @@ public class MaitreDuJeu {
     //Les 7 Phases///
     /////////////////
 
-    public void setConstructeurCanal(Joueur j) {
-        constructeurCanal = j;
-    }
 
     //gère la première phase du jeu les enchères pour les parcelles
     public void enchereParcelle() {
@@ -523,7 +524,7 @@ public class MaitreDuJeu {
                 paiementJoueur();
                 System.out.println("Tour " + nbTours + " fini");
             }
-        } while (nbTours != 1);
+        } while (nbTours != 11);
 
         resultatFinal(listeJoueurs);
 
@@ -538,7 +539,9 @@ public class MaitreDuJeu {
     //////MAIN///////
     /////////////////
     public static void main(String[] args){
-
+        //preparaton d<une liste de couleur pour eviter les doublons
+        Color[] tabCouleur = new Color[4];
+        tabCouleur[0]=Color.red;tabCouleur[1]=Color.blue;tabCouleur[2]=Color.green;tabCouleur[3]=Color.pink;
         //A la place une interface graphique devras permettre de choisir les joueurs
         ArrayList<Joueur> listeJoueurs = new ArrayList<Joueur>(4);
 
@@ -560,10 +563,10 @@ public class MaitreDuJeu {
                 mj.getCli().sendPseudo(mj.fenetre.getLauncher().jtf.getText());
             }
             if(mj.fenetre.getLauncher().pseudo4String != null){
-                listeJoueurs.add(new Joueur(mj.fenetre.getLauncher().jtf.getText(),10));
-                listeJoueurs.add(new Joueur(mj.fenetre.getLauncher().pseudo2String,10));
-                listeJoueurs.add(new Joueur(mj.fenetre.getLauncher().pseudo3String,10));
-                listeJoueurs.add(new Joueur(mj.fenetre.getLauncher().pseudo4String, 10));
+                listeJoueurs.add(new Joueur(mj.fenetre.getLauncher().jtf.getText(),10, tabCouleur[0]));
+                listeJoueurs.add(new Joueur(mj.fenetre.getLauncher().pseudo2String,10, tabCouleur[1]));
+                listeJoueurs.add(new Joueur(mj.fenetre.getLauncher().pseudo3String,10, tabCouleur[2]));
+                listeJoueurs.add(new Joueur(mj.fenetre.getLauncher().pseudo4String,10, tabCouleur[3]));
                 mj.setLocal(true);
             }
             if(mj.getLocal()) {
@@ -571,7 +574,7 @@ public class MaitreDuJeu {
             }
             if(mj.getServ() != null){
                 mj.pseudoJoueur = mj.fenetre.getLauncher().jtf.getText();
-                listeJoueurs.add(new Joueur(mj.fenetre.getLauncher().jtf.getText(),10));
+                listeJoueurs.add(new Joueur(mj.fenetre.getLauncher().jtf.getText(),10, Color.red));
                 while(mj.getServ().getNbCo() != 3){
                     int jrestant = 3-mj.getServ().getNbCo();
                     mj.fenetre.getLauncher().setInfo("Attente de " + jrestant +"joueur");
@@ -586,14 +589,14 @@ public class MaitreDuJeu {
                     while(mj.getServ().getPseudo(i) == "unknow"){
                         mj.fenetre.getLauncher().setInfo("Tout les joueurs sont connecté début de la partie");
                     }
-                    listeJoueurs.add(new Joueur(mj.getServ().getPseudo(i), 10));
+                    listeJoueurs.add(new Joueur(mj.getServ().getPseudo(i), 10, tabCouleur[i]));
 
                 }
 
                 mj.jouerPartieServeur(listeJoueurs);
             }
             if(mj.getCli() != null){
-                mj.joueursCli = new Joueur(mj.fenetre.getLauncher().jtf.getText(),10);
+                mj.joueursCli = new Joueur(mj.fenetre.getLauncher().jtf.getText(),10,tabCouleur[0]);
                 listeJoueurs = mj.getCli().getJoueurs();
                 mj.jouerPartieClient(listeJoueurs);
             }

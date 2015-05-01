@@ -80,7 +80,6 @@ public class PileParcelleGUI {
 
             });
 
-            thumb.setBorder(BorderFactory.createLineBorder(Color.red));
             panel.add(thumb);
         }
     }
