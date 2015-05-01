@@ -22,7 +22,7 @@ public class MainJoueurGUI {
 
         panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.anchor = GridBagConstraints.LAST_LINE_END ;
+        //gbc.anchor = GridBagConstraints.LAST_LINE_END ;
         //On positionne la case de départ du composant
         gbc.gridx = 0;
         gbc.gridy = 0;
