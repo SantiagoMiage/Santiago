@@ -112,6 +112,10 @@ public class MaitreDuJeu {
         return constructeurCanal;
     }
 
+    public void refreshInfo(String mess){
+        fenetre.refreshInfo("Tours : "+Integer.toString(nbTours) + "Phase : " + mess +" Joueur : " + j_actif.getPseudo());
+    }
+
     /////////////////
     //Les 7 Phases///
     /////////////////
@@ -137,6 +141,7 @@ public class MaitreDuJeu {
         joueurs = toursJoueurs;
         for(int i = 0; i<joueurs.size(); i++){
             j_actif = toursJoueurs.get(i);
+            refreshInfo("Enchère Parcelle");
             Parcelle pChoisie = fenetre.choixParcelle(j_actif);
             j_actif.setParcelleMain(pChoisie);
             fenetre.RefreshMainJoueur(joueurs);
@@ -238,6 +243,7 @@ public class MaitreDuJeu {
     public void depotParcelle() {
         for (Joueur joueur : joueurs) {
             j_actif = joueur;
+            refreshInfo("Dépot parcelle");
             fenetre.depotParcelle(j_actif);
             fenetre.RefreshMainJoueur(joueurs);
         }
@@ -251,10 +257,10 @@ public class MaitreDuJeu {
         for (int i = 0; i < joueurs.size(); i++) {
 
             j_actif = joueurs.get(i);
+            refreshInfo("Enchère canal");
             //seul les non constructeurs emettent des propositions
             if (j_actif != constructeurCanal) {
                 fenetre.propositionCanalJoueur(j_actif, listProposition);
-
             }
         }
 
@@ -264,9 +270,11 @@ public class MaitreDuJeu {
 
     //gère la  cinquieme phase du jeu
     private void irriguationComplementaire() {
+        refreshInfo("Irriguation");
         boolean adeposer = false;
         for (int i = 0; i < joueurs.size(); i++) {
             j_actif = joueurs.get(i);
+            refreshInfo("Irriguation");
             if (j_actif.isCanalComplementaire()) { //si la personne actif a un canal complémentaire
                 if (!adeposer) { //si personne n'a déja posé son canal durant ce tour de jeu
                     adeposer = fenetre.depotCanalComplementaire(j_actif);
@@ -277,6 +285,7 @@ public class MaitreDuJeu {
 
     //gère la  sixieme phase du jeu
     private void secheresse() {
+        refreshInfo("Secheresse");
         System.out.println("MJ.secheresse");
         fenetre.secheresse();
 
@@ -332,10 +341,6 @@ public class MaitreDuJeu {
                 parcelles.remove(0);
             }
         }
-    }
-
-    private void afficherPileParcelle() {
-        fenetre.creationParcelle(pileParcelles);
     }
 
     //Retourne une liste de joueurs trié pour la phase de tour 1
