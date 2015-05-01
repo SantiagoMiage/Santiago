@@ -179,10 +179,5 @@ private boolean marquer=false;
         patate, piment, banane, bambou, haricot, vide, test;
     }
 
-//Fonction d ajout ouvrier
-
-
-//
-
 
 }

@@ -51,24 +51,12 @@ public class Plateau extends JApplet {
 
     }
 
-    public Plateau(JPanel panel) {
-        this.panel = panel;
-    }
-
-    public JPanel getPanel() {
-        return panel;
-    }
-
     public JLayeredPane getPanelCalque() {
         return panelCalque;
     }
 
     public JPanel getGlassOuvrier() {
         return glassOuvrier;
-    }
-
-    public JPanel getPanelRenvoi() {
-        return panelRenvoi;
     }
 
     public ArrayList<Canal> getListCanauxModele() {
@@ -79,42 +67,24 @@ public class Plateau extends JApplet {
         return ListCanauxGUI;
     }
 
-    public void setListCanauxGUI(ArrayList<JLabel> listCanauxGUI) {
-        ListCanauxGUI = listCanauxGUI;
-    }
-
     public ArrayList<Parcelle> getListParcelleModele() {
         return ListParcelleModele;
     }
 
     public void initialisation() {
         //mis en places des JPanels gérant le plateau
-        panel.setBorder(BorderFactory.createLineBorder(Color.blue));
-        glassOuvrier.setBorder(BorderFactory.createLineBorder(Color.magenta));
-        panelCalque.setBorder(BorderFactory.createLineBorder(Color.green));
+
 
         //panel plateau
         this.panel.setBounds(0, 0, 500, 500);
-        //  panel.setSize(new Dimension(500, 500));
-
-        //panel invisible ouvrier
-
         this.glassOuvrier.setBounds(this.panel.getBounds());
-        this. glassOuvrier.setLayout(null);
+        this.glassOuvrier.setLayout(null);
         this.glassOuvrier.setOpaque(false);
-
 
         //on ajoute au couche de calque
         this.panelCalque.setPreferredSize(new Dimension(500, 500));
-
         this.panelCalque.add(this.glassOuvrier, Integer.valueOf(30), 0);
         this.panelCalque.add(this.panel, Integer.valueOf(1), 1);
-
-
-        //panel renvoie
-        //   panelRenvoi.setSize(new Dimension(500, 500));
-        this.panelRenvoi.add(panelCalque, BorderLayout.NORTH);
-
 
         //Traitement des ressources
         //pour la performance , on instancie seulement  au début , pour ne pas devoir le faire plus tard dans le listener, gain
@@ -129,7 +99,6 @@ public class Plateau extends JApplet {
         String cheminintersection = "/ressource/images/intersection.png";
         URL url_intersection = this.getClass().getResource(cheminintersection);
 
-//[A FAIRE]rajouter les plantations 2 ouvriers
         final ImageIcon iconparcelle = new ImageIcon(url_parcelle),
                 iconcanalhori = new ImageIcon(url_canalhori),
                 iconcanalverti = new ImageIcon(url_canalverti),
@@ -407,17 +376,10 @@ public class Plateau extends JApplet {
 
     }
 
-
     public JLabel modeleToGuiIParcelle(Parcelle parcelle) {
         int index = ListParcelleModele.indexOf(parcelle);
         return ListParcelleGUI.get(index);
     }
-
-    public Parcelle guiToModeleParcelle(JLabel thumb) {
-        int index = ListParcelleGUI.indexOf(thumb);
-        return ListParcelleModele.get(index);
-    }
-
 
     public void irrigueIntersection(int i, int j) {
         for (Intersection elem : ListIntersect) {
@@ -546,7 +508,6 @@ public class Plateau extends JApplet {
 
     }
 
-
     //colorie le canal ayant eu une proposition en vert , seulement pour les test
     public void colorieCanalPropVert(Canal canal) {
 
@@ -582,6 +543,7 @@ public class Plateau extends JApplet {
         ListIntersect.get(index).setirrigue(true);
         ListIntersectGUI.get(index).setIcon(iconsource);
     }
+
     //quand une parcelle devient vide
     public void secheresse(Parcelle parcelle) {
         parcelle.setSecheresse(true);
@@ -597,7 +559,6 @@ public class Plateau extends JApplet {
 
 
     }
-
 
     //permet de choisir sur le plateau le canal que l'on veut encherir
     public Canal choixCanal(Joueur joueur) {

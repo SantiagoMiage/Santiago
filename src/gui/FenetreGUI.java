@@ -134,10 +134,8 @@ public class FenetreGUI {
 
                 }
             }
-            System.out.println("yolo");
             //on met a jour l<affichage des ouvriers sur les parcelles de joueurs
             if (parcelle.getProprio()!=null) {
-                System.out.println("y a un proprio");
                 plateau.colorierOuvrier(parcelle, parcelle.getProprio());
             }
         }
@@ -220,7 +218,6 @@ public class FenetreGUI {
         }else{
             adepose=false;
         }
-        System.out.println("depotCanalComplementaire adepose "+adepose);
         return  adepose;
     }
 
@@ -239,7 +236,6 @@ public class FenetreGUI {
                 plateau.irrigation(canal);
 
             }
-            System.out.println("choixDuCanalComplementaire adepose "+deposer);
         }while(!deposer);
     }
 
@@ -365,7 +361,7 @@ public class FenetreGUI {
                         montantInt = 0;
                     } else {
                         montantInt = Integer.parseInt(montant);
-                        if (montantInt >= 0) {
+                        if (montantInt > 0) {
                             propose = true;
                         }
                     }
@@ -482,7 +478,6 @@ public class FenetreGUI {
     public void retirerParcelle(Parcelle pChoisie) {
         pileParcelleGUI.retirerParcelle(pChoisie);
     }
-
 
     public void calculResultatFinal(ArrayList < Joueur > listeJoueurs) {
         int[] res= plateau.calculResultatFinal(listeJoueurs);

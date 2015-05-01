@@ -30,9 +30,6 @@ public class PileParcelle implements Serializable {
     }
 
     //Affiche la première parcelle de la pile
-    public void afficherDessus(){
-        System.out.println(this.pileParcelle.get(0));
-    }
 
     public int recupNbouvrierDessus(){
         return this.pileParcelle.get(0).getNbouvrier();

@@ -56,8 +56,6 @@ public class PileParcelleGUI {
                         if (thumb.getIcon() != iconvide) {
                             //recuperer la parcelle
                             parcelleChoisie = pileParcelles.get(indice).getParcelle();
-                            System.out.println("recup parcelle de pile parcelle");
-                            System.out.println("rtype champs"+parcelleChoisie.getChamps());
                             if (pileParcelles.get(indice).getPileParcelle().size() > 1) {
                                 //retirer limage
                                 pileParcelles.get(indice).popParcelle();
@@ -187,11 +185,8 @@ public class PileParcelleGUI {
     public void retirerParcelle(Parcelle pChoisie) {
         for(int i =0; i<4; i++){
             if(pileParcelles.get(i).getParcelle().equals(pChoisie)){
-                System.out.println("good");
                 pileParcelles.get(i).popParcelle();
                 pileParcellesGUI.get(i).setIcon(iconvide);
-            }else{
-                System.out.println("pas good" + pileParcelles.get(i).getParcelle().getNumero()+ " différent de : " + pChoisie.getNumero());
             }
         }
     }

@@ -508,30 +508,25 @@ public class MaitreDuJeu {
         setJ_actif(listeJoueurs.get(0));
         do {
             nbTours++;
-            System.out.println("Tour " + nbTours + " commence");
-            System.out.println("Phase Enchere Parcelle");
+
+            //Phase Enchere Parcelle
             enchereParcelle();
-            System.out.println("Phase Depot Parcelle");
+            //Phase Depot Parcelle
             depotParcelle();
-            System.out.println("Phase Soudoiement Constructeur + construction canal");
+            //Phase Soudoiement Constructeur + construction canal
             soudoiementConstructeur();
-            System.out.println("Phase Irrigation complémentaire");
+            //Phase Irrigation complémentaire
             irriguationComplementaire();
             if (nbTours != 11) {//ces 2 phases n<ont pas lieu au dernier tour
-                System.out.println("Phase de secheresse");
+                //Phase de secheresse
                 secheresse();
-                System.out.println("Phase de paiement");
+                //Phase de paiement
                 paiementJoueur();
-                System.out.println("Tour " + nbTours + " fini");
             }
         } while (nbTours != 11);
 
         resultatFinal(listeJoueurs);
-
-
-
-
-    }
+   }
 
 
 
@@ -541,7 +536,7 @@ public class MaitreDuJeu {
     public static void main(String[] args){
         //preparaton d<une liste de couleur pour eviter les doublons
         Color[] tabCouleur = new Color[4];
-        tabCouleur[0]=Color.red;tabCouleur[1]=Color.blue;tabCouleur[2]=Color.green;tabCouleur[3]=Color.pink;
+        tabCouleur[0]=Color.red;tabCouleur[1]=Color.cyan;tabCouleur[2]=Color.green;tabCouleur[3]=Color.pink;
         //A la place une interface graphique devras permettre de choisir les joueurs
         ArrayList<Joueur> listeJoueurs = new ArrayList<Joueur>(4);
 

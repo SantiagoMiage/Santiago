@@ -14,12 +14,6 @@ public class Intersection {
     }
 
 
-    public Intersection(boolean irrigue, int i, int j) {
-        this.irrigue = irrigue;
-        this.i = i;
-        this.j = j;
-    }
-
     public int getI() {
         return i;
     }
